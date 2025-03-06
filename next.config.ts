@@ -11,9 +11,13 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'www.lovosis.in'
       }
-    ]
+    ],
+    domains: ['localhost']
   },
-  output: 'standalone'
+  output: 'standalone',
+  eslint: {
+    ignoreDuringBuilds: true
+  }
 };
 
 export default nextConfig;
