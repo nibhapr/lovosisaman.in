@@ -1,4 +1,4 @@
-import Services from "./services";
+import Services from "../Components/services/services";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 

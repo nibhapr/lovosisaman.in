@@ -1,4 +1,4 @@
-import ItServices from "./it-services";
+import ItServices from "../../Components/services/it-services/it-services";
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 
