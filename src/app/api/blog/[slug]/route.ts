@@ -64,7 +64,7 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
-    const post = await Blog.findOneAndDelete({ slug: params.slug });
+    const post = await Blog.findOneAndDelete({ slug: params.slug }).exec();
     
     if (!post) {
       return NextResponse.json(
