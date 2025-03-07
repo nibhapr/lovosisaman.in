@@ -31,7 +31,7 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            {['About', 'Services', 'Products', 'Events', 'Blogs'].map((item) => (
+            {['About', 'Services', 'Products', 'Blogs'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
@@ -92,7 +92,7 @@ const Navbar = () => {
           } overflow-hidden`}
         >
           <div className="px-3 pt-3 pb-4 space-y-3 bg-gradient-to-b from-white to-blue-50 rounded-2xl shadow-inner my-2 border border-gray-100">
-            {['Home', 'About', 'Services', 'Products', 'Events', 'Blogs'].map((item) => (
+            {['Home', 'About', 'Services', 'Products', 'Blogs'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
