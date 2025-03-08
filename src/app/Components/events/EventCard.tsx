@@ -24,7 +24,7 @@ export default function EventCard({ event }: EventCardProps) {
         />
       </div>
       <div className="p-6">
-        <Link href={`/events/${event.slug}`}>
+        <Link href={`/events/${event._id}`}>
           <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
             {event.title}
           </h3>

@@ -5,9 +5,9 @@ import { notFound } from 'next/navigation';
 export default async function EventPage({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: { id: string } 
 }) {
-  const event = await getEvent(params.slug);
+  const event = await getEvent(params.id);
   
   if (!event) {
     return notFound();
