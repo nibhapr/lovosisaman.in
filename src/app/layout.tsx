@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import RootLayoutWrapper from "./Components/layouts/RootLayoutWrapper";
-import { Analytics } from "@vercel/analytics/react"
+import favicon from "../../public/favicon.ico";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   robots: {
     index: false,
     follow: false
+  },
+  icons: {
+    icon: favicon.src
   }
 };
 
@@ -33,7 +36,6 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <RootLayoutWrapper>
           {children}
-          <Analytics />
         </RootLayoutWrapper>
       </body>
     </html>
