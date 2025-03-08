@@ -1,31 +1,46 @@
-version: '3.8'
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "8081:8081"
     environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_DOMAIN=lovosis.in
-      - NEXTAUTH_URL=https://lovosis.in
-      - MONGODB_URI=mongodb+srv://webrelated0:webrelated0@lovosisdb.zj0bl.mongodb.net/lovosisdb?retryWrites=true&w=majority&appName=lovosisdb
-      - JWT_SECRET=94af5eb59932b5aef9a3c1bfe8b1c8e860d5771324b2dee91414fccb21489a4ee9f980d02b887556d986fa88058f705bdf0cbd2c962da56ee2797a1b84e45c50
+      - NODE_ENV=${NODE_ENV}
+      - NEXT_PUBLIC_DOMAIN=${NEXT_PUBLIC_DOMAIN}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - uploads:/app/public/uploads
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8081/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   mongodb:
     image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
     volumes:
       - mongodb_data:/data/db
-    ports:
-      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
 
 volumes:
   mongodb_data:
-  uploads: 
+  uploads:
+
+networks:
+  app-network:
+    driver: bridge 

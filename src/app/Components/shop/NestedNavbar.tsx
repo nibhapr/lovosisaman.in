@@ -15,24 +15,7 @@ interface NavItem {
   }[];
 }
 
-const categories: NavItem[] = [
-  {
-    name: 'Electronics',
-    slug: 'electronics',
-    subcategories: [
-      { name: 'Laptops', slug: 'laptops' },
-      { name: 'Smartphones', slug: 'smartphones' },
-    ],
-  },
-  {
-    name: 'Clothing',
-    slug: 'clothing',
-    subcategories: [
-      { name: 'Men', slug: 'men' },
-      { name: 'Women', slug: 'women' },
-    ],
-  },
-];
+const categories: NavItem[] = [];
 
 export default function NestedNavbar() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -83,4 +66,4 @@ export default function NestedNavbar() {
       </div>
     </nav>
   );
-} 
+}
