@@ -34,4 +34,14 @@ interface Product {
   catalogExcel?: string;
 }
 
+export interface Review {
+  _id: string;
+  itemId: string;
+  itemType: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 export type { Category, Subcategory, Product };

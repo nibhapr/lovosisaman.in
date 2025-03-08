@@ -6,7 +6,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV=${NODE_ENV:-production}
       - NEXT_PUBLIC_DOMAIN=${NEXT_PUBLIC_DOMAIN}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - MONGODB_URI=${MONGODB_URI}
@@ -16,26 +16,56 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: always
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost:8081/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - app-network
 
   mongodb:
     image: mongo:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
     volumes:
       - mongodb_data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 10s
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - app-network
 
 volumes:
   mongodb_data:

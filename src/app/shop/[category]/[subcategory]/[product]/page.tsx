@@ -2,10 +2,11 @@
 
 import { useEffect, useState, use } from 'react';
 import Image from 'next/image';
-import { IoDownloadOutline, IoEyeOutline } from 'react-icons/io5';
+import { IoDownloadOutline, IoEyeOutline, IoStarOutline, IoStar } from 'react-icons/io5';
 import { FaFileExcel } from 'react-icons/fa';
 import FilePreviewModal from '@/app/Components/shop/FilePreviewModal';
-import type { Product } from '@/types/shop';
+import ReviewForm from '@/app/Components/shared/ReviewForm';
+import type { Product, Review } from '@/types/shop';
 
 export default function ProductPage({
   params
@@ -13,8 +14,20 @@ export default function ProductPage({
   params: Promise<{ category: string; subcategory: string; product: string }>
 }) {
   const [product, setProduct] = useState<Product | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
   const resolvedParams = use(params);
+
+  // Move fetchReviews outside useEffect
+  const fetchReviews = async () => {
+    if (product?._id) {
+      const response = await fetch(`/api/reviews?itemId=${product._id}&itemType=product`);
+      if (response.ok) {
+        const data = await response.json();
+        setReviews(data);
+      }
+    }
+  };
 
   useEffect(() => {
     async function fetchProduct() {
@@ -27,6 +40,10 @@ export default function ProductPage({
     fetchProduct();
   }, [resolvedParams.product]);
 
+  useEffect(() => {
+    fetchReviews();
+  }, [product?._id]);
+
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -35,6 +52,10 @@ export default function ProductPage({
   const specifications = product.specifications instanceof Map
     ? Object.fromEntries(product.specifications)
     : product.specifications;
+
+  const averageRating = reviews.length 
+    ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length 
+    : 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -140,6 +161,53 @@ export default function ProductPage({
             )}
           </div>
         </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="mt-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold">Product Reviews</h2>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center">
+              {[1, 2, 3, 4, 5].map((star) => (
+                star <= Math.round(averageRating) 
+                  ? <IoStar key={star} className="w-5 h-5 text-yellow-400" />
+                  : <IoStarOutline key={star} className="w-5 h-5 text-yellow-400" />
+              ))}
+            </div>
+            <span className="text-gray-600">({reviews.length} reviews)</span>
+          </div>
+        </div>
+
+        {/* Existing Reviews */}
+        <div className="space-y-6 mb-8">
+          {reviews.map((review) => (
+            <div key={review._id} className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-semibold">{review.userName}</h3>
+                  <p className="text-sm text-gray-500">
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    star <= review.rating 
+                      ? <IoStar key={star} className="w-5 h-5 text-yellow-400" />
+                      : <IoStarOutline key={star} className="w-5 h-5 text-yellow-400" />
+                  ))}
+                </div>
+              </div>
+              <p className="text-gray-600">{review.comment}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Review Form */}
+        {product._id && <ReviewForm itemId={product._id} itemType="product" onSubmitSuccess={() => {
+          // Refresh reviews after new submission
+          fetchReviews();
+        }} />}
       </div>
 
       {/* Preview Modals */}

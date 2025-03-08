@@ -38,6 +38,7 @@ ENV NODE_ENV=production
 ENV PORT=8081
 ENV HOSTNAME="0.0.0.0"
 
+# Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -54,6 +55,10 @@ RUN mkdir -p /app/public/uploads && chown -R nextjs:nodejs /app/public
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Security hardening
+RUN chmod -R 555 /app
+RUN chmod -R 755 /app/public/uploads
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

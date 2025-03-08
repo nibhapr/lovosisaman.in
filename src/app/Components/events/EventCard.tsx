@@ -46,6 +46,19 @@ export default function EventCard({ event }: EventCardProps) {
           </div>
         </div>
 
+        <div className="flex items-center space-x-2 mb-4">
+          <span className="text-sm px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+            {event.category}
+          </span>
+          <span className={`text-sm px-2 py-1 rounded-full ${
+            event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
+            event.status === 'ongoing' ? 'bg-green-100 text-green-800' :
+            'bg-gray-100 text-gray-800'
+          }`}>
+            {event.status}
+          </span>
+        </div>
+
         <button
           onClick={() => setShowModal(true)}
           className="mt-6 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"

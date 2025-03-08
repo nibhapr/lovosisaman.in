@@ -7,4 +7,5 @@ export interface Event {
   location: string;
   image: string;
   status: 'upcoming' | 'ongoing' | 'completed';
+  category: 'Technology' | 'Innovation' | 'Education' | 'Manufacturing' | 'Digital Services';
 } 

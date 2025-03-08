@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { IoTrashOutline } from 'react-icons/io5';
 
 interface Contact {
   _id: string;
@@ -59,6 +60,26 @@ export default function ContactManager() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this contact?')) return;
+
+    try {
+      const response = await fetch(`/api/contact/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete contact');
+
+      // Update local state
+      setContacts(contacts.filter(contact => contact._id !== id));
+      if (selectedContact?._id === id) {
+        setSelectedContact(null);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -90,13 +111,24 @@ export default function ContactManager() {
                     <h4 className="font-medium">{contact.name}</h4>
                     <p className="text-sm text-gray-600">{contact.subject}</p>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    contact.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    contact.status === 'inProgress' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {contact.status}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      contact.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      contact.status === 'inProgress' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {contact.status}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(contact._id);
+                      }}
+                      className="p-1 text-red-600 hover:text-red-800 transition-colors"
+                    >
+                      <IoTrashOutline className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

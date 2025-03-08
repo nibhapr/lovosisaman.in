@@ -20,7 +20,8 @@ export async function getEvent(id: string): Promise<EventType | null> {
       time: event.time,
       location: event.location,
       image: event.image,
-      status: event.status as EventType['status']
+      status: event.status as EventType['status'],
+      category: event.category as EventType['category']
     };
   } catch (error) {
     console.error('Error fetching event:', error);

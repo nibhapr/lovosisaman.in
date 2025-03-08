@@ -40,6 +40,11 @@ const eventSchema = new mongoose.Schema({
     enum: ['upcoming', 'ongoing', 'completed'],
     default: 'upcoming',
   },
+  category: {
+    type: String,
+    required: true,
+    enum: ['Technology', 'Innovation', 'Education', 'Manufacturing', 'Digital Services']
+  }
 }, {
   timestamps: true
 });
