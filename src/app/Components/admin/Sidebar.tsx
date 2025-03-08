@@ -45,7 +45,7 @@ export default function Sidebar() {
       });
 
       if (response.ok) {
-        router.push('/login');
+        router.push('/auth/login');
       } else {
         console.error('Logout failed');
       }
