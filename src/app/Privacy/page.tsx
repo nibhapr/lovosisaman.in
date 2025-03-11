@@ -97,6 +97,7 @@ export default function PrivacyPolicy() {
               <a href="mailto:info@lovosis.in" className="text-blue-600 hover:text-blue-800">
                 info@lovosis.in
               </a>
+              <br/>
               <a href="mailto:lovosist@gmail.com" className="text-blue-600 hover:text-blue-800">
                 lovosist@gmail.com
               </a>
@@ -105,6 +106,7 @@ export default function PrivacyPolicy() {
               <a href="tel:+917012970281" className="text-blue-600 hover:text-blue-800">
                 +91 7012970281
               </a>
+              <br/>
               <a href="tel:+919747745544" className="text-blue-600 hover:text-blue-800">
                 +91 9747745544
               </a>

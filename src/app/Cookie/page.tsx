@@ -73,6 +73,7 @@ export default function CookiePage() {
               <a href="mailto:info@lovosis.in" className="text-blue-600 hover:text-blue-800 transition-colors">
                 info@lovosis.in
               </a>
+              <br/>
               <a href="mailto:lovosist@gmail.com" className="text-blue-600 hover:text-blue-800 transition-colors">
                 lovosist@gmail.com
               </a>
@@ -81,6 +82,7 @@ export default function CookiePage() {
               <a href="tel:+917012970281" className="text-blue-600 hover:text-blue-800 transition-colors">
                 +91 7012970281
               </a>
+              <br/>
               <a href="tel:+919747745544" className="text-blue-600 hover:text-blue-800 transition-colors">
                 +91 9747745544
               </a>
