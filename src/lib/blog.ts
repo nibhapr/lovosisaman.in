@@ -12,4 +12,9 @@ export async function getBlogPost(slug: string) {
   await connectDB();
   const post = await Blog.findOne({ slug });
   return post ? JSON.parse(JSON.stringify(post)) : null;
+}
+
+export async function getBlogBySlug(slug: string) {
+  await connectDB();
+  return Blog.findOne({ slug }).exec();
 } 

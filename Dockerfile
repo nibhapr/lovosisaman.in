@@ -25,6 +25,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN mkdir -p /app/public/uploads
+
 RUN apk add --no-cache python3 make g++
 RUN cd node_modules/bcrypt && npm install node-addon-api && npm rebuild bcrypt --build-from-source
 RUN npm run setup
@@ -62,7 +64,7 @@ RUN chmod -R 755 /app/public/uploads
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --spider http://localhost:8081/api/health || exit 1
+    CMD wget --spider http://localhost:80/api/health || exit 1
 
 USER nextjs
 EXPOSE 8081

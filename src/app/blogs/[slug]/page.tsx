@@ -1,45 +1,46 @@
 "use client";
 
-import { getBlogPost } from '@/lib/blog';
-import BlogPost from '@/app/Components/blog/BlogPost';
+import { useEffect, useState } from 'react';
+import { BlogPost } from '@/types/blog';
+import BlogPostComponent from '@/app/Components/blog/BlogPost';
 import ReviewForm from '@/app/Components/shared/ReviewForm';
-import { useState, useEffect } from 'react';
 import { IoStar, IoStarOutline } from 'react-icons/io5';
+import { use } from 'react';
 import type { Review } from '@/types/review';
 
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  image: string;
-  date: string;
-  author: string;
-  category: string;
-}
-
-export default function BlogSlugPage({ params }: { params: { slug: string } }) {
-  const [post, setPost] = useState<BlogPost | null>(null);
+export default function BlogPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params);
+  const [blog, setBlog] = useState<BlogPost | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const postData = await getBlogPost(params.slug);
-      setPost(postData);
-
-      if (postData?._id) {
-        const response = await fetch(`/api/reviews?itemId=${postData._id}&itemType=blog`);
-        if (response.ok) {
-          const reviewsData = await response.json();
-          setReviews(reviewsData);
+    const fetchBlog = async () => {
+      try {
+        const response = await fetch(`/api/blog/${resolvedParams.slug}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog');
         }
-      }
-    }
-    fetchData();
-  }, [params.slug]);
+        const data = await response.json();
+        setBlog(data);
 
-  if (!post) {
-    return <div>Post not found</div>;
-  }
+        if (data?._id) {
+          const reviewsResponse = await fetch(`/api/reviews?itemId=${data._id}&itemType=blog`);
+          if (reviewsResponse.ok) {
+            const reviewsData = await reviewsResponse.json();
+            setReviews(reviewsData);
+          }
+        }
+      } catch (error) {
+        setError(error instanceof Error ? error.message : 'Failed to fetch blog');
+      }
+    };
+
+    fetchBlog();
+  }, [resolvedParams.slug]);
+
+  if (error) return <div>Error: {error}</div>;
+  if (!blog) return <div>Loading...</div>;
 
   const averageRating = reviews.length 
     ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length 
@@ -47,7 +48,7 @@ export default function BlogSlugPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <BlogPost post={post} />
+      <BlogPostComponent post={blog} />
       
       <div className="mt-12">
         <div className="mb-8">
@@ -86,10 +87,10 @@ export default function BlogSlugPage({ params }: { params: { slug: string } }) {
         </div>
 
         <ReviewForm 
-          itemId={post._id} 
+          itemId={blog._id} 
           itemType="blog" 
           onSubmitSuccess={async () => {
-            const response = await fetch(`/api/reviews?itemId=${post._id}&itemType=blog`);
+            const response = await fetch(`/api/reviews?itemId=${blog._id}&itemType=blog`);
             if (response.ok) {
               const newReviews = await response.json();
               setReviews(newReviews);

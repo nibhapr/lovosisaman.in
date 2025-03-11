@@ -2,9 +2,12 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import Admin from '@/app/models/Admin';
+import { connectDB } from '@/lib/db';
 
-export async function GET() {
+export async function POST(request: Request) {
   try {
+    await connectDB();
+    
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 
@@ -17,21 +20,27 @@ export async function GET() {
       username: string;
     };
 
+    const { currentPassword, newPassword } = await request.json();
+
     const admin = await Admin.findById(decoded.id);
     if (!admin) {
       return NextResponse.json({ error: 'Admin not found' }, { status: 404 });
     }
 
-    return NextResponse.json({
-      id: admin._id,
-      username: admin.username,
-      lastLoginAt: admin.lastLoginAt
-    });
+    const isValidPassword = await admin.comparePassword(currentPassword);
+    if (!isValidPassword) {
+      return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 });
+    }
+
+    admin.password = newPassword;
+    await admin.save();
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Me error:', error);
+    console.error('Change password error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
-}
+} 

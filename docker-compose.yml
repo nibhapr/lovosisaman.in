@@ -11,8 +11,10 @@ services:
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - MONGODB_URI=${MONGODB_URI}
       - JWT_SECRET=${JWT_SECRET}
+      - WEBSOCKET_PORT=${WEBSOCKET_PORT:-8081}
+      - NEXT_PUBLIC_FRONTEND_URL=${NEXT_PUBLIC_FRONTEND_URL}
     volumes:
-      - uploads:/app/public/uploads
+      - uploads:/app/public/uploads:rw
     depends_on:
       mongodb:
         condition: service_healthy
@@ -31,10 +33,26 @@ services:
         max-file: "3"
     restart: always
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8081/api/health"]
+      test: ["CMD", "wget", "--spider", "http://localhost:80/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - app-network
+
+  websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["npm", "run", "websocket"]
+    ports:
+      - "81:81"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - WEBSOCKET_PORT=81
+      - NEXT_PUBLIC_FRONTEND_URL=${NEXT_PUBLIC_FRONTEND_URL}
+    depends_on:
+      - web
     networks:
       - app-network
 

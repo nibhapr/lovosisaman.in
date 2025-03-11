@@ -19,6 +19,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
+    // Update last login time
+    admin.lastLoginAt = new Date();
+    await admin.save();
+
     const token = jwt.sign(
       { id: admin._id, username: admin.username },
       process.env.JWT_SECRET!,

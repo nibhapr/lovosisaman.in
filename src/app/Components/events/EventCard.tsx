@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Event } from '@/types/event';
 import RegistrationModal from '@/app/Components/events/RegistrationModal';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface EventCardProps {
   event: Event;
@@ -12,9 +13,17 @@ interface EventCardProps {
 
 export default function EventCard({ event }: EventCardProps) {
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/events/${event._id}`);
+  };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div 
+      className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+      onClick={handleCardClick}
+    >
       <div className="relative h-48 w-full">
         <Image
           src={event.image}

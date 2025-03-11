@@ -102,7 +102,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              {['Home', 'About', 'Services', 'Products'].map((item) => (
+              {['Home', 'About', 'Services' ].map((item) => (
                 <li key={item}>
                   <Link 
                     href={`/${item.toLowerCase()}`}
@@ -119,7 +119,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Resources</h3>
             <ul className="space-y-2">
-              {['Blog', 'Help Center', 'Terms'].map((item) => (
+              {['Blog', 'Events', 'shop', 'Terms', 'Privacy Policy', 'Cookie Policy'].map((item) => (
                 <li key={item}>
                   <Link 
                     href={`/${item.toLowerCase()}`}
@@ -136,10 +136,11 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Us</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>1234 Street Name</li>
-              <li>City, State 12345</li>
-              <li>Email: info@lovosis.com</li>
-              <li>Phone: (123) 456-7890</li>
+              <li><a href="https://www.google.com/maps?q=4-72/2,+Swathi+Building,+3rd+Floor,+Opp.+Singapura+Garden,+1st+Main+Road,+Lakshmipura,+Abbigere,+Bengaluru,+Karnataka+560090" target="_blank" className="hover:text-blue-600 transition-colors duration-300">4-72/2, Swathi Building, 3rd Floor, Opp. Singapura Garden, 1st Main Road, Lakshmipura, Abbigere, Bengaluru, Karnataka 560090</a></li>
+              <li>Email: <a href="mailto:info@lovosis.in" className="hover:text-blue-600 transition-colors duration-300">info@lovosis.in</a></li>
+              <li>Email: <a href="mailto:lovosist@gmail.com" className="hover:text-blue-600 transition-colors duration-300">lovosist@gmail.com</a></li>
+              <li>Phone: <a href="tel:+917012970281" className="hover:text-blue-600 transition-colors duration-300">+91 7012970281</a></li>
+              <li>Phone: <a href="tel:+919747745544" className="hover:text-blue-600 transition-colors duration-300">+91 9747745544</a></li>
             </ul>
           </div>
         </div>

@@ -38,7 +38,7 @@ export interface Review {
   _id: string;
   itemId: string;
   itemType: string;
-  userName: string;
+  name: string;
   rating: number;
   comment: string;
   createdAt: string;

@@ -118,8 +118,8 @@ export default function BlogManager() {
     const uploadImage = async (file: File): Promise<ImageUploadResponse> => {
         try {
             const formData = new FormData();
-            formData.append('image', file);
-
+            formData.append('file', file);
+            
             const response = await fetch('/api/upload', {
                 method: 'POST',
                 body: formData,

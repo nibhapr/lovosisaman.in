@@ -181,11 +181,11 @@ export default function ProductPage({
 
         {/* Existing Reviews */}
         <div className="space-y-6 mb-8">
-          {reviews.map((review) => (
+          {reviews.map((review: Review) => (
             <div key={review._id} className="bg-white p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="font-semibold">{review.userName}</h3>
+                  <h3 className="font-semibold">{review.name}</h3>
                   <p className="text-sm text-gray-500">
                     {new Date(review.createdAt).toLocaleDateString()}
                   </p>

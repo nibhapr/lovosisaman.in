@@ -27,6 +27,13 @@ const EVENT_CATEGORIES = [
     'Digital Services'
 ] as const;
 
+const generateSlug = (title: string) => {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+};
+
 export default function EventManager() {
     const [events, setEvents] = useState<Event[]>([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -82,20 +89,31 @@ export default function EventManager() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const eventData = {
+                ...formData,
+                slug: generateSlug(formData.title)
+            };
+
             const url = isEditing ? `/api/events/${selectedEvent?._id}` : '/api/events';
             const method = isEditing ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(eventData)
             });
 
-            if (!response.ok) throw new Error('Failed to save event');
-            fetchEvents();
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to save event');
+            }
+            
+            await fetchEvents();
             resetForm();
+            setIsEditing(false);
         } catch (error) {
             console.error('Error saving event:', error);
+            alert(error instanceof Error ? error.message : 'Failed to save event');
         }
     };
 

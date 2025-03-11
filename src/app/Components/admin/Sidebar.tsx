@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -16,6 +15,7 @@ import {
   HiOutlineStar,
   HiOutlineArrowRightOnRectangle,
   HiOutlineDocumentText,
+  HiOutlineUserCircle,
 } from 'react-icons/hi2';
 
 const menuItems = [
@@ -28,10 +28,15 @@ const menuItems = [
   { name: 'Subcategories', icon: HiOutlineRectangleStack, path: '/admin/dashboard/subcategories' },
   { name: 'Products', icon: HiOutlineShoppingBag, path: '/admin/dashboard/products' },
   { name: 'Reviews', icon: HiOutlineStar, path: '/admin/dashboard/reviews' },
+  { name: 'Profile', icon: HiOutlineUserCircle, path: '/admin/dashboard/profile' },
 ];
 
-export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+interface SidebarProps {
+  isCollapsed: boolean;
+  onCollapse: (collapsed: boolean) => void;
+}
+
+export default function Sidebar({ isCollapsed, onCollapse }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -55,17 +60,30 @@ export default function Sidebar() {
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-20' : 'w-64'} min-h-screen bg-white/60 backdrop-blur-xl border-r border-white/20 transition-all duration-300 ease-in-out flex flex-col justify-between shadow-lg`}>
+    <div
+      className={`
+        ${isCollapsed ? 'w-20' : 'w-72'} 
+        h-screen 
+        bg-gradient-to-b from-gray-900 to-gray-800
+        text-white
+        transition-all duration-300 ease-in-out 
+        flex flex-col 
+        justify-between 
+        shadow-xl
+        relative
+        overflow-y-auto
+      `}
+    >
       <div>
-        <div className="flex items-center justify-between p-4 border-b border-white/20 backdrop-blur-xl">
-          <h1 className={`font-semibold text-[#1d1d1f] ${isCollapsed ? 'hidden' : 'block'}`}>
-            Admin Panel
+        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+          <h1 className={`font-bold text-xl ${isCollapsed ? 'hidden' : 'block'}`}>
+            Lovosis Admin
           </h1>
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 rounded-full hover:bg-black/5 active:bg-black/10 transition-colors"
+            onClick={() => onCollapse(!isCollapsed)}
+            className="p-2 rounded-lg hover:bg-gray-700 transition-colors"
           >
-            {isCollapsed ? <HiOutlineBars3 size={20} /> : <HiOutlineXMark size={20} />}
+            {isCollapsed ? <HiOutlineBars3 size={24} /> : <HiOutlineXMark size={24} />}
           </button>
         </div>
 
@@ -75,13 +93,16 @@ export default function Sidebar() {
               <li key={item.name}>
                 <Link
                   href={item.path}
-                  className={`flex items-center space-x-3 p-3 rounded-2xl transition-all duration-200 ${
-                    pathname === item.path
-                      ? 'bg-[#007AFF]/10 text-[#007AFF] shadow-sm'
-                      : 'hover:bg-black/5 active:bg-black/10 text-[#1d1d1f]'
-                  }`}
+                  className={`
+                    flex items-center gap-4 p-3 rounded-xl
+                    transition-all duration-200
+                    ${pathname === item.path
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                      : 'hover:bg-gray-700/50 text-gray-300 hover:text-white'
+                    }
+                  `}
                 >
-                  <item.icon size={22} />
+                  <item.icon size={24} />
                   <span className={`${isCollapsed ? 'hidden' : 'block'} font-medium`}>
                     {item.name}
                   </span>
@@ -92,12 +113,17 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="p-4 border-t border-white/20">
+      <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
-          className={`flex items-center space-x-3 p-3 rounded-2xl transition-all duration-200 w-full hover:bg-[#FF3B30]/10 active:bg-[#FF3B30]/20 text-[#FF3B30]`}
+          className={`
+            flex items-center gap-4 p-3 rounded-xl w-full
+            text-red-400 hover:text-red-300
+            hover:bg-red-500/10
+            transition-all duration-200
+          `}
         >
-          <HiOutlineArrowRightOnRectangle size={22} />
+          <HiOutlineArrowRightOnRectangle size={24} />
           <span className={`${isCollapsed ? 'hidden' : 'block'} font-medium`}>
             Logout
           </span>

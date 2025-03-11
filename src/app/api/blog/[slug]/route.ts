@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getBlogBySlug } from '@/lib/blog';
 import { connectDB } from '@/lib/db';
 import Blog from '@/app/models/Blog';
 
@@ -7,21 +8,14 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   try {
-    await connectDB();
-    const post = await Blog.findOne({ slug: params.slug });
-    
-    if (!post) {
-      return NextResponse.json(
-        { error: 'Blog post not found' },
-        { status: 404 }
-      );
+    const blog = await getBlogBySlug(params.slug);
+    if (!blog) {
+      return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
-
-    return NextResponse.json(post);
+    return NextResponse.json(blog);
   } catch (error) {
-    console.error('Blog post fetch error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch blog post' },
+      { error: 'Failed to fetch blog' },
       { status: 500 }
     );
   }
