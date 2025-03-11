@@ -17,7 +17,26 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(event);
+    // Include optional fields in response
+    const eventData = {
+      _id: event._id.toString(),
+      title: event.title,
+      description: event.description,
+      content: event.content || undefined,
+      content2: event.content2 || undefined,
+      content3: event.content3 || undefined,
+      date: event.date,
+      time: event.time,
+      location: event.location,
+      image: event.image || undefined,
+      image2: event.image2 || undefined,
+      image3: event.image3 || undefined,
+      status: event.status,
+      category: event.category,
+      slug: event.slug
+    };
+
+    return NextResponse.json(eventData);
   } catch (error) {
     console.error('Event fetch error:', error);
     return NextResponse.json(
@@ -34,9 +53,21 @@ export async function PUT(
   try {
     await connectDB();
     const data = await request.json();
+    
+    // Handle optional fields
+    const eventData = {
+      ...data,
+      content: data.content || undefined,
+      content2: data.content2 || undefined,
+      content3: data.content3 || undefined,
+      image: data.image || undefined,
+      image2: data.image2 || undefined,
+      image3: data.image3 || undefined
+    };
+    
     const event = await Event.findByIdAndUpdate(
       params.id,
-      data,
+      eventData,
       { new: true }
     );
     return NextResponse.json(event);

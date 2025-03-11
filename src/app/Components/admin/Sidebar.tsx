@@ -16,6 +16,7 @@ import {
   HiOutlineArrowRightOnRectangle,
   HiOutlineDocumentText,
   HiOutlineUserCircle,
+  HiOutlinePhoto,
 } from 'react-icons/hi2';
 
 const menuItems = [
@@ -29,6 +30,7 @@ const menuItems = [
   { name: 'Products', icon: HiOutlineShoppingBag, path: '/admin/dashboard/products' },
   { name: 'Reviews', icon: HiOutlineStar, path: '/admin/dashboard/reviews' },
   { name: 'Profile', icon: HiOutlineUserCircle, path: '/admin/dashboard/profile' },
+  { name: 'Gallery', icon: HiOutlinePhoto, path: '/admin/dashboard/gallery' },
 ];
 
 interface SidebarProps {

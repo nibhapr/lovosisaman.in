@@ -16,6 +16,7 @@ export async function getEvent(id: string): Promise<EventType | null> {
       _id: event._id.toString(),
       title: event.title,
       description: event.description,
+      content: event.content,
       date: event.date,
       time: event.time,
       location: event.location,

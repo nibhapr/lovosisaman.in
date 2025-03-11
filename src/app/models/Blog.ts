@@ -8,7 +8,23 @@ const blogSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true
+    required: false,
+    default: ''
+  },
+  content2: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  content3: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  content4: {
+    type: String,
+    required: false,
+    default: ''
   },
   excerpt: {
     type: String,
@@ -17,7 +33,18 @@ const blogSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true
+    required: false,
+    default: ''
+  },
+  image2: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  image3: {
+    type: String,
+    required: false,
+    default: ''
   },
   youtubeUrl: {
     type: String,

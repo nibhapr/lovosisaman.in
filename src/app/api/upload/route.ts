@@ -10,14 +10,16 @@ export const config = {
 
 export async function POST(request: Request) {
   try {
+    console.log('Upload request received');
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file uploaded' },
-        { status: 400 }
-      );
+      console.log('No file found in request');
+      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
+
+    console.log('File received:', file.name, 'Size:', file.size);
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);

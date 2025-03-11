@@ -16,7 +16,19 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     const data = await request.json();
-    const event = await Event.create(data);
+    
+    // Handle optional fields
+    const eventData = {
+      ...data,
+      content: data.content || undefined,
+      content2: data.content2 || undefined,
+      content3: data.content3 || undefined,
+      image: data.image || undefined,
+      image2: data.image2 || undefined,
+      image3: data.image3 || undefined
+    };
+    
+    const event = await Event.create(eventData);
     return NextResponse.json(event);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create event' }, { status: 500 });

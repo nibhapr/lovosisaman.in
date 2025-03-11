@@ -10,13 +10,18 @@ interface Event {
     _id: string;
     title: string;
     description: string;
+    content?: string;
     date: string;
     time: string;
     location: string;
-    image: string;
+    image?: string;
     status: 'upcoming' | 'ongoing' | 'completed';
     slug: string;
     category: 'Technology' | 'Innovation' | 'Education' | 'Manufacturing' | 'Digital Services';
+    content2?: string;
+    content3?: string;
+    image2?: string;
+    image3?: string;
 }
 
 const EVENT_CATEGORIES = [
@@ -48,10 +53,15 @@ export default function EventManager() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
+        content: '',
+        content2: '',
+        content3: '',
         date: '',
         time: '',
         location: '',
         image: '',
+        image2: '',
+        image3: '',
         status: 'upcoming' as 'upcoming' | 'ongoing' | 'completed',
         slug: '',
         category: 'Technology' as typeof EVENT_CATEGORIES[number]
@@ -91,7 +101,13 @@ export default function EventManager() {
         try {
             const eventData = {
                 ...formData,
-                slug: generateSlug(formData.title)
+                slug: generateSlug(formData.title),
+                content: formData.content || undefined,
+                content2: formData.content2 || undefined,
+                content3: formData.content3 || undefined,
+                image: formData.image || undefined,
+                image2: formData.image2 || undefined,
+                image3: formData.image3 || undefined
             };
 
             const url = isEditing ? `/api/events/${selectedEvent?._id}` : '/api/events';
@@ -104,8 +120,7 @@ export default function EventManager() {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to save event');
+                throw new Error('Failed to save event');
             }
             
             await fetchEvents();
@@ -113,7 +128,6 @@ export default function EventManager() {
             setIsEditing(false);
         } catch (error) {
             console.error('Error saving event:', error);
-            alert(error instanceof Error ? error.message : 'Failed to save event');
         }
     };
 
@@ -134,10 +148,15 @@ export default function EventManager() {
         setFormData({
             title: '',
             description: '',
+            content: '',
+            content2: '',
+            content3: '',
             date: '',
             time: '',
             location: '',
             image: '',
+            image2: '',
+            image3: '',
             status: 'upcoming',
             slug: '',
             category: 'Technology'
@@ -200,6 +219,75 @@ export default function EventManager() {
                         />
                     </div>
 
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Content (Optional)
+                        </label>
+                        <textarea
+                            value={formData.content || ''}
+                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            rows={6}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Image (Optional)
+                        </label>
+                        <ImageUpload
+                            value={formData.image}
+                            onChange={(url) => setFormData({ ...formData, image: url })}
+                            label="Event Image"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Content 2 (Optional)
+                        </label>
+                        <textarea
+                            value={formData.content2 || ''}
+                            onChange={(e) => setFormData({ ...formData, content2: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            rows={6}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Content 3 (Optional)
+                        </label>
+                        <textarea
+                            value={formData.content3 || ''}
+                            onChange={(e) => setFormData({ ...formData, content3: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            rows={6}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Image 2 (Optional)
+                        </label>
+                        <ImageUpload
+                            value={formData.image2 || ''}
+                            onChange={(url) => setFormData({ ...formData, image2: url })}
+                            label="Event Image 2"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Image 3 (Optional)
+                        </label>
+                        <ImageUpload
+                            value={formData.image3 || ''}
+                            onChange={(url) => setFormData({ ...formData, image3: url })}
+                            label="Event Image 3"
+                        />
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -237,14 +325,6 @@ export default function EventManager() {
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                             required
-                        />
-                    </div>
-
-                    <div>
-                        <ImageUpload
-                            value={formData.image}
-                            onChange={(url) => setFormData({ ...formData, image: url })}
-                            label="Event Image"
                         />
                     </div>
 
@@ -353,10 +433,15 @@ export default function EventManager() {
                                         setFormData({
                                             title: event.title,
                                             description: event.description,
+                                            content: event.content || '',
+                                            content2: event.content2 || '',
+                                            content3: event.content3 || '',
                                             date: event.date,
                                             time: event.time,
                                             location: event.location,
-                                            image: event.image,
+                                            image: event.image || '',
+                                            image2: event.image2 || '',
+                                            image3: event.image3 || '',
                                             status: event.status,
                                             slug: event.slug,
                                             category: event.category

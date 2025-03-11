@@ -47,6 +47,7 @@ export default function ImageUpload({ value, onChange, label = 'Image' }: ImageU
                 src={value}
                 alt="Upload preview"
                 fill
+                sizes="(max-width: 96px) 100vw, 96px"
                 className="object-cover"
               />
               <button
@@ -68,10 +69,10 @@ export default function ImageUpload({ value, onChange, label = 'Image' }: ImageU
           accept="image/*"
           onChange={handleUpload}
           className="hidden"
-          id="image-upload"
+          id={`image-upload-${label}`}
         />
         <label
-          htmlFor="image-upload"
+          htmlFor={`image-upload-${label}`}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
         >
           {uploading ? 'Uploading...' : 'Upload Image'}

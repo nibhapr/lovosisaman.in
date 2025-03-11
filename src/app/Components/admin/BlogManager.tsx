@@ -6,9 +6,14 @@ import { motion } from 'framer-motion';
 interface BlogPost {
     _id: string;
     title: string;
-    content: string;
+    content?: string;
+    content2?: string;
+    content3?: string;
+    content4?: string;
     excerpt: string;
-    image: string;
+    image?: string;
+    image2?: string;
+    image3?: string;
     date: string;
     author: string;
     category: string;
@@ -17,17 +22,17 @@ interface BlogPost {
 }
 
 interface ImageUploadResponse {
-  url: string;
-  success: boolean;
-  error?: string;
+    url: string;
+    success: boolean;
+    error?: string;
 }
 
 const BLOG_CATEGORIES = [
-  'Technology',
-  'Innovation',
-  'Education',
-  'Manufacturing',
-  'Digital Services'
+    'Technology',
+    'Innovation',
+    'Education',
+    'Manufacturing',
+    'Digital Services'
 ];
 
 export default function BlogManager() {
@@ -37,8 +42,13 @@ export default function BlogManager() {
     const [formData, setFormData] = useState<Omit<BlogPost, '_id' | 'date'>>({
         title: '',
         content: '',
+        content2: '',
+        content3: '',
+        content4: '',
         excerpt: '',
         image: '',
+        image2: '',
+        image3: '',
         youtubeUrl: '',
         category: '',
         slug: '',
@@ -85,17 +95,30 @@ export default function BlogManager() {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to save post');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to save blog post');
             }
 
-            await fetchPosts();
+            // Fetch fresh data immediately after successful update
+            const fetchResponse = await fetch('/api/blog');
+            if (fetchResponse.ok) {
+                const data = await fetchResponse.json();
+                setPosts(data);
+            }
+
+            // Reset form
             setIsEditing(false);
             setSelectedPost(null);
             setFormData({
                 title: '',
                 content: '',
+                content2: '',
+                content3: '',
+                content4: '',
                 excerpt: '',
                 image: '',
+                image2: '',
+                image3: '',
                 youtubeUrl: '',
                 category: '',
                 slug: '',
@@ -103,7 +126,7 @@ export default function BlogManager() {
             });
         } catch (error) {
             console.error('Failed to save post:', error);
-            setError(error instanceof Error ? error.message : 'Failed to save post');
+            alert(error instanceof Error ? error.message : 'Failed to save post');
         }
     };
 
@@ -119,7 +142,7 @@ export default function BlogManager() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            
+
             const response = await fetch('/api/upload', {
                 method: 'POST',
                 body: formData,
@@ -169,8 +192,13 @@ export default function BlogManager() {
             setFormData({
                 title: '',
                 content: '',
+                content2: '',
+                content3: '',
+                content4: '',
                 excerpt: '',
                 image: '',
+                image2: '',
+                image3: '',
                 youtubeUrl: '',
                 category: '',
                 slug: '',
@@ -205,8 +233,13 @@ export default function BlogManager() {
                                 setFormData({
                                     title: '',
                                     content: '',
+                                    content2: '',
+                                    content3: '',
+                                    content4: '',
                                     excerpt: '',
                                     image: '',
+                                    image2: '',
+                                    image3: '',
                                     youtubeUrl: '',
                                     category: '',
                                     slug: '',
@@ -233,8 +266,13 @@ export default function BlogManager() {
                                             setFormData({
                                                 title: post.title || '',
                                                 content: post.content || '',
+                                                content2: post.content2 || '',
+                                                content3: post.content3 || '',
+                                                content4: post.content4 || '',
                                                 excerpt: post.excerpt || '',
                                                 image: post.image || '',
+                                                image2: post.image2 || '',
+                                                image3: post.image3 || '',
                                                 youtubeUrl: post.youtubeUrl || '',
                                                 category: post.category || '',
                                                 slug: post.slug || '',
@@ -301,22 +339,63 @@ export default function BlogManager() {
 
                         <div>
                             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-                                Content
+                                Content (Optional)
                             </label>
                             <textarea
                                 id="content"
                                 name="content"
-                                value={formData.content}
+                                value={formData.content || ''}
                                 onChange={handleInputChange}
                                 rows={6}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="content2" className="block text-sm font-medium text-gray-700 mb-1">
+                                Content 2 (Optional)
+                            </label>
+                            <textarea
+                                id="content2"
+                                name="content2"
+                                value={formData.content2 || ''}
+                                onChange={handleInputChange}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="content3" className="block text-sm font-medium text-gray-700 mb-1">
+                                Content 3 (Optional)
+                            </label>
+                            <textarea
+                                id="content3"
+                                name="content3"
+                                value={formData.content3 || ''}
+                                onChange={handleInputChange}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="content4" className="block text-sm font-medium text-gray-700 mb-1">
+                                Content 4 (Optional)
+                            </label>
+                            <textarea
+                                id="content4"
+                                name="content4"
+                                value={formData.content4 || ''}
+                                onChange={handleInputChange}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
                         <div>
                             <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
-                                Image
+                                Image (Optional)
                             </label>
                             <div className="flex items-center space-x-4">
                                 <input
@@ -340,11 +419,108 @@ export default function BlogManager() {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {formData.image && (
-                                    <img 
-                                        src={formData.image} 
-                                        alt="Preview" 
-                                        className="h-20 w-20 object-cover rounded-lg"
-                                    />
+                                    <div className="relative">
+                                        <img
+                                            src={formData.image}
+                                            alt="Preview"
+                                            className="h-20 w-20 object-cover rounded-lg"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="image2" className="block text-sm font-medium text-gray-700 mb-1">
+                                Image 2 (Optional)
+                            </label>
+                            <div className="flex items-center space-x-4">
+                                <input
+                                    type="file"
+                                    id="image2"
+                                    accept="image/*"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const result = await uploadImage(file);
+                                            if (result.success) {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    image2: result.url
+                                                }));
+                                            } else {
+                                                setError(result.error || 'Failed to upload image');
+                                            }
+                                        }
+                                    }}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                {formData.image2 && (
+                                    <div className="relative">
+                                        <img
+                                            src={formData.image2}
+                                            alt="Preview"
+                                            className="h-20 w-20 object-cover rounded-lg"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, image2: '' }))}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="image3" className="block text-sm font-medium text-gray-700 mb-1">
+                                Image 3 (Optional)
+                            </label>
+                            <div className="flex items-center space-x-4">
+                                <input
+                                    type="file"
+                                    id="image3"
+                                    accept="image/*"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const result = await uploadImage(file);
+                                            if (result.success) {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    image3: result.url
+                                                }));
+                                            } else {
+                                                setError(result.error || 'Failed to upload image');
+                                            }
+                                        }
+                                    }}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                {formData.image3 && (
+                                    <div className="relative">
+                                        <img
+                                            src={formData.image3}
+                                            alt="Preview"
+                                            className="h-20 w-20 object-cover rounded-lg"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, image3: '' }))}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -438,8 +614,13 @@ export default function BlogManager() {
                                     setFormData({
                                         title: '',
                                         content: '',
+                                        content2: '',
+                                        content3: '',
+                                        content4: '',
                                         excerpt: '',
                                         image: '',
+                                        image2: '',
+                                        image3: '',
                                         youtubeUrl: '',
                                         category: '',
                                         slug: '',

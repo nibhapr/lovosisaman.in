@@ -41,7 +41,20 @@ export async function POST(request: Request) {
         .replace(/(^-|-$)/g, '');
     }
 
-    const post = await Blog.create(data);
+    // Remove empty optional fields
+    const blogData = {
+      ...data,
+      content: data.content || undefined,
+      content2: data.content2 || undefined,
+      content3: data.content3 || undefined,
+      content4: data.content4 || undefined,
+      image: data.image || undefined,
+      image2: data.image2 || undefined,
+      image3: data.image3 || undefined,
+      youtubeUrl: data.youtubeUrl || undefined
+    };
+
+    const post = await Blog.create(blogData);
     return NextResponse.json(post);
   } catch (error) {
     console.error('Blog creation error:', error);

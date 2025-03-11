@@ -16,6 +16,18 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  content: {
+    type: String,
+    required: false,
+  },
+  content2: {
+    type: String,
+    required: false,
+  },
+  content3: {
+    type: String,
+    required: false,
+  },
   date: {
     type: String,
     required: true,
@@ -30,7 +42,15 @@ const eventSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
+    required: false,
+  },
+  image2: {
+    type: String,
+    required: false,
+  },
+  image3: {
+    type: String,
+    required: false,
   },
   registrationLink: {
     type: String,
