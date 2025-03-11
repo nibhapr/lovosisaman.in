@@ -16,7 +16,7 @@ COPY .eslintrc.js ./
 
 # Install dependencies with better caching
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci --only=production && \
+    npm install --omit=dev && \
     npm cache clean --force
 
 # Install and rebuild bcrypt separately

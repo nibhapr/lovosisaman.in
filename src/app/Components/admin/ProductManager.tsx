@@ -242,27 +242,39 @@ export default function ProductManager() {
                                         onChange={(url: string) => {
                                             const newImages = [...formData.images];
                                             newImages[index] = url;
-                                            setFormData({ ...formData, images: newImages });
+                                            setFormData(prevState => ({
+                                                ...prevState,
+                                                images: newImages
+                                            }));
                                         }}
+                                        label={`Image ${index + 1}`}
+                                        index={index}
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            const newImages = formData.images.filter((_, i) => i !== index);
-                                            setFormData({ ...formData, images: newImages });
-                                        }}
-                                        className="text-red-600 hover:text-red-700"
-                                    >
-                                        Remove
-                                    </button>
+                                    {formData.images.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newImages = formData.images.filter((_, i) => i !== index);
+                                                setFormData(prevState => ({
+                                                    ...prevState,
+                                                    images: newImages
+                                                }));
+                                            }}
+                                            className="text-red-600 hover:text-red-700"
+                                        >
+                                            <IoTrashOutline className="w-5 h-5" />
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                             <button
                                 type="button"
-                                onClick={() => setFormData({ 
-                                    ...formData, 
-                                    images: [...formData.images, ''] 
-                                })}
+                                onClick={() => {
+                                    setFormData(prevState => ({
+                                        ...prevState,
+                                        images: [...prevState.images, '']
+                                    }));
+                                }}
                                 className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
                             >
                                 <IoAddOutline className="w-5 h-5" />

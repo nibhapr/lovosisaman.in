@@ -6,9 +6,10 @@ interface ImageUploadProps {
   value: string;
   onChange: (url: string) => void;
   label?: string;
+  index?: number;
 }
 
-export default function ImageUpload({ value, onChange, label = 'Image' }: ImageUploadProps) {
+export default function ImageUpload({ value, onChange, label = 'Image', index = 0 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,19 +65,21 @@ export default function ImageUpload({ value, onChange, label = 'Image' }: ImageU
             </div>
           )}
         </div>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleUpload}
-          className="hidden"
-          id={`image-upload-${label}`}
-        />
-        <label
-          htmlFor={`image-upload-${label}`}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
-        >
-          {uploading ? 'Uploading...' : 'Upload Image'}
-        </label>
+        <div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleUpload}
+            className="hidden"
+            id={`image-upload-${label}-${index}`}
+          />
+          <label
+            htmlFor={`image-upload-${label}-${index}`}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+          >
+            {uploading ? 'Uploading...' : 'Upload Image'}
+          </label>
+        </div>
       </div>
     </div>
   );

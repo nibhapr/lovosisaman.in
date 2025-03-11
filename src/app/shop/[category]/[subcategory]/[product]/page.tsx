@@ -7,6 +7,8 @@ import { FaFileExcel } from 'react-icons/fa';
 import FilePreviewModal from '@/app/Components/shop/FilePreviewModal';
 import ReviewForm from '@/app/Components/shared/ReviewForm';
 import type { Product, Review } from '@/types/shop';
+import { parseExcelPreview } from '@/lib/excelParser';
+import Link from 'next/link';
 
 export default function ProductPage({
   params
@@ -16,8 +18,13 @@ export default function ProductPage({
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
+  const [excelPreviewOpen, setExcelPreviewOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [categoryName, setCategoryName] = useState<string>('');
+  const [subcategoryName, setSubcategoryName] = useState<string>('');
+  const [excelPreviewData, setExcelPreviewData] = useState<{ headers: string[]; rows: any[][] } | null>(null);
   const resolvedParams = use(params);
 
   // Move fetchReviews outside useEffect
@@ -27,6 +34,22 @@ export default function ProductPage({
       if (response.ok) {
         const data = await response.json();
         setReviews(data);
+      }
+    }
+  };
+
+  const fetchCategoryAndSubcategory = async () => {
+    if (product?.categoryId && product?.subcategoryId) {
+      const [categoryRes, subcategoryRes] = await Promise.all([
+        fetch(`/api/categories/${product.categoryId}`),
+        fetch(`/api/subcategories/${product.subcategoryId}`)
+      ]);
+
+      if (categoryRes.ok && subcategoryRes.ok) {
+        const categoryData = await categoryRes.json();
+        const subcategoryData = await subcategoryRes.json();
+        setCategoryName(categoryData.name);
+        setSubcategoryName(subcategoryData.name);
       }
     }
   };
@@ -46,6 +69,10 @@ export default function ProductPage({
     fetchReviews();
   }, [product?._id]);
 
+  useEffect(() => {
+    fetchCategoryAndSubcategory();
+  }, [product?.categoryId, product?.subcategoryId]);
+
   // Add useEffect to handle body scroll
   useEffect(() => {
     if (isReviewsOpen) {
@@ -60,6 +87,21 @@ export default function ProductPage({
     };
   }, [isReviewsOpen]);
 
+  // Add Excel preview data fetching
+  useEffect(() => {
+    async function fetchExcelPreview() {
+      if (product?.catalogExcel) {
+        try {
+          const data = await parseExcelPreview(product.catalogExcel);
+          setExcelPreviewData(data);
+        } catch (error) {
+          console.error('Error fetching Excel preview:', error);
+        }
+      }
+    }
+    fetchExcelPreview();
+  }, [product?.catalogExcel]);
+
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -69,54 +111,133 @@ export default function ProductPage({
     ? Object.fromEntries(product.specifications)
     : product.specifications;
 
-  const averageRating = reviews.length 
-    ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length 
+  const averageRating = reviews.length
+    ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
     : 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Main Product Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Product Images - Enhanced container */}
-        <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square w-full rounded-xl overflow-hidden bg-gray-100 shadow-lg">
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            className="object-cover hover:scale-105 transition-transform duration-300"
-            priority
-          />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      {/* Breadcrumb navigation with enhanced styling */}
+      <nav className="mb-8">
+        <ol className="flex items-center space-x-2 text-sm">
+          {categoryName && (
+            <>
+              <Link
+                href={`/shop/${resolvedParams.category}`}
+                className="text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                {categoryName}
+              </Link>
+              <span className="text-gray-400">/</span>
+            </>
+          )}
+          {subcategoryName && (
+            <>
+              <Link
+                href={`/shop/${resolvedParams.category}/${resolvedParams.subcategory}`}
+                className="text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                {subcategoryName}
+              </Link>
+              <span className="text-gray-400">/</span>
+            </>
+          )}
+          <span className="text-gray-800 font-medium">{product.name}</span>
+        </ol>
+      </nav>
+
+      {/* Main product grid with glass morphism effect */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Image gallery with enhanced container */}
+        <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square w-full rounded-2xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+          {product.images.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-500 ${currentImageIndex === index ? 'opacity-100' : 'opacity-0'
+                }`}
+            >
+              <Image
+                src={image}
+                alt={`${product.name} - Image ${index + 1}`}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-500"
+                priority={index === 0}
+              />
+            </div>
+          ))}
+
+          {/* Enhanced navigation arrows */}
+          {product.images.length > 1 && (
+            <div className="absolute inset-0 flex items-center justify-between p-4">
+              <button
+                onClick={() => setCurrentImageIndex(prev =>
+                  prev === 0 ? product.images.length - 1 : prev - 1
+                )}
+                className="p-3 rounded-full bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white hover:shadow-lg transition-all duration-300"
+              >
+                ←
+              </button>
+              <button
+                onClick={() => setCurrentImageIndex(prev =>
+                  prev === product.images.length - 1 ? 0 : prev + 1
+                )}
+                className="p-3 rounded-full bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white hover:shadow-lg transition-all duration-300"
+              >
+                →
+              </button>
+            </div>
+          )}
+
+          {/* Enhanced image indicators */}
+          {product.images.length > 1 && (
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+              {product.images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${currentImageIndex === index
+                    ? 'bg-white scale-110 shadow-lg'
+                    : 'bg-white/50 hover:bg-white/70'
+                    }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Product Info - Enhanced styling */}
-        <div className="space-y-8">
+        {/* Product info with glass morphism effect */}
+        <div className="space-y-8 bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-gray-100">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
             <p className="text-lg text-gray-600 leading-relaxed">{product.description}</p>
           </div>
 
-          {/* Features - Enhanced styling */}
+          {/* Features with enhanced cards */}
           {product.features?.length > 0 && (
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Features</h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Features
+              </h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {product.features.map((feature: string, index: number) => (
-                  <li key={index} className="flex items-center space-x-2 text-gray-700">
-                    <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                    <span>{feature}</span>
+                  <li key={index} className="flex items-center space-x-3 bg-white/80 p-3 rounded-lg shadow-sm">
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></span>
+                    <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
               </ul>
             </div>
           )}
 
-          {/* Specifications - Enhanced styling */}
+          {/* Specifications with enhanced styling */}
           {specifications && Object.keys(specifications).length > 0 && (
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Specifications</h2>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Specifications
+              </h2>
               <div className="grid grid-cols-1 gap-3">
                 {Object.entries(specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-3 border-b border-gray-100 last:border-0">
+                  <div key={key} className="flex justify-between py-3 px-4 bg-white/80 rounded-lg shadow-sm">
                     <span className="font-medium text-gray-900">{key}</span>
                     <span className="text-gray-600">{String(value)}</span>
                   </div>
@@ -124,72 +245,84 @@ export default function ProductPage({
               </div>
             </div>
           )}
-
-          {/* Catalogs Section - Enhanced styling */}
-          <div className="space-y-4">
-            {/* PDF Catalog */}
-            {product.catalogPdf && (
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">PDF Catalog</h3>
-                <div className="space-y-4">
-                  <div 
-                    className="h-48 border rounded-lg overflow-hidden cursor-pointer transform hover:scale-[1.02] transition-transform duration-200 shadow-sm" 
-                    onClick={() => setPdfPreviewOpen(true)}
-                  >
-                    <iframe
-                      src={`${product.catalogPdf}#toolbar=0&view=FitH`}
-                      className="w-full h-full pointer-events-none"
-                      title="PDF Preview"
-                    />
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    <button
-                      onClick={() => setPdfPreviewOpen(true)}
-                      className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                    >
-                      <IoEyeOutline className="w-5 h-5 mr-2" />
-                      Preview PDF
-                    </button>
-                    <a
-                      href={product.catalogPdf}
-                      download
-                      className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-                    >
-                      <IoDownloadOutline className="w-5 h-5 mr-2" />
-                      Download PDF
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Excel Catalog */}
-            {product.catalogExcel && (
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">Excel Catalog</h3>
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center">
-                    <FaFileExcel className="w-10 h-10 text-green-600 mr-3" />
-                    <span className="text-gray-700">Excel Specifications</span>
-                  </div>
-                  <a
-                    href={product.catalogExcel}
-                    download
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-                  >
-                    <IoDownloadOutline className="w-5 h-5 mr-2" />
-                    Download Excel
-                  </a>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
+      </div>
+
+      {/* Catalogs Section - Enhanced styling */}
+      <div className="space-y-4">
+        {/* PDF Catalog */}
+        {product.catalogPdf && (
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900">PDF Catalog</h3>
+            <div className="space-y-4">
+              <div
+                className="h-48 border rounded-lg overflow-hidden cursor-pointer transform hover:scale-[1.02] transition-transform duration-200 shadow-sm"
+                onClick={() => setPdfPreviewOpen(true)}
+              >
+                <iframe
+                  src={`${product.catalogPdf}#toolbar=0&view=FitH`}
+                  className="w-full h-full pointer-events-none"
+                  title="PDF Preview"
+                />
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => setPdfPreviewOpen(true)}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                >
+                  <IoEyeOutline className="w-5 h-5 mr-2" />
+                  Preview PDF
+                </button>
+                <a
+                  href={product.catalogPdf}
+                  download
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+                >
+                  <IoDownloadOutline className="w-5 h-5 mr-2" />
+                  Download PDF
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Excel Catalog */}
+        {product.catalogExcel && (
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900">Excel Catalog</h3>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center">
+                <FaFileExcel className="w-10 h-10 text-green-600 mr-3" />
+                <span className="text-gray-700">Excel Specifications</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setPdfPreviewOpen(false);
+                    setExcelPreviewOpen(true);
+                  }}
+                  className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                >
+                  <IoEyeOutline className="w-5 h-5 mr-2" />
+                  Preview Excel
+                </button>
+                <a
+                  href={product.catalogExcel}
+                  download
+                  className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+                >
+                  <IoDownloadOutline className="w-5 h-5 mr-2" />
+                  Download Excel
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Reviews Section - Enhanced styling */}
       <div className="mt-16">
-        <button 
+        <button
           onClick={() => setIsReviewsOpen(true)}
           className="flex flex-col sm:flex-row items-center justify-between bg-white p-8 rounded-xl shadow-sm hover:bg-gray-50 transition-colors w-full border border-gray-100 gap-4"
         >
@@ -201,7 +334,7 @@ export default function ProductPage({
             <div className="flex items-center space-x-3">
               <div className="flex items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  star <= Math.round(averageRating) 
+                  star <= Math.round(averageRating)
                     ? <IoStar key={star} className="w-6 h-6 text-yellow-400" />
                     : <IoStarOutline key={star} className="w-6 h-6 text-yellow-400" />
                 ))}
@@ -220,7 +353,7 @@ export default function ProductPage({
         <>
           {/* Blur Backdrop */}
           <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 transition-all duration-300" />
-          
+
           {/* Modal Content - Increased top spacing */}
           <div className="fixed inset-x-0 top-[100px] bottom-0 z-50 flex items-start justify-center overflow-hidden p-4">
             <div className="bg-white rounded-xl max-w-3xl w-full shadow-2xl animate-modalSlideIn max-h-[calc(100vh-120px)] flex flex-col">
@@ -230,14 +363,14 @@ export default function ProductPage({
                   <h2 className="text-2xl font-bold text-gray-900">Product Reviews</h2>
                   <p className="text-sm text-gray-500 mt-1">Share your experience with others</p>
                 </div>
-                <button 
+                <button
                   onClick={() => setIsReviewsOpen(false)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
                   <IoClose className="w-6 h-6" />
                 </button>
               </div>
-              
+
               {/* Scrollable Content */}
               <div className="flex-1 overflow-y-auto p-6">
                 {/* Existing Reviews */}
@@ -267,7 +400,7 @@ export default function ProductPage({
                           <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg">
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((star) => (
-                                star <= reviews[0].rating 
+                                star <= reviews[0].rating
                                   ? <IoStar key={star} className="w-5 h-5 text-yellow-400" />
                                   : <IoStarOutline key={star} className="w-5 h-5 text-yellow-400" />
                               ))}
@@ -308,8 +441,8 @@ export default function ProductPage({
                       {showAllReviews && (
                         <div className="space-y-4 animate-fadeIn">
                           {reviews.slice(1).map((review: Review) => (
-                            <div 
-                              key={review._id} 
+                            <div
+                              key={review._id}
                               className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
@@ -333,7 +466,7 @@ export default function ProductPage({
                                 <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg">
                                   <div className="flex">
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                      star <= review.rating 
+                                      star <= review.rating
                                         ? <IoStar key={star} className="w-5 h-5 text-yellow-400" />
                                         : <IoStarOutline key={star} className="w-5 h-5 text-yellow-400" />
                                     ))}
@@ -376,10 +509,14 @@ export default function ProductPage({
 
       {/* Preview Modal */}
       <FilePreviewModal
-        isOpen={pdfPreviewOpen}
-        onClose={() => setPdfPreviewOpen(false)}
-        fileUrl={product.catalogPdf || ''}
-        fileType="pdf"
+        isOpen={pdfPreviewOpen || excelPreviewOpen}
+        onClose={() => {
+          setPdfPreviewOpen(false);
+          setExcelPreviewOpen(false);
+        }}
+        fileUrl={product.catalogPdf || product.catalogExcel || ''}
+        fileType={pdfPreviewOpen ? 'pdf' : 'excel'}
+        excelData={excelPreviewData}
       />
     </div>
   );

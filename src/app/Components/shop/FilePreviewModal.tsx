@@ -5,10 +5,7 @@ interface FilePreviewModalProps {
     onClose: () => void;
     fileUrl: string;
     fileType: 'pdf' | 'excel';
-    excelData?: {
-        headers: string[];
-        rows: any[][];
-    };
+    excelData: { headers: string[]; rows: any[][] } | null | undefined;
 }
 
 export default function FilePreviewModal({
