@@ -18,7 +18,11 @@ const question = (query: string): Promise<string> => {
 
 async function connectDB() {
   try {
-    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/lovosis';
+    // Use the MongoDB URI from environment variables
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
     await mongoose.connect(uri);
     console.log('Connected to MongoDB');
   } catch (error) {
@@ -29,12 +33,18 @@ async function connectDB() {
 
 async function createAdmin() {
   try {
-    const username = await question('Enter new admin username: ');
-    const password = await question('Enter new admin password: ');
+    const username = await question('Enter username: ');
+    const password = await question('Enter password: ');
+
+    const existingAdmin = await Admin.findOne({ username });
+    if (existingAdmin) {
+      console.log('Username already exists');
+      return;
+    }
 
     const admin = new Admin({ username, password });
     await admin.save();
-    console.log('Admin created successfully!');
+    console.log('Admin created successfully');
   } catch (error) {
     console.error('Error creating admin:', error);
   }
@@ -42,52 +52,33 @@ async function createAdmin() {
 
 async function loginAdmin() {
   try {
-    const username = await question('Username: ');
-    const password = await question('Password: ');
+    const username = await question('Enter username: ');
+    const password = await question('Enter password: ');
 
     const admin = await Admin.findOne({ username });
     if (!admin) {
-      console.log('Admin not found');
-      return false;
+      console.log('Invalid credentials');
+      return;
     }
 
-    const isMatch = await admin.comparePassword(password);
-    if (isMatch) {
-      console.log('Login successful!');
-      return true;
-    } else {
-      console.log('Invalid password');
-      return false;
+    const isValidPassword = await admin.comparePassword(password);
+    if (!isValidPassword) {
+      console.log('Invalid credentials');
+      return;
     }
+
+    console.log('Login successful');
   } catch (error) {
-    console.error('Login error:', error);
-    return false;
+    console.error('Error logging in:', error);
   }
 }
 
 async function main() {
   await connectDB();
-
-  while (true) {
-    console.log('\n1. Create Admin\n2. Login\n3. Exit');
-    const choice = await question('Select an option (1-3): ');
-
-    switch (choice) {
-      case '1':
-        await createAdmin();
-        break;
-      case '2':
-        await loginAdmin();
-        break;
-      case '3':
-        rl.close();
-        mongoose.connection.close();
-        console.log('Goodbye!');
-        process.exit(0);
-      default:
-        console.log('Invalid option');
-    }
-  }
+  await createAdmin();
+  rl.close();
+  mongoose.connection.close();
+  process.exit(0);
 }
 
-main().catch(console.error); 
+main(); 
