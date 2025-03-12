@@ -93,7 +93,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Contact Us</h2>
             <p className="text-gray-600 leading-relaxed">
-              If you have any questions about this Privacy Policy, please contact us at:{' '}
+              If you have any questions about this Privacy Policy, please contact us at:{' '} <br/>
               <a href="mailto:info@lovosis.in" className="text-blue-600 hover:text-blue-800">
                 info@lovosis.in
               </a>
