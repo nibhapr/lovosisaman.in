@@ -4,8 +4,14 @@ import {
   IoCodeSlash,
   IoMegaphone,
   IoDesktop,
-  IoAnalytics
+  IoAnalytics,
+  IoCloudDone,
+  IoColorPalette,
+  IoSettings,
+  IoLogoWordpress
 } from "react-icons/io5";
+import { SiShopify } from "react-icons/si";
+import { useState } from "react";
 
 const services = [
   {
@@ -51,10 +57,100 @@ const services = [
       "Technical SEO audits",
       "Performance tracking"
     ]
+  },
+  {
+    title: "IT Consulting",
+    description: "Strategic IT consulting to help businesses leverage technology for growth and efficiency.",
+    icon: IoSettings,
+    features: [
+      "Technology assessment",
+      "Digital transformation",
+      "IT strategy planning",
+      "System architecture design"
+    ]
+  },
+  {
+    title: "WordPress & Shopify",
+    description: "Expert development and customization of WordPress and Shopify platforms for your business needs.",
+    icon: ({ className }: { className: string }) => (
+      <div className="flex gap-2">
+        <IoLogoWordpress className={className} />
+        <SiShopify className={className} />
+      </div>
+    ),
+    features: [
+      "WordPress theme development",
+      "Shopify store setup",
+      "Plugin customization",
+      "E-commerce optimization"
+    ]
+  },
+  {
+    title: "Cloud Solutions",
+    description: "Comprehensive cloud computing services to help businesses scale and modernize their infrastructure.",
+    icon: IoCloudDone,
+    features: [
+      "Cloud migration",
+      "Cloud infrastructure setup",
+      "Serverless architecture",
+      "Cloud security implementation"
+    ]
+  },
+  {
+    title: "Design & Creative Services",
+    description: "Creating intuitive user experiences and professional visual designs through modern principles, user research and creative expertise.",
+    icon: IoColorPalette,
+    features: [
+      "User interface & experience design",
+      "Brand identity & visual design",
+      "Wireframing & prototyping",
+      "Print & digital media creation",
+      "Marketing collateral",
+      "Usability testing"
+    ]
+  }
+];
+
+const portfolioCategories = ["All", "Web Development", "Software Development", "Digital Marketing", "SEO"];
+
+const portfolioProjects = [
+  {
+    title: "E-Commerce Platform",
+    category: "Web Development",
+    image: "/portfolio/ecommerce.jpg",
+    description: "A full-stack e-commerce solution with advanced features",
+    url: "https://ecommerce-example.com"
+  },
+  {
+    title: "Mobile Banking App",
+    category: "Software Development",
+    image: "/portfolio/banking.jpg",
+    description: "Secure and user-friendly mobile banking application",
+    url: "https://banking-app-example.com"
+  },
+  {
+    title: "Digital Marketing Campaign",
+    category: "Digital Marketing",
+    image: "/portfolio/marketing.jpg",
+    description: "Successful marketing campaign for a major retail brand",
+    url: "https://marketing-campaign.com"
+  },
+  {
+    title: "SEO Optimization Project",
+    category: "SEO",
+    image: "/portfolio/seo.jpg",
+    description: "Improved search rankings and organic traffic by 200%",
+    url: "https://seo-project.com"
   }
 ];
 
 export default function ITServices() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const filteredProjects = portfolioProjects.filter(project =>
+    selectedCategory === "All" ? true : project.category === selectedCategory
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       {/* Hero Section */}
@@ -72,33 +168,33 @@ export default function ITServices() {
       {/* Services Grid */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                    <service.icon className="w-7 h-7 text-blue-600" />
+                <div className="flex flex-col items-center text-center gap-3 mb-4">
+                  <div className="w-12 h-12 flex items-center justify-center">
+                    <service.icon className="w-6 h-6 text-blue-600" />
                   </div>
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {service.title}
                   </h3>
                 </div>
 
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
                   {service.description}
                 </p>
 
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {service.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="flex items-center gap-3 text-gray-700 hover:text-blue-600 transition-colors duration-200"
+                      className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors duration-200 text-sm"
                     >
                       <svg
-                        className="w-5 h-5 text-blue-600"
+                        className="w-4 h-4 text-blue-600 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -115,6 +211,84 @@ export default function ITServices() {
                   ))}
                 </ul>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+              Our Portfolio
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Explore some of our recent projects and success stories
+            </p>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {portfolioCategories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
+                    ${selectedCategory === category
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredProjects.map((project, index) => (
+              <a
+                key={index}
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <div className="aspect-w-16 aspect-h-12 w-full">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
+                  <span className="text-sm text-blue-300 font-medium mb-2">
+                    {project.category}
+                  </span>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {project.description}
+                  </p>
+                  <span className="text-blue-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                    Visit Website
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </a>
             ))}
           </div>
         </div>

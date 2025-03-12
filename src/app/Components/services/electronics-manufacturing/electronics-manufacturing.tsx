@@ -1,61 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { IoCheckmarkCircleOutline, IoSettingsOutline, IoSpeedometerOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { PiStudentBold, PiRulerBold } from "react-icons/pi";
+import { MdOutlineMemory, MdOutlinePrecisionManufacturing } from "react-icons/md";
+import { TbTestPipe } from "react-icons/tb";
+import { BsBox } from "react-icons/bs";
 import Link from "next/link";
-
-const features = [
-  {
-    title: "PCB Assembly",
-    description: "Professional PCB assembly services with advanced SMT and through-hole technology for various applications.",
-    icon: IoSettingsOutline,
-  },
-  {
-    title: "Quality Testing",
-    description: "Rigorous quality control and testing procedures to ensure reliable and durable electronic products.",
-    icon: IoShieldCheckmarkOutline,
-  },
-  {
-    title: "Rapid Prototyping",
-    description: "Quick turnaround prototyping services to help bring your ideas to life faster.",
-    icon: IoSpeedometerOutline,
-  },
-];
 
 const services = [
   {
-    title: "Surface Mount Technology (SMT)",
-    description: "State-of-the-art SMT assembly with high-precision component placement.",
-    benefits: [
-      "High-density board assembly",
-      "Automated optical inspection",
-      "Lead-free soldering options",
-      "Multi-layer PCB capability"
-    ]
-  },
-  {
-    title: "Through-hole Assembly",
-    description: "Traditional through-hole assembly for specialized electronic components.",
-    benefits: [
-      "Manual and automated assembly",
-      "Mixed technology boards",
-      "Custom component fitting",
-      "High reliability connections"
-    ]
-  },
-  {
-    title: "Testing & Quality Assurance",
-    description: "Comprehensive testing and quality control procedures.",
-    benefits: [
-      "Functional testing",
-      "Environmental stress screening",
-      "X-ray inspection",
-      "Thermal testing"
-    ]
-  },
-  {
     title: "Educational Equipment Manufacturing",
     description: "Production of high-quality educational tools and devices for enhanced learning experiences.",
+    icon: PiStudentBold,
     benefits: [
       "Interactive learning solutions",
       "Durable educational tools",
@@ -66,6 +23,7 @@ const services = [
   {
     title: "Testing & Measuring Instruments",
     description: "Development of precision testing and measuring tools for various applications.",
+    icon: PiRulerBold,
     benefits: [
       "High-precision instruments",
       "Electrical testing tools",
@@ -74,18 +32,42 @@ const services = [
     ]
   },
   {
-    title: "CCTV & AV Solutions",
-    description: "Comprehensive security and audiovisual solutions for various environments.",
+    title: "Surface Mount Technology (SMT)",
+    description: "State-of-the-art SMT assembly with high-precision component placement.",
+    icon: MdOutlineMemory,
     benefits: [
-      "End-to-end system design",
-      "Professional installation",
-      "Customized security solutions",
-      "Broadcasting equipment setup"
+      "High-density board assembly",
+      "Automated optical inspection",
+      "Lead-free soldering options",
+      "Multi-layer PCB capability"
+    ]
+  },
+  {
+    title: "Through-hole Assembly",
+    description: "Traditional through-hole assembly for specialized electronic components.",
+    icon: MdOutlinePrecisionManufacturing,
+    benefits: [
+      "Manual and automated assembly",
+      "Mixed technology boards",
+      "Custom component fitting",
+      "High reliability connections"
+    ]
+  },
+  {
+    title: "Testing & Quality Assurance",
+    description: "Comprehensive testing and quality control procedures.",
+    icon: TbTestPipe,
+    benefits: [
+      "Functional testing",
+      "Environmental stress screening",
+      "X-ray inspection",
+      "Thermal testing"
     ]
   },
   {
     title: "Custom Enclosures",
     description: "Specialized enclosure design and manufacturing for electronic equipment.",
+    icon: BsBox,
     benefits: [
       "Custom design solutions",
       "Protection for sensitive equipment",
@@ -120,27 +102,6 @@ export default function ElectronicsManufacturing() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <feature.icon className="w-12 h-12 text-blue-600 mb-6" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Detailed Services Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
         <div className="max-w-7xl mx-auto">
@@ -154,7 +115,10 @@ export default function ElectronicsManufacturing() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{service.title}</h3>
+                <div className="flex items-center mb-4">
+                  <service.icon size={24} className="text-blue-600 mr-3 flex-shrink-0" />
+                  <h3 className="text-xl font-semibold text-gray-900">{service.title}</h3>
+                </div>
                 <p className="text-gray-600 mb-6">{service.description}</p>
                 <ul className="space-y-3">
                   {service.benefits.map((benefit, i) => (
