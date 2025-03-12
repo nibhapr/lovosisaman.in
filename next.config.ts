@@ -26,9 +26,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '2mb'
     }
   },
-  // Skip static generation during build if environment variable is set
-  staticPageGenerationTimeout: 120,
-  generateStaticParams: process.env.SKIP_BUILD_STATIC_GENERATION === 'true' ? () => [] : undefined,
+  staticPageGenerationTimeout: 120
 };
 
 export default nextConfig;
