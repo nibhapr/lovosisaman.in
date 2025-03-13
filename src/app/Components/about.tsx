@@ -1,141 +1,324 @@
 "use client";
 
-import { IoRocketOutline, IoHeartOutline, IoTimeOutline, IoTrophyOutline, IoSchoolOutline, IoSpeedometerOutline, IoVideocamOutline, IoCubeOutline, IoCodeSlashOutline, IoMegaphoneOutline, IoDesktopOutline, IoSearchOutline } from "react-icons/io5";
+import { motion } from 'framer-motion';
+import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoBarChartOutline } from 'react-icons/io5';
 import Image from 'next/image';
+import { useState } from 'react';
 
-const stats = [
-  { number: "10+", label: "Years Experience", icon: IoTimeOutline },
-  { number: "500+", label: "Projects Delivered", icon: IoRocketOutline },
-  { number: "200+", label: "Happy Clients", icon: IoHeartOutline },
-  { number: "8", label: "Core Services", icon: IoTrophyOutline },
-];
+const About = () => {
+  const [hoveredService, setHoveredService] = useState<number | null>(null);
 
-const services = [
-  {
-    name: "Educational Equipment",
-    description: "Manufacturing interactive and durable educational tools for schools and universities.",
-    icon: IoSchoolOutline
-  },
-  {
-    name: "Testing & Measuring",
-    description: "Precision instruments for electrical, mechanical, and physical testing.",
-    icon: IoSpeedometerOutline
-  },
-  {
-    name: "CCTV & AV Solutions",
-    description: "End-to-end security and audiovisual solutions for all environments.",
-    icon: IoVideocamOutline
-  },
-  {
-    name: "Custom Enclosures",
-    description: "Specialized enclosures for electronic devices and equipment protection.",
-    icon: IoCubeOutline
-  },
-  {
-    name: "Software Development",
-    description: "Full-stack development for enterprise solutions and mobile applications.",
-    icon: IoCodeSlashOutline
-  },
-  {
-    name: "Digital Marketing",
-    description: "Comprehensive digital marketing services for brand growth.",
-    icon: IoMegaphoneOutline
-  },
-  {
-    name: "Website Design",
-    description: "Responsive and intuitive website solutions for businesses.",
-    icon: IoDesktopOutline
-  },
-  {
-    name: "SEO Analysis",
-    description: "Data-driven SEO strategies for improved online visibility.",
-    icon: IoSearchOutline
-  }
-];
+  const services = [
+    {
+      icon: IoRocketOutline,
+      title: "Educational Equipment",
+      description: "Premium laboratory equipment for engineering colleges and technical schools, featuring digital oscilloscopes and electronic workbenches.",
+      color: "from-blue-700 to-purple-700"
+    },
+    {
+      icon: IoCodeSlashOutline,
+      title: "Digital Solutions",
+      description: "All-inclusive digital services spanning web design, marketing strategies, and SEO optimization to elevate your online presence.",
+      color: "from-purple-700 to-pink-700"
+    },
+    {
+      icon: IoLayersOutline,
+      title: "Web Design",
+      description: "Bespoke website development, e-commerce solutions, and mobile-responsive designs that transform visitors into loyal customers.",
+      color: "from-pink-700 to-indigo-700"
+    },
+    {
+      icon: IoBarChartOutline,
+      title: "Digital Marketing",
+      description: "Holistic digital marketing strategies, encompassing social media management, SEO optimization, and data-driven advertising campaigns.",
+      color: "from-indigo-700 to-blue-700"
+    }
+  ];
 
-export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-            About Lovosis
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            We are a passionate team of developers, designers, and innovators dedicated to creating exceptional digital experiences that transform businesses.
-          </p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8"
+          >
+            Discover Lovosis Technologies
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed"
+          >
+            Revolutionizing education and business through cutting-edge technology solutions and precision engineering
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mt-12 mx-auto max-w-4xl"
+          >
+            <Image
+              src="/images/about-hero.jpg" // Update with your image path
+              alt="Lovosis Technologies"
+              width={1200}
+              height={800}
+              className="rounded-3xl shadow-xl"
+              priority
+            />
+          </motion.div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <stat.icon className="w-10 h-10 mx-auto mb-4 text-blue-600" />
-                <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {stat.number}
-                </div>
-                <div className="text-gray-600 mt-2">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Mission & Vision Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/60">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+          {/* Mission */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-3xl p-10 shadow-xl"
+          >
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8">
+              Our Mission
+            </h2>
+            <p className="text-gray-700 text-lg leading-relaxed">
+              To empower educational institutions and businesses with state-of-the-art technology solutions that drive innovation, enhance learning experiences, and accelerate digital transformation.
+            </p>
+          </motion.div>
 
-      {/* Mission Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Our Mission
-              </h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                At Lovosis Technology, we are committed to delivering innovative solutions across multiple sectors, from educational equipment manufacturing to cutting-edge software development and digital services.
-              </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                We specialize in creating high-quality, durable products and offering comprehensive services that cater to the diverse needs of our clients, from educational institutions to businesses seeking digital transformation.
-              </p>
-            </div>
-            <div className="relative">
-              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src="/images/about/team-collaboration.jpg"
-                  alt="Team collaboration"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
+          {/* Vision */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-3xl p-10 shadow-xl"
+          >
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8">
+              Our Vision
+            </h2>
+            <p className="text-gray-700 text-lg leading-relaxed">
+              To become the premier provider of innovative educational equipment and digital solutions, revolutionizing the way institutions teach and businesses operate in the digital era.
+            </p>
+          </motion.div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Our Services
-          </h2>
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="text-center mb-20">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+            >
+              Our Core Services
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-gray-700 text-xl max-w-3xl mx-auto"
+            >
+              We synergize innovation with expertise to deliver outstanding results across diverse domains
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {services.map((service, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
-                <service.icon className="w-12 h-12 text-blue-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {service.name}
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+                onMouseEnter={() => setHoveredService(index)}
+                onMouseLeave={() => setHoveredService(null)}
+                className={`p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border-2 ${
+                  hoveredService === index 
+                    ? `border-transparent bg-gradient-to-r ${service.color}`
+                    : 'border-gray-200'
+                }`}
+              >
+                <service.icon className={`w-16 h-16 mb-6 transition-colors ${
+                  hoveredService === index ? 'text-white' : 'text-blue-700'
+                }`} />
+                <h3 className={`text-2xl font-semibold mb-4 transition-colors ${
+                  hoveredService === index ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {service.title}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className={`text-lg transition-colors ${
+                  hoveredService === index ? 'text-white' : 'text-gray-700'
+                }`}>
                   {service.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Educational Equipment Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/60">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+            >
+              Educational Equipment Solutions
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-gray-700 text-xl max-w-3xl mx-auto"
+            >
+              High-quality equipment tailored for engineering colleges, polytechnics, and technical schools
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 bg-white rounded-3xl shadow-xl"
+            >
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Digital Oscilloscopes</h3>
+              <p className="text-gray-700 text-lg">
+                High-precision tools for visualizing waveforms and examining electrical circuits in real-time
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 bg-white rounded-3xl shadow-xl"
+            >
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Electronic Workbenches</h3>
+              <p className="text-gray-700 text-lg">
+                Packed with latest tools for building and testing electronic circuits safely and efficiently
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 bg-white rounded-3xl shadow-xl"
+            >
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Electrical Workbenches</h3>
+              <p className="text-gray-700 text-lg">
+                Designed for electrical engineering experiments with built-in safety features
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Digital Solutions Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+            >
+              Comprehensive Digital Solutions
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-gray-700 text-xl max-w-3xl mx-auto"
+            >
+              Helping businesses thrive in the digital world with tailored solutions
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 bg-white rounded-3xl shadow-xl"
+            >
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Web Design</h3>
+              <p className="text-gray-700 text-lg">
+                Custom, responsive websites that convert visitors into customers
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 bg-white rounded-3xl shadow-xl"
+            >
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Digital Marketing</h3>
+              <p className="text-gray-700 text-lg">
+                Comprehensive strategies to boost visibility and conversions
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 bg-white rounded-3xl shadow-xl"
+            >
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">SEO Services</h3>
+              <p className="text-gray-700 text-lg">
+                Proven techniques to improve search rankings and drive organic traffic
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-700 to-purple-700">
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl md:text-5xl font-bold text-white mb-8"
+          >
+            Ready to Transform Your Institution or Business?
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-xl text-white max-w-3xl mx-auto mb-12"
+          >
+            Contact us today to learn more about our solutions and how we can help you achieve your goals
+          </motion.p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-white text-blue-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+            onClick={() => {
+              window.location.href = '/contact';
+            }}
+          >
+            Get Started Now
+          </motion.button>
+        </div>
+      </section>
     </div>
   );
-}
+};
+
+export default About;
