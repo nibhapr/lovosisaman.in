@@ -63,7 +63,7 @@ const About = () => {
             className="mt-12 mx-auto max-w-4xl"
           >
             <Image
-              src="/images/about-hero.jpg" // Update with your image path
+              src="/images/home/3.jpg" // Update with your image path
               alt="Lovosis Technologies"
               width={1200}
               height={800}

@@ -32,22 +32,22 @@ const features = [
 // Combined slider data array
 const sliderData = [
   {
-    url: "/slider1.jpg",
+    url: "/images/home/2.jpg",
     alt: "Educational Equipment",
     description: "State-of-the-art educational equipment for modern learning environments. Empowering students with hands-on experience."
   },
   {
-    url: "/slider2.jpg",
+    url: "/images/home/3.jpg",
     alt: "Testing & Measuring Equipment",
     description: "Precision testing and measuring equipment for accurate results. Industry-standard tools for professional applications."
   },
   {
-    url: "/slider3.jpg",
+    url: "/images/home/4.jpg",
     alt: "Software Solutions",
     description: "Innovative software solutions to streamline your operations. Custom development for your unique needs."
   },
   {
-    url: "/slider4.jpg",
+    url: "/images/home/5.jpg",
     alt: "Digital Marketing & SEO",
     description: "Comprehensive digital marketing strategies and SEO services to boost your online presence and drive business growth."
   }
@@ -110,7 +110,7 @@ export default function Home() {
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm"
+                      className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"
                     />
                   </div>
                 </div>
@@ -154,9 +154,9 @@ export default function Home() {
 
         {/* Enhanced Background Elements */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply opacity-30 animate-blob"></div>
+          <div className="absolute top-0 right-1/4 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply opacity-30 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply opacity-30 animate-blob animation-delay-4000"></div>
         </div>
       </section>
 
@@ -300,25 +300,25 @@ export default function Home() {
                     icon: IoRocketOutline, 
                     text: "Fast Delivery", 
                     color: "from-blue-500 to-blue-600",
-                    image: "/delivery.jpg"
+                    image: "/images/home/2.jpg"
                   },
                   { 
                     icon: IoLayersOutline, 
                     text: "Quality First", 
                     color: "from-purple-500 to-purple-600",
-                    image: "/quality.jpg"
+                    image: "/images/home/5.jpg"
                   },
                   { 
                     icon: IoTimeOutline, 
                     text: "24/7 Support", 
                     color: "from-blue-500 to-blue-600",
-                    image: "/support.jpg"
+                    image: "/images/home/3.jpg"
                   },
                   { 
                     icon: IoBarChartOutline, 
                     text: "Growth Focus", 
                     color: "from-purple-500 to-purple-600",
-                    image: "/growth.jpg"
+                    image: "/images/home/4.jpg"
                   }
                 ].map((item, index) => (
                   <motion.div
@@ -378,7 +378,7 @@ export default function Home() {
               >
                 {/* Main Feature Image */}
                 <Image
-                  src="/main-feature.jpg"
+                  src="/images/home/5.jpg"
                   alt="Innovation and Technology"
                   fill
                   className="object-cover"
@@ -409,8 +409,8 @@ export default function Home() {
           }}
           className="absolute inset-0 -z-10"
         >
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-blue-200/30 rounded-full mix-blend-multiply filter blur-3xl" />
-          <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-purple-200/30 rounded-full mix-blend-multiply filter blur-3xl" />
+          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-blue-200/30 rounded-full mix-blend-multiply" />
+          <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-purple-200/30 rounded-full mix-blend-multiply" />
         </motion.div>
       </section>
     </div>

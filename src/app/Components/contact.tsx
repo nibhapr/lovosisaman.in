@@ -79,7 +79,7 @@ export default function Contact() {
           <ContactCard
             icon={<IoLocationSharp className="w-full h-full" />}
             title="Visit Us"
-            content="4-72/2, Swathi Building,<br/>3rd Floor, Opp. Singapura Garden,<br/>1st Main Road, Lakshmipura,<br/>Abbigere, Bengaluru,<br/>Karnataka 560090"
+            content="4-72/2, Swathi Building,<br/>3rd Floor, Opp. Singapura Garden,<br/>1st Main Lakshmipura Road,<br/>Abbigere, Bengaluru,<br/>Karnataka 560090"
             bgColor="bg-indigo-100"
             textColor="text-indigo-600"
           />

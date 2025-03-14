@@ -136,7 +136,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Us</h3>
             <ul className="space-y-2 text-gray-600">
-              <li><a href="https://www.google.com/maps?q=4-72/2,+Swathi+Building,+3rd+Floor,+Opp.+Singapura+Garden,+1st+Main+Road,+Lakshmipura,+Abbigere,+Bengaluru,+Karnataka+560090" target="_blank" className="hover:text-blue-600 transition-colors duration-300">4-72/2, Swathi Building, 3rd Floor, Opp. Singapura Garden, 1st Main Road, Lakshmipura, Abbigere, Bengaluru, Karnataka 560090</a></li>
+              <li><a href="https://www.google.com/maps?q=4-72/2,+Swathi+Building,+3rd+Floor,+Opp.+Singapura+Garden,+1st+Main+Lakshmipura+Road,+Abbigere,+Bengaluru,+Karnataka+560090" target="_blank" className="hover:text-blue-600 transition-colors duration-300">4-72/2, Swathi Building, 3rd Floor, Opp. Singapura Garden, 1st Main Lakshmipura Road, Abbigere, Bengaluru, Karnataka 560090</a></li>
               <li>Email: <a href="mailto:info@lovosis.in" className="hover:text-blue-600 transition-colors duration-300">info@lovosis.in</a></li>
               <li>Email: <a href="mailto:lovosist@gmail.com" className="hover:text-blue-600 transition-colors duration-300">lovosist@gmail.com</a></li>
               <li>Phone: <a href="tel:+917012970281" className="hover:text-blue-600 transition-colors duration-300">+91 7012970281</a></li>
