@@ -3,15 +3,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - MONGODB_URI=mongodb://digiimpact:Digitech%402030@mongodb:27017/lovosisdb?authSource=admin
     ports:
       - "8081:8081"
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_DOMAIN=lovosis.in
       - NEXTAUTH_URL=https://lovosis.in
-      - MONGODB_URI=mongodb://digiimpact:Digitech%402030@mongodb:27017/lovosisdb?authSource=admin
+      - MONGODB_URI=mongodb+srv://websitedata0102:Digitech%402030@lovosisdb.pyhn5.mongodb.net/lovosisdb?retryWrites=true&w=majority&appName=lovosisDB
       - JWT_SECRET=94af5eb59932b5aef9a3c1bfe8b1c8e860d5771324b2dee91414fccb21489a4ee9f980d02b887556d986fa88058f705bdf0cbd2c962da56ee2797a1b84e45c50
       - WEBSOCKET_PORT=8081
       - NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
@@ -19,9 +17,6 @@ services:
       - SKIP_BUILD_STATIC_GENERATION=true
     volumes:
       - uploads:/app/public/uploads:rw
-    depends_on:
-      mongodb:
-        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -78,59 +73,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  mongodb:
-    image: mongo:7
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=digiimpact
-      - MONGO_INITDB_ROOT_PASSWORD=Digitech@2030
-      - MONGO_INITDB_DATABASE=lovosisdb
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 5
-    restart: always
-    networks:
-      - app-network
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - "8082:8081"
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=digiimpact
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=Digitech@2030
-      - ME_CONFIG_MONGODB_URL=mongodb://digiimpact:Digitech%402030@mongodb:27017/lovosisdb?authSource=admin
-      - ME_CONFIG_BASICAUTH_USERNAME=digiimpact
-      - ME_CONFIG_BASICAUTH_PASSWORD=Digitech@2030
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - app-network
-
 volumes:
-  mongodb_data:
-  mongodb_config:
   uploads:
 
 networks:

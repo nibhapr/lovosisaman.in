@@ -31,8 +31,14 @@ export async function POST(request: Request) {
 
     await writeFile(filePath, buffer);
     
+    // Return both local path and full URL
+    const baseUrl = process.env.NEXT_PUBLIC_DOMAIN 
+      ? `https://${process.env.NEXT_PUBLIC_DOMAIN}`
+      : 'http://localhost:3000';
+
     return NextResponse.json({ 
-      url: `/uploads/${filename}`
+      url: `/uploads/${filename}`,
+      fullUrl: `${baseUrl}/uploads/${filename}`
     });
   } catch (error) {
     console.error('Upload error:', error);
