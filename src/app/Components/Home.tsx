@@ -32,22 +32,22 @@ const features = [
 // Combined slider data array
 const sliderData = [
   {
-    url: "/images/home/2.jpg",
+    url: "/images/home/1.jpg",
     alt: "Educational Equipment",
     description: "State-of-the-art educational equipment for modern learning environments. Empowering students with hands-on experience."
   },
   {
-    url: "/images/home/3.jpg",
+    url: "/images/home/2.jpg",
     alt: "Testing & Measuring Equipment",
     description: "Precision testing and measuring equipment for accurate results. Industry-standard tools for professional applications."
   },
   {
-    url: "/images/home/4.jpg",
+    url: "/images/home/3.jpg",  
     alt: "Software Solutions",
     description: "Innovative software solutions to streamline your operations. Custom development for your unique needs."
   },
   {
-    url: "/images/home/5.jpg",
+    url: "/images/home/4.jpg",
     alt: "Digital Marketing & SEO",
     description: "Comprehensive digital marketing strategies and SEO services to boost your online presence and drive business growth."
   }
