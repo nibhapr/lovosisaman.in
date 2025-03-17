@@ -62,8 +62,7 @@ const serviceDetails = [
     link: "/services/electronics-manufacturing",
     media: {
       type: "video",
-      src: "/videos/home/service/2.mp4",
-      poster: "/videos/home/service/1.jpg"
+      src: "/videos/home/service/2.gif",
     }
   },
   {
@@ -73,8 +72,7 @@ const serviceDetails = [
     link: "/services/it-services",
     media: {
       type: "video",
-      src: "/videos/home/service/1.mp4",
-      poster: "/videos/home/service/3.jpg"
+      src: "/videos/home/service/1.gif",
     }
   }
 ];
@@ -254,7 +252,13 @@ export default function Home() {
                     {/* Image/Icon Section */}
                     <div className={`relative h-64 md:h-full ${index % 2 === 1 ? 'md:col-start-1' : ''}`}>
                       <div className="absolute inset-0 rounded-2xl overflow-hidden group">
-                        {/* Remove media content */}
+                        <Image 
+                          src={service.media.src}
+                          alt={service.title}
+                          fill
+                          className="w-full h-full object-cover"
+                          priority
+                        />
                       </div>
                     </div>
                   </div>
@@ -322,7 +326,14 @@ export default function Home() {
                 transition={{ duration: 0.8 }}
                 className="relative h-full rounded-3xl overflow-hidden shadow-2xl"
               >
-                {/* Remove video content */}
+                <Image
+                  src="/videos/home/service/3.gif"
+                  alt="Digital Experience"
+                  fill
+                  unoptimized
+                  className="w-full h-full object-cover"
+                  priority
+                />
               </motion.div>
             </div>
           </motion.div>

@@ -10,9 +10,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'www.lovosis.in'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost'
       }
-    ],
-    domains: ['localhost']
+    ]
   },
   webpack: (config) => {
     config.module.rules.push({
