@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoCheckmarkCircleOutline, IoTimeOutline, IoBarChartOutline, IoPeopleOutline, IoCloudOutline } from 'react-icons/io5';
+import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoCheckmarkCircleOutline, IoBarChartOutline } from 'react-icons/io5';
 
 // Updated features array with more detailed descriptions
 const features = [
@@ -14,8 +14,8 @@ const features = [
   },
   {
     icon: IoLayersOutline,
-    title: "Laboratory Solutions",
-    description: "Comprehensive workbench setups for electrical and electronic experiments, featuring built-in safety features and testing equipment."
+    title: "Testing & Measurement Equipment",
+    description: "Professional-grade testing and measurement instruments for precise analysis, including oscilloscopes, multimeters, and signal generators."
   },
   {
     icon: IoCodeSlashOutline,
@@ -42,7 +42,7 @@ const sliderData = [
     description: "Precision testing and measuring equipment for accurate results. Industry-standard tools for professional applications."
   },
   {
-    url: "/images/home/3.jpg",  
+    url: "/images/home/3.jpg",
     alt: "Software Solutions",
     description: "Innovative software solutions to streamline your operations. Custom development for your unique needs."
   },
@@ -56,16 +56,26 @@ const sliderData = [
 // Add service details for expanded sections
 const serviceDetails = [
   {
-    title: "Laboratory Equipment",
-    description: "Our range includes digital oscilloscopes for signal analysis, electronic workbenches for circuit testing, and electrical workbenches for power systems experiments.",
-    features: ["Digital Oscilloscopes", "Electronic Workbenches", "Electrical Test Equipment"],
-    link: "/services/electronics-manufacturing"
+    title: "Educational and Testing Equipment",
+    description: "Our range includes advanced testing equipment for educational institutions, featuring digital measurement tools, electronic testing stations, and comprehensive power analysis systems.",
+    features: ["Educational Testing Tools", "Measurement Equipment", "Power Analysis Systems"],
+    link: "/services/electronics-manufacturing",
+    media: {
+      type: "video",
+      src: "/videos/home/service/2.mp4",
+      poster: "/videos/home/service/1.jpg"
+    }
   },
   {
     title: "Digital Solutions",
     description: "Comprehensive digital services including web design, marketing strategies, and SEO optimization to boost your online presence.",
     features: ["Custom Website Development", "Social Media Marketing", "SEO Services"],
-    link: "/services/it-services"
+    link: "/services/it-services",
+    media: {
+      type: "video",
+      src: "/videos/home/service/1.mp4",
+      poster: "/videos/home/service/3.jpg"
+    }
   }
 ];
 
@@ -103,15 +113,10 @@ export default function Home() {
                   className="object-cover"
                   priority={index === 0}
                 />
-                {/* Simple Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent">
+                {/* Remove Simple Gradient Overlay */}
+                <div className="absolute inset-0">
                   <div className="relative h-full flex items-center justify-center">
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                      className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"
-                    />
+                    {/* Remove gradient motion.div */}
                   </div>
                 </div>
 
@@ -227,11 +232,8 @@ export default function Home() {
                             initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: idx * 0.1 }}
-                            className="flex items-center space-x-3 bg-blue-50 rounded-lg p-3"
+                            className="bg-blue-50 rounded-lg p-3"
                           >
-                            <div className="flex-shrink-0">
-                              <IoCheckmarkCircleOutline className="w-6 h-6 text-blue-600" />
-                            </div>
                             <span className="text-gray-700 font-medium">
                               {feature}
                             </span>
@@ -251,14 +253,8 @@ export default function Home() {
 
                     {/* Image/Icon Section */}
                     <div className={`relative h-64 md:h-full ${index % 2 === 1 ? 'md:col-start-1' : ''}`}>
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-2xl">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          {index === 0 ? (
-                            <IoLayersOutline className="w-24 h-24 text-blue-600/40" />
-                          ) : (
-                            <IoCodeSlashOutline className="w-24 h-24 text-purple-600/40" />
-                          )}
-                        </div>
+                      <div className="absolute inset-0 rounded-2xl overflow-hidden group">
+                        {/* Remove media content */}
                       </div>
                     </div>
                   </div>
@@ -269,148 +265,86 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section - Enhanced Interactive Version with Images */}
+      {/* Immersive Interactive Experience Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="grid md:grid-cols-2 gap-8 items-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-2"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7 }}
+            className="grid md:grid-cols-2 gap-8 items-center bg-gradient-to-br from-indigo-900 via-purple-900 to-fuchsia-900 rounded-[3rem] p-3"
           >
             {/* Content Section */}
-            <div className="p-8 md:p-12 bg-white rounded-2xl">
+            <div className="p-8 md:p-12 backdrop-blur-xl bg-white/90 rounded-2xl shadow-2xl">
               <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                  Let's Create Something Amazing Together
+                <h2 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent mb-6">
+                  Turn Dreams Into Digital Reality
                 </h2>
-                <p className="text-gray-600 text-lg mb-8">
-                  Transform your ideas into reality with our expert team and cutting-edge solutions.
+                <p className="text-gray-700 text-xl mb-10 leading-relaxed">
+                  Join us on an extraordinary journey where innovation meets imagination. Let's craft something truly remarkable together.
                 </p>
               </motion.div>
 
-              {/* Feature Cards with Images */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {[
-                  { 
-                    icon: IoRocketOutline, 
-                    text: "Fast Delivery", 
-                    color: "from-blue-500 to-blue-600",
-                    image: "/images/home/2.jpg"
-                  },
-                  { 
-                    icon: IoLayersOutline, 
-                    text: "Quality First", 
-                    color: "from-purple-500 to-purple-600",
-                    image: "/images/home/5.jpg"
-                  },
-                  { 
-                    icon: IoTimeOutline, 
-                    text: "24/7 Support", 
-                    color: "from-blue-500 to-blue-600",
-                    image: "/images/home/3.jpg"
-                  },
-                  { 
-                    icon: IoBarChartOutline, 
-                    text: "Growth Focus", 
-                    color: "from-purple-500 to-purple-600",
-                    image: "/images/home/4.jpg"
-                  }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    className={`relative p-4 rounded-xl bg-gradient-to-r ${item.color} group cursor-pointer overflow-hidden`}
-                  >
-                    <div className="relative z-10 bg-white/90 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/95">
-                      <item.icon className="w-8 h-8 mb-2 text-blue-600" />
-                      <p className="font-semibold text-gray-800">{item.text}</p>
-                    </div>
-                    {/* Background Image */}
-                    <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300">
-                      <Image
-                        src={item.image}
-                        alt={item.text}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* CTA Button */}
+              {/* Animated CTA Button */}
               <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href="/about"
-                  className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-xl transition-all duration-300"
+                  href="/contact"
+                  className="group relative inline-flex items-center px-10 py-5 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 text-white rounded-full font-bold text-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
                 >
-                  <span className="mr-2">Start Your Journey</span>
+                  <span className="relative z-10 mr-3">Let's Create Magic</span>
                   <motion.span
-                    animate={{ x: [0, 4, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
+                    animate={{
+                      x: [0, 8, 0],
+                      rotate: [0, 360, 0]
+                    }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="relative z-10"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    <IoRocketOutline className="w-7 h-7" />
                   </motion.span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 </Link>
               </motion.div>
             </div>
 
-            {/* Interactive Visual Section with Main Image */}
-            <div className="relative h-full min-h-[400px] p-8">
+            {/* Dynamic Visual Experience */}
+            <div className="relative h-full min-h-[500px] p-8">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="relative h-full rounded-2xl overflow-hidden"
+                initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ duration: 0.8 }}
+                className="relative h-full rounded-3xl overflow-hidden shadow-2xl"
               >
-                {/* Main Feature Image */}
-                <Image
-                  src="/images/home/5.jpg"
-                  alt="Innovation and Technology"
-                  fill
-                  className="object-cover"
-                />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-white text-4xl font-bold text-center max-w-lg">
-                      Discover the Power of Innovation and Technology
-                    </p>
-                  </div>
-                </div>
+                {/* Remove video content */}
               </motion.div>
             </div>
           </motion.div>
         </div>
 
-        {/* Dynamic Background Elements */}
+        {/* Animated Background Elements */}
         <motion.div
           animate={{
-            opacity: [0.3, 0.5, 0.3],
-            scale: [1, 1.1, 1]
+            opacity: [0.2, 0.4, 0.2],
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360]
           }}
           transition={{
-            duration: 8,
+            duration: 15,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "linear"
           }}
           className="absolute inset-0 -z-10"
         >
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-blue-200/30 rounded-full mix-blend-multiply" />
-          <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-purple-200/30 rounded-full mix-blend-multiply" />
+          <div className="absolute top-1/3 left-1/4 w-[30rem] h-[30rem] bg-indigo-300/20 rounded-full mix-blend-multiply blur-3xl" />
+          <div className="absolute bottom-1/3 right-1/4 w-[35rem] h-[35rem] bg-fuchsia-300/20 rounded-full mix-blend-multiply blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 w-[25rem] h-[25rem] bg-purple-300/20 rounded-full mix-blend-multiply blur-3xl" />
         </motion.div>
       </section>
     </div>

@@ -6,7 +6,7 @@ FROM base AS deps
 WORKDIR /app
 
 # Install build dependencies
-RUN apk add --no-cache python3 make g++ libc6-compat
+RUN apk add --no-cache python3 make g++ libc6-compat ffmpeg
 
 # Copy package files
 COPY package*.json ./
@@ -31,9 +31,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN mkdir -p /app/public/uploads
+# Create necessary directories
+RUN mkdir -p /app/public/uploads/videos
+RUN mkdir -p /app/public/uploads/images
+RUN mkdir -p /app/.next/static/videos
 
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ ffmpeg
 RUN cd node_modules/bcrypt && npm install node-addon-api && npm rebuild bcrypt --build-from-source
 RUN npm run setup
 RUN npm run build
@@ -51,22 +54,26 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Install only required runtime dependencies
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ ffmpeg
 
 # Setup bcrypt
 COPY --from=deps /app/node_modules/bcrypt ./node_modules/bcrypt
 RUN cd node_modules/bcrypt && npm install node-addon-api && npm rebuild bcrypt --build-from-source
 
-# Setup application files
-RUN mkdir -p /app/public/uploads && chown -R nextjs:nodejs /app/public
+# Setup application files and directories
+RUN mkdir -p /app/public/uploads/videos && \
+    mkdir -p /app/public/uploads/images && \
+    mkdir -p /app/.next/static/videos && \
+    chown -R nextjs:nodejs /app/public
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Security hardening
-RUN chmod -R 555 /app
-RUN chmod -R 755 /app/public/uploads
+# Security hardening with proper permissions for video directories
+RUN chmod -R 555 /app && \
+    chmod -R 755 /app/public/uploads/videos && \
+    chmod -R 755 /app/public/uploads/images
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

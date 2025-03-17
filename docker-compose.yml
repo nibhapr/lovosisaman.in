@@ -17,6 +17,7 @@ services:
       - SKIP_BUILD_STATIC_GENERATION=true
     volumes:
       - uploads:/app/public/uploads:rw
+      - ./.next/static/videos:/app/.next/static/videos:rw
     deploy:
       resources:
         limits:

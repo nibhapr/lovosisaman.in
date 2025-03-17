@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoBarChartOutline } from 'react-icons/io5';
+import { IoCodeSlashOutline, IoBarChartOutline, IoLayersOutline, IoRocketOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -10,28 +10,28 @@ const About = () => {
 
   const services = [
     {
-      icon: IoRocketOutline,
+      icon: IoLayersOutline,
       title: "Educational Equipment",
       description: "Premium laboratory equipment for engineering colleges and technical schools, featuring digital oscilloscopes and electronic workbenches.",
       color: "from-blue-700 to-purple-700"
     },
     {
-      icon: IoCodeSlashOutline,
-      title: "Digital Solutions",
-      description: "All-inclusive digital services spanning web design, marketing strategies, and SEO optimization to elevate your online presence.",
+      icon: IoBarChartOutline,
+      title: "Testing & Measurement Equipment",
+      description: "Professional-grade testing and measurement instruments for precise analysis, including oscilloscopes, multimeters, and signal generators.",
       color: "from-purple-700 to-pink-700"
     },
     {
-      icon: IoLayersOutline,
-      title: "Web Design",
-      description: "Bespoke website development, e-commerce solutions, and mobile-responsive designs that transform visitors into loyal customers.",
-      color: "from-pink-700 to-indigo-700"
+      icon: IoCodeSlashOutline,
+      title: "Web Design & Development",
+      description: "Custom website creation, e-commerce solutions, and mobile-responsive designs that convert visitors into customers.",
+      color: "from-pink-700 to-red-700"
     },
     {
-      icon: IoBarChartOutline,
-      title: "Digital Marketing",
-      description: "Holistic digital marketing strategies, encompassing social media management, SEO optimization, and data-driven advertising campaigns.",
-      color: "from-indigo-700 to-blue-700"
+      icon: IoRocketOutline,
+      title: "Digital Marketing & SEO",
+      description: "Comprehensive digital marketing strategies, including social media management, SEO optimization, and targeted advertising campaigns.",
+      color: "from-red-700 to-orange-700"
     }
   ];
 
@@ -63,7 +63,7 @@ const About = () => {
             className="mt-12 mx-auto max-w-4xl"
           >
             <Image
-              src="/images/home/3.jpg" // Update with your image path
+              src="/images/about/1.jpg"
               alt="Lovosis Technologies"
               width={1200}
               height={800}
@@ -141,23 +141,19 @@ const About = () => {
                 transition={{ duration: 0.3 }}
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
-                className={`p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border-2 ${
-                  hoveredService === index 
-                    ? `border-transparent bg-gradient-to-r ${service.color}`
-                    : 'border-gray-200'
-                }`}
+                className={`p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border-2 ${hoveredService === index
+                  ? `border-transparent bg-gradient-to-r ${service.color}`
+                  : 'border-gray-200'
+                  }`}
               >
-                <service.icon className={`w-16 h-16 mb-6 transition-colors ${
-                  hoveredService === index ? 'text-white' : 'text-blue-700'
-                }`} />
-                <h3 className={`text-2xl font-semibold mb-4 transition-colors ${
-                  hoveredService === index ? 'text-white' : 'text-gray-900'
-                }`}>
+                <service.icon className={`w-16 h-16 mb-6 transition-colors ${hoveredService === index ? 'text-white' : 'text-blue-700'
+                  }`} />
+                <h3 className={`text-2xl font-semibold mb-4 transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-900'
+                  }`}>
                   {service.title}
                 </h3>
-                <p className={`text-lg transition-colors ${
-                  hoveredService === index ? 'text-white' : 'text-gray-700'
-                }`}>
+                <p className={`text-lg transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-700'
+                  }`}>
                   {service.description}
                 </p>
               </motion.div>
