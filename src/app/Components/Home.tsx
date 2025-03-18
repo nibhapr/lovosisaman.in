@@ -10,12 +10,12 @@ const features = [
   {
     icon: IoRocketOutline,
     title: "Educational Equipment",
-    description: "Specialized laboratory equipment for engineering colleges, polytechnics, and technical schools, including digital oscilloscopes and electronic workbenches."
+    description: "Specialized laboratory equipment for engineering colleges, polytechnics, and technical schools, including "
   },
   {
     icon: IoLayersOutline,
     title: "Testing & Measurement Equipment",
-    description: "Professional-grade testing and measurement instruments for precise analysis, including oscilloscopes, multimeters, and signal generators."
+    description: "Professional-grade testing and measurement instruments for precise analysis, including oscilloscopes, multimeters, electronic workbenches, and signal generators."
   },
   {
     icon: IoCodeSlashOutline,
