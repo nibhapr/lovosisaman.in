@@ -36,15 +36,15 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       {/* Hero Section */}
-      <section className="relative py-24 px-4 sm:px-6 lg:px-8">
+      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-900/5 via-purple-900/5 to-pink-900/5">
         <div className="max-w-7xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8"
+            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-800 to-purple-800 bg-clip-text text-transparent mb-8 leading-tight"
           >
             Discover Lovosis Technology Private Limited
           </motion.h1>
@@ -62,27 +62,30 @@ const About = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-12 mx-auto max-w-4xl"
           >
-            <Image
-              src="/images/about/1.jpg"
-              alt="Lovosis Technology Private Limited"
-              width={1200}
-              height={800}
-              className="rounded-3xl shadow-xl"
-              priority
-            />
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full rounded-3xl shadow-xl"
+            >
+              <source src="/videos/about/hero.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </motion.div>
         </div>
       </section>
 
       {/* Mission & Vision Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/60">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
           {/* Mission */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white rounded-3xl p-10 shadow-xl"
+            whileHover={{ scale: 1.02 }}
+            className="bg-white/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100"
           >
             <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8">
               Our Mission
@@ -97,7 +100,8 @@ const About = () => {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white rounded-3xl p-10 shadow-xl"
+            whileHover={{ scale: 1.02 }}
+            className="bg-white/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100"
           >
             <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8">
               Our Vision
@@ -131,20 +135,21 @@ const About = () => {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {services.map((service, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
-                className={`p-6 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border-2 ${hoveredService === index
-                  ? `border-transparent bg-gradient-to-r ${service.color}`
-                  : 'border-gray-200'
-                  }`}
+                className={`p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border ${
+                  hoveredService === index
+                    ? `border-transparent bg-gradient-to-br ${service.color}`
+                    : 'border-gray-100'
+                }`}
               >
                 <service.icon className={`w-12 h-12 mb-4 transition-colors ${hoveredService === index ? 'text-white' : 'text-blue-700'
                   }`} />
@@ -163,7 +168,7 @@ const About = () => {
       </section>
 
       {/* Educational Equipment Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/60">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <motion.h2
@@ -184,12 +189,13 @@ const About = () => {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden"
+              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
@@ -207,8 +213,9 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden"
+              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
@@ -226,8 +233,9 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden"
+              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
@@ -268,12 +276,13 @@ const About = () => {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden"
+              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
@@ -291,8 +300,9 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden"
+              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
@@ -310,8 +320,9 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden"
+              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
@@ -331,7 +342,7 @@ const About = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/60">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -403,7 +414,7 @@ const About = () => {
                 <motion.div
                   initial={false}
                   animate={{ height: "auto" }}
-                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-gray-100 hover:border-blue-500"
+                  className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500"
                   onClick={() => {
                     const element = document.getElementById(`faq-answer-${index}`);
                     const isHidden = element?.classList.contains('hidden');
