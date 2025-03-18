@@ -193,7 +193,7 @@ const About = () => {
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
-                  src="/images/equipment/oscilloscope.jpg"
+                  src="/images/about/equipment/oscilloscope.jpg"
                   alt="Digital Oscilloscope"
                   fill
                   className="object-cover"
@@ -212,15 +212,15 @@ const About = () => {
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
-                  src="/images/equipment/electronic-workbench.jpg"
-                  alt="Electronic Workbench"
+                  src="/images/about/equipment/electronic-workbench.jpg"
+                  alt="Engineering Workbench"
                   fill
                   className="object-cover"
                 />
               </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Electronic Workbenches</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Engineering Workbenches</h3>
               <p className="text-gray-700 text-lg">
-                Packed with latest tools for building and testing electronic circuits safely and efficiently
+                State-of-the-art workbenches equipped with latest tools for electronic and electrical experiments, featuring built-in safety features and efficient testing capabilities
               </p>
             </motion.div>
             <motion.div
@@ -231,15 +231,15 @@ const About = () => {
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
-                  src="/images/equipment/electrical-workbench.jpg"
-                  alt="Electrical Workbench"
+                  src="/images/about/equipment/education-kit.jpg"
+                  alt="Education and Training Kit"
                   fill
                   className="object-cover"
                 />
               </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Electrical Workbenches</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Education & Training Kits</h3>
               <p className="text-gray-700 text-lg">
-                Designed for electrical engineering experiments with built-in safety features
+                Comprehensive educational kits designed for hands-on learning in electronics and electrical engineering, featuring practical experiments and detailed training materials
               </p>
             </motion.div>
           </div>
@@ -277,7 +277,7 @@ const About = () => {
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
-                  src="/images/digital/web-design.jpg"
+                  src="/images/about/digital/web-design.jpg"
                   alt="Web Design"
                   fill
                   className="object-cover"
@@ -296,7 +296,7 @@ const About = () => {
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
-                  src="/images/digital/digital-marketing.jpg"
+                  src="/images/about/digital/digital-marketing.jpg"
                   alt="Digital Marketing"
                   fill
                   className="object-cover"
@@ -315,7 +315,7 @@ const About = () => {
             >
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
-                  src="/images/digital/seo.jpg"
+                  src="/images/about/digital/seo.jpg"
                   alt="SEO Services"
                   fill
                   className="object-cover"

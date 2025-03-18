@@ -10,7 +10,7 @@ const features = [
   {
     icon: IoRocketOutline,
     title: "Educational Equipment",
-    description: "Specialized laboratory equipment for engineering colleges, polytechnics, and technical schools, including "
+    description: "Specialized laboratory equipment for engineering colleges, polytechnics, and Industrial training institute, including "
   },
   {
     icon: IoLayersOutline,
