@@ -97,7 +97,7 @@ export default function Home() {
           {/* Image Slider */}
           <div className="relative w-full h-[500px] mb-12 rounded-2xl overflow-hidden">
             {/* Navigation Buttons */}
-            <button 
+            <button
               onClick={() => setCurrentSlide((prev) => (prev === 0 ? sliderData.length - 1 : prev - 1))}
               className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all"
             >
@@ -105,7 +105,7 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
               </svg>
             </button>
-            <button 
+            <button
               onClick={() => setCurrentSlide((prev) => (prev === sliderData.length - 1 ? 0 : prev + 1))}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all"
             >
@@ -336,7 +336,7 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Dynamic Visual Experience */}
+            {/* Updated Video Experience Section */}
             <div className="relative h-full min-h-[500px] p-8">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
@@ -345,12 +345,12 @@ export default function Home() {
                 className="relative h-full rounded-3xl overflow-hidden shadow-2xl"
               >
                 <Image
-                  src="/videos/home/service/3.gif"
-                  alt="Digital Experience"
+                  src="/videos/home/service/3.webp"
+                  alt="Digital Experience Animation"
                   fill
-                  unoptimized
                   className="w-full h-full object-cover"
                   priority
+                  unoptimized
                 />
               </motion.div>
             </div>

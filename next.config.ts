@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   },
   webpack: (config) => {
     config.module.rules.push({
-      test: /\.(mp4|webm|ogg)$/,
+      test: /\.(mp4|webm|ogg|mov)$/,
       use: {
         loader: 'file-loader',
         options: {
@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb'
+      bodySizeLimit: '15mb'
     }
   },
   staticPageGenerationTimeout: 120
