@@ -345,7 +345,7 @@ export default function Home() {
                 className="relative h-full rounded-3xl overflow-hidden shadow-2xl"
               >
                 <Image
-                  src="/images/home/service/5.jpg"
+                  src="/images/home/5.jpg"
                   alt="Digital Experience Image"
                   fill
                   className="w-full h-full object-cover"
