@@ -1,10 +1,15 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { mkdir } from 'fs/promises';
 import { join } from 'path';
 
-const uploadDir = join(process.cwd(), 'public', 'uploads');
+const createUploadDirs = async () => {
+  const dirs = ['images', 'pdfs', 'excel'];
+  const baseDir = join(process.cwd(), 'public', 'uploads');
+  
+  for (const dir of dirs) {
+    const fullPath = join(baseDir, dir);
+    await mkdir(fullPath, { recursive: true });
+    console.log(`Created directory: ${fullPath}`);
+  }
+};
 
-if (!existsSync(uploadDir)) {
-  mkdirSync(uploadDir, { recursive: true });
-  writeFileSync(join(uploadDir, '.gitkeep'), '');
-  console.log('Created uploads directory');
-} 
+createUploadDirs().catch(console.error); 

@@ -34,6 +34,8 @@ COPY . .
 # Create necessary directories
 RUN mkdir -p /app/public/uploads/videos
 RUN mkdir -p /app/public/uploads/images
+RUN mkdir -p /app/public/uploads/pdfs
+RUN mkdir -p /app/public/uploads/excel
 RUN mkdir -p /app/.next/static/videos
 
 RUN apk add --no-cache python3 make g++ ffmpeg
@@ -63,8 +65,11 @@ RUN cd node_modules/bcrypt && npm install node-addon-api && npm rebuild bcrypt -
 # Setup application files and directories
 RUN mkdir -p /app/public/uploads/videos && \
     mkdir -p /app/public/uploads/images && \
+    mkdir -p /app/public/uploads/pdfs && \
+    mkdir -p /app/public/uploads/excel && \
     mkdir -p /app/.next/static/videos && \
-    chown -R nextjs:nodejs /app/public
+    chown -R nextjs:nodejs /app/public/uploads && \
+    chmod -R 755 /app/public/uploads
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -73,7 +78,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Security hardening with proper permissions for video directories
 RUN chmod -R 555 /app && \
     chmod -R 755 /app/public/uploads/videos && \
-    chmod -R 755 /app/public/uploads/images
+    chmod -R 755 /app/public/uploads/images && \
+    chmod -R 755 /app/public/uploads/pdfs && \
+    chmod -R 755 /app/public/uploads/excel
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
