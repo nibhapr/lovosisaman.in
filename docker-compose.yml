@@ -16,8 +16,6 @@ services:
       - NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:3001
       - SKIP_BUILD_STATIC_GENERATION=true
     volumes:
-      - uploads:/app/public/uploads:rw
-      - ./public/uploads:/app/public/uploads:rw
       - ./.next/static/videos:/app/.next/static/videos:rw
     deploy:
       resources:
@@ -74,9 +72,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-volumes:
-  uploads:
 
 networks:
   app-network:

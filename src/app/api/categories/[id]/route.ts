@@ -1,6 +1,32 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Category from '@/app/models/Category';
+import File from '@/app/models/File';
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const category = await Category.findById(params.id);
+    
+    if (!category) {
+      return NextResponse.json(
+        { error: 'Category not found' },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json(category);
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch category' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function PUT(
   request: Request,
@@ -10,24 +36,40 @@ export async function PUT(
     await connectDB();
     const data = await request.json();
     
-    const result = await Category.findByIdAndUpdate(
+    if (!data.name || !data.slug) {
+      return NextResponse.json(
+        { error: 'Name and slug are required' },
+        { status: 400 }
+      );
+    }
+
+    // Check if another category with the same slug exists (excluding this one)
+    const existingCategory = await Category.findOne({
+      slug: data.slug,
+      _id: { $ne: params.id }
+    });
+    
+    if (existingCategory) {
+      return NextResponse.json(
+        { error: 'Another category with this slug already exists' },
+        { status: 409 }
+      );
+    }
+
+    const category = await Category.findByIdAndUpdate(
       params.id,
-      {
-        $set: {
-          ...data,
-        },
-      },
-      { new: true }
+      data,
+      { new: true, runValidators: true }
     );
     
-    if (!result) {
+    if (!category) {
       return NextResponse.json(
         { error: 'Category not found' },
         { status: 404 }
       );
     }
     
-    return NextResponse.json(result);
+    return NextResponse.json(category);
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json(
@@ -44,13 +86,25 @@ export async function DELETE(
   try {
     await connectDB();
     
-    const result = await Category.findByIdAndDelete(params.id);
+    // Find the category first to get its image
+    const category = await Category.findById(params.id);
     
-    if (result.deletedCount === 0) {
+    if (!category) {
       return NextResponse.json(
         { error: 'Category not found' },
         { status: 404 }
       );
+    }
+    
+    // Delete the category
+    await Category.findByIdAndDelete(params.id);
+    
+    // If the category has an image stored in MongoDB, delete it too
+    if (category.image && category.image.startsWith('/api/files/')) {
+      const fileId = category.image.split('/').pop();
+      if (fileId) {
+        await File.findByIdAndDelete(fileId);
+      }
     }
     
     return NextResponse.json({ success: true });

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 interface BlogCardProps {
   title: string;
@@ -24,6 +24,29 @@ export default function BlogCard({
   category,
   slug,
 }: BlogCardProps) {
+  // Function to get the display URL for the image
+  const getDisplayUrl = (url: string) => {
+    if (!url) return '';
+    // If it's already a MongoDB file URL, use it directly
+    return url;
+  };
+
+  // Format date safely
+  const formatDate = (dateString: string) => {
+    try {
+      // Try to parse as ISO string first
+      return format(parseISO(dateString), 'MMM dd, yyyy');
+    } catch (error) {
+      try {
+        // If that fails, try with regular Date constructor
+        return format(new Date(dateString), 'MMM dd, yyyy');
+      } catch (e) {
+        // If all parsing fails, return the original string
+        return dateString;
+      }
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -33,7 +56,7 @@ export default function BlogCard({
       {image && (
         <div className="relative h-48 w-full">
           <Image
-            src={image}
+            src={getDisplayUrl(image)}
             alt={title}
             fill
             className="object-cover"
@@ -47,7 +70,7 @@ export default function BlogCard({
         
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center space-x-4">
-            <span>{format(new Date(date), 'MMM dd, yyyy')}</span>
+            <span>{formatDate(date)}</span>
             <span>{author}</span>
             <span>{category}</span>
           </div>

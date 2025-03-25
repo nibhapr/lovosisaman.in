@@ -16,58 +16,49 @@ async function getSubcategories(categoryId: string) {
 
 export default async function CategoryPage({ params }: { params: { category: string } }) {
   const category = await getCategory(params.category);
-  const subcategories = category ? await getSubcategories(category._id) : [];
-
+  
   if (!category) {
-    return <div>Category not found</div>;
+    return <div className="container mx-auto px-4 py-12">Category not found</div>;
   }
+  
+  const subcategories = await getSubcategories(category._id.toString());
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">
-          Products in this{" "}
-          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {category.name}
-          </span>{" "}
-          Category
-        </h1>
-        <p className="text-gray-600">
-          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {category.description}
-          </span>
-          <br />
-          <span className="text-sm mt-2 block">
-            Browse our selection of products in the below subcategories of this{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-semibold">
-              {category.name}
-            </span>{" "}
-            category.
-          </span>
-        </p>
+    <div className="container mx-auto px-4 py-12">
+      <div className="mb-8">
+        <Link href="/shop" className="text-blue-600 hover:underline">
+          ← Back to Categories
+        </Link>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <h1 className="text-3xl font-bold mb-8">{category.name}</h1>
+      
+      {category.description && (
+        <p className="text-gray-700 mb-8">{category.description}</p>
+      )}
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {subcategories.map((subcategory) => (
-          <Link
-            key={subcategory._id}
+          <Link 
+            key={subcategory._id} 
             href={`/shop/${params.category}/${subcategory.slug}`}
             className="group"
           >
-            <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
               <div className="relative h-48 w-full">
                 <Image
-                  src={subcategory.image}
+                  src={subcategory.image || '/images/placeholder.jpg'}
                   alt={subcategory.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
                 />
               </div>
-              <div className="p-4">
-                <h2 className="text-xl font-semibold group-hover:text-blue-600">
-                  {subcategory.name}
-                </h2>
-                <p className="text-gray-600 mt-2">{subcategory.description}</p>
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-2">{subcategory.name}</h2>
+                {subcategory.description && (
+                  <p className="text-gray-600 line-clamp-2">{subcategory.description}</p>
+                )}
               </div>
             </div>
           </Link>

@@ -31,7 +31,6 @@ interface Product {
   features: string[];
   specifications: Record<string, string>;
   catalogPdf?: string;
-  catalogExcel?: string;
 }
 
 export interface Review {

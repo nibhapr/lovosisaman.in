@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import {
     IoCalendarOutline,
     IoPersonOutline,
@@ -13,6 +13,7 @@ import {
     IoLogoLinkedin,
     IoLogoFacebook
 } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
 
 interface BlogPostProps {
     post: {
@@ -34,7 +35,7 @@ interface BlogPostProps {
 }
 
 export default function BlogPost({ post }: BlogPostProps) {
-    const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const [shareUrl, setShareUrl] = useState('');
     const shareText = `Check out this article: ${post.title}`;
 
     const handleShare = (platform: string) => {
@@ -53,6 +54,31 @@ export default function BlogPost({ post }: BlogPostProps) {
         return match && match[2].length === 11 ? match[2] : '';
     };
 
+    // Function to get the display URL for images
+    const getDisplayUrl = (url: string) => {
+        if (!url) return '';
+        return url;
+    };
+
+    // Format date safely
+    const formatDate = (dateString: string) => {
+        try {
+            return format(parseISO(dateString), 'MMM dd, yyyy');
+        } catch (error) {
+            try {
+                return format(new Date(dateString), 'MMM dd, yyyy');
+            } catch (e) {
+                return dateString;
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setShareUrl(window.location.href);
+        }
+    }, []);
+
     return (
         <motion.article
             initial={{ opacity: 0 }}
@@ -64,7 +90,7 @@ export default function BlogPost({ post }: BlogPostProps) {
                 <div className="flex flex-wrap gap-4 text-gray-600">
                     <span className="flex items-center gap-1">
                         <IoCalendarOutline />
-                        {format(new Date(post.date), 'MMM dd, yyyy')}
+                        {formatDate(post.date)}
                     </span>
                     <span className="flex items-center gap-1">
                         <IoPersonOutline />
@@ -86,7 +112,7 @@ export default function BlogPost({ post }: BlogPostProps) {
             {post.image && (
                 <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden">
                     <Image
-                        src={post.image}
+                        src={getDisplayUrl(post.image)}
                         alt={post.title}
                         fill
                         className="object-cover"
@@ -105,7 +131,7 @@ export default function BlogPost({ post }: BlogPostProps) {
             {post.image2 && (
                 <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden">
                     <Image
-                        src={post.image2}
+                        src={getDisplayUrl(post.image2)}
                         alt={`${post.title} - additional image 1`}
                         fill
                         className="object-cover"
@@ -123,7 +149,7 @@ export default function BlogPost({ post }: BlogPostProps) {
             {post.image3 && (
                 <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden">
                     <Image
-                        src={post.image3}
+                        src={getDisplayUrl(post.image3)}
                         alt={`${post.title} - additional image 2`}
                         fill
                         className="object-cover"

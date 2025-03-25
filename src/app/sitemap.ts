@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://yourdomain.com'
+  const baseUrl = 'https://lovosis.com'
   
   // Base routes that we know exist
   const routes = [
@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/about',
     '/contact',
     '/services',
+    '/careers',
     '/services/it-services',
     '/services/electronics-manufacturing',
   ].map((route) => ({

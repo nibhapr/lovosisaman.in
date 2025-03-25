@@ -16,8 +16,12 @@ export default function EventCard({ event }: EventCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
-    router.push(`/events/${event._id}`);
+    router.push(`/events/${event.slug}`);
   };
+
+  const imageUrl = event.image?.startsWith('/api/files/') 
+    ? event.image 
+    : event.image || '/images/placeholder.jpg';
 
   return (
     <div 
@@ -26,14 +30,15 @@ export default function EventCard({ event }: EventCardProps) {
     >
       <div className="relative h-48 w-full">
         <Image
-          src={event.image}
+          src={imageUrl}
           alt={event.title}
           fill
           className="object-cover"
+          unoptimized={imageUrl.startsWith('/api/files/')}
         />
       </div>
       <div className="p-6">
-        <Link href={`/events/${event._id}`}>
+        <Link href={`/events/${event.slug}`}>
           <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
             {event.title}
           </h3>

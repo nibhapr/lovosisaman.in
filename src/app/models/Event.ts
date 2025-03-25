@@ -4,70 +4,43 @@ const eventSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    trim: true
   },
   slug: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
+    unique: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
-  content: {
-    type: String,
-    required: false,
-  },
-  content2: {
-    type: String,
-    required: false,
-  },
-  content3: {
-    type: String,
-    required: false,
-  },
+  content: String,
+  content2: String,
+  content3: String,
+  image: String,
+  image2: String,
+  image3: String,
   date: {
-    type: String,
-    required: true,
+    type: Date,
+    required: true
   },
-  time: {
-    type: String,
-    required: true,
-  },
+  time: String,
   location: {
     type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: false,
-  },
-  image2: {
-    type: String,
-    required: false,
-  },
-  image3: {
-    type: String,
-    required: false,
-  },
-  registrationLink: {
-    type: String,
+    required: true
   },
   status: {
     type: String,
     enum: ['upcoming', 'ongoing', 'completed'],
-    default: 'upcoming',
+    default: 'upcoming'
   },
   category: {
     type: String,
-    required: true,
-    enum: ['Technology', 'Innovation', 'Education', 'Manufacturing', 'Digital Services']
+    enum: ['Technology', 'Innovation', 'Education', 'Manufacturing', 'Digital Services'],
+    required: true
   }
-}, {
-  timestamps: true
-});
+}, { timestamps: true });
 
 // Add pre-save middleware to generate slug
 eventSchema.pre('save', function(next) {

@@ -43,7 +43,8 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '15mb'
     }
   },
-  staticPageGenerationTimeout: 120
+  staticPageGenerationTimeout: 120,
+  reactStrictMode: process.env.NODE_ENV === 'production',
 };
 
 export default nextConfig;

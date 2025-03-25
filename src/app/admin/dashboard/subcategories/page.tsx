@@ -5,11 +5,11 @@ import SubcategoryManager from '@/app/Components/admin/SubcategoryManager';
 
 export default function SubcategoriesPage() {
   return (
-    <div className="p-6">
-        <DashboardLayout>
-      <h1 className="text-2xl font-bold mb-6">Subcategories Management</h1>
-      <SubcategoryManager />
-        </DashboardLayout>
+    <div>
+      <DashboardLayout>
+        <h1 className="text-2xl font-bold mb-6">Subcategories Management</h1>
+        <SubcategoryManager />
+      </DashboardLayout>
     </div>
   );
 } 

@@ -5,10 +5,14 @@ import Event from '@/app/models/Event';
 export async function GET() {
   try {
     await connectDB();
-    const events = await Event.find().sort({ date: 1 });
+    const events = await Event.find({}).sort({ date: 1 });
     return NextResponse.json(events);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
+    console.error('Database error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch events' },
+      { status: 500 }
+    );
   }
 }
 
@@ -17,7 +21,14 @@ export async function POST(request: Request) {
     await connectDB();
     const data = await request.json();
     
-    // Handle optional fields
+    if (!data.title || !data.description || !data.date || !data.location) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Clean up optional fields
     const eventData = {
       ...data,
       content: data.content || undefined,
@@ -27,10 +38,16 @@ export async function POST(request: Request) {
       image2: data.image2 || undefined,
       image3: data.image3 || undefined
     };
+
+    const event = new Event(eventData);
+    await event.save();
     
-    const event = await Event.create(eventData);
-    return NextResponse.json(event);
+    return NextResponse.json(event, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create event' }, { status: 500 });
+    console.error('Database error:', error);
+    return NextResponse.json(
+      { error: 'Failed to create event' },
+      { status: 500 }
+    );
   }
 } 

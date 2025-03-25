@@ -10,11 +10,9 @@ const productSchema = new mongoose.Schema({
   features: [String],
   specifications: { type: Map, of: String },
   catalogPdf: String,
-  catalogExcel: String
 }, { timestamps: true });
 
 // Add indexes for better query performance
-productSchema.index({ slug: 1 }, { unique: true });
 productSchema.index({ categoryId: 1, subcategoryId: 1 });
 
 const Product = mongoose.models.Product || mongoose.model('Product', productSchema);

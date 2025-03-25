@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { connectDB } from '@/lib/db';
+import File from '@/app/models/File';
 
 export const config = {
   api: {
@@ -21,24 +21,42 @@ export async function POST(request: Request) {
 
     console.log('File received:', file.name, 'Size:', file.size);
 
+    // Connect to MongoDB
+    await connectDB();
+
+    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     // Generate unique filename
     const filename = `${Date.now()}-${file.name}`;
-    const publicPath = path.join(process.cwd(), 'public', 'uploads');
-    const filePath = path.join(publicPath, filename);
-
-    await writeFile(filePath, buffer);
     
-    // Return both local path and full URL
+    // Determine content type
+    const contentType = file.type;
+
+    // Save file to MongoDB
+    const fileDoc = await File.create({
+      filename: filename,
+      contentType: contentType,
+      size: file.size,
+      data: buffer,
+      metadata: {
+        originalName: file.name
+      }
+    });
+
+    // Return the file ID as the URL
+    const fileId = fileDoc._id.toString();
+    
+    // Return both MongoDB ID and a URL format that can be used to retrieve the file
     const baseUrl = process.env.NEXT_PUBLIC_DOMAIN 
       ? `https://${process.env.NEXT_PUBLIC_DOMAIN}`
       : 'http://localhost:3000';
 
     return NextResponse.json({ 
-      url: `/uploads/${filename}`,
-      fullUrl: `${baseUrl}/uploads/${filename}`
+      url: `/api/files/${fileId}`,
+      fileId: fileId,
+      fullUrl: `${baseUrl}/api/files/${fileId}`
     });
   } catch (error) {
     console.error('Upload error:', error);

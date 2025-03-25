@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { BlogPost } from '@/types/blog';
 import BlogPostComponent from '@/app/Components/blog/BlogPost';
 import ReviewForm from '@/app/Components/shared/ReviewForm';
 import { IoStar, IoStarOutline, IoClose } from 'react-icons/io5';
-import { use } from 'react';
 import type { Review } from '@/types/review';
 
 export default function BlogPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -17,17 +16,21 @@ export default function BlogPage({ params }: { params: Promise<{ slug: string }>
   const [showAllReviews, setShowAllReviews] = useState(false);
 
   useEffect(() => {
-    const fetchBlog = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`/api/blog/${resolvedParams.slug}`);
-        if (!response.ok) {
+        // Fetch blog data
+        const blogResponse = await fetch(`/api/blog/${resolvedParams.slug}`);
+        if (!blogResponse.ok) {
           throw new Error('Failed to fetch blog');
         }
-        const data = await response.json();
-        setBlog(data);
+        const blogData = await blogResponse.json();
+        setBlog(blogData);
 
-        if (data?._id) {
-          const reviewsResponse = await fetch(`/api/reviews?itemId=${data._id}&itemType=blog`);
+        // Fetch reviews if blog data is available
+        if (blogData?._id) {
+          const reviewsResponse = await fetch(
+            `/api/reviews?itemId=${blogData._id}&itemType=blog`
+          );
           if (reviewsResponse.ok) {
             const reviewsData = await reviewsResponse.json();
             setReviews(reviewsData);
@@ -38,7 +41,7 @@ export default function BlogPage({ params }: { params: Promise<{ slug: string }>
       }
     };
 
-    fetchBlog();
+    fetchData();
   }, [resolvedParams.slug]);
 
   useEffect(() => {

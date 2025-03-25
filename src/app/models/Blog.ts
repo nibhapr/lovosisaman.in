@@ -6,73 +6,29 @@ const blogSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  content: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  content2: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  content3: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  content4: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  excerpt: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  image: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  image2: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  image3: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  youtubeUrl: {
-    type: String,
-    trim: true,
-    required: false
-  },
-  author: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  category: {
-    type: String,
-    required: true,
-    trim: true
-  },
   slug: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
+    unique: true
   },
-  date: {
-    type: Date,
-    default: Date.now
+  content: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: true
+  },
+  author: {
+    type: String,
+    default: "Site Admin"
+  },
+  tags: [String],
+  published: {
+    type: Boolean,
+    default: false
   }
-});
+}, { timestamps: true });
 
 // Create indexes for better query performance
 blogSchema.index({ slug: 1 });

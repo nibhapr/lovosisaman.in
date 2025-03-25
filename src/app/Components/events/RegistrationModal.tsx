@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from 'react';
-import { Event } from '@/types/event';
 
 interface RegistrationModalProps {
-  event: Event;
+  event: {
+    _id: string;
+    title: string;
+    slug: string;
+  };
   onClose: () => void;
 }
 
@@ -21,7 +24,7 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
     setStatus('loading');
     
     try {
-      const response = await fetch(`/api/events/${event._id}/registrations`, {
+      const response = await fetch(`/api/events/${event.slug}/registrations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -32,77 +35,98 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
       setStatus('success');
       setTimeout(onClose, 2000);
     } catch (error) {
+      console.error('Registration error:', error);
       setStatus('error');
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
-        <h3 className="text-xl font-semibold mb-4">Register for {event.title}</h3>
+      <div className="bg-white rounded-xl p-6 max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-4">Register for {event.title}</h2>
         
         {status === 'success' ? (
-          <div className="text-green-600 text-center py-4">
-            Registration successful! Thank you for registering.
+          <div className="text-center py-8">
+            <div className="mb-4 text-green-500">
+              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="text-xl font-medium">Registration Successful!</p>
+            <p className="text-gray-500 mt-2">Thank you for registering.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
               <input
                 type="text"
+                id="name"
+                name="name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
+                disabled={status === 'loading'}
               />
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
                 type="email"
+                id="email"
+                name="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
+                disabled={status === 'loading'}
               />
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                 Phone
               </label>
               <input
                 type="tel"
+                id="phone"
+                name="phone"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
+                disabled={status === 'loading'}
               />
             </div>
-
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 pt-2">
               <button
                 type="submit"
+                className={`px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 flex-1 ${
+                  status === 'loading' ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
                 disabled={status === 'loading'}
-                className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
               >
                 {status === 'loading' ? 'Registering...' : 'Register'}
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300"
+                className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+                disabled={status === 'loading'}
               >
                 Cancel
               </button>
             </div>
-
+            
             {status === 'error' && (
               <p className="text-red-600 text-sm text-center">
                 Registration failed. Please try again.

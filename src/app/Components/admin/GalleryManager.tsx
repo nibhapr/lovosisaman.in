@@ -49,37 +49,55 @@ export default function GalleryManager() {
     try {
       const url = isEditing && selectedItem?._id ? `/api/gallery/${selectedItem._id}` : '/api/gallery';
       const method = isEditing ? 'PUT' : 'POST';
-      
+
       const data = {
         ...formData,
-        images: formData.images.filter(img => img.trim() !== '')
+        images: await Promise.all(formData.images.map(async (image) => {
+          if (image.startsWith('/api/files/')) {
+            return image; // Already uploaded
+          }
+          const response = await fetch(image); // Assuming image is the file URL
+          const fileData = await response.json();
+          return fileData.fullUrl; // Use the full URL returned from the upload
+        })),
       };
 
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
-      if (!response.ok) throw new Error('Failed to save gallery item');
-      
-      await fetchGalleryItems();
-      resetForm();
+      if (response.ok) {
+        fetchGalleryItems();
+        resetForm();
+      }
     } catch (error) {
       console.error('Error saving gallery item:', error);
     }
   };
 
+  const handleEdit = (item: GalleryImage) => {
+    setFormData({
+      title: item.title,
+      description: item.description || '',
+      images: item.images,
+      category: item.category,
+    });
+    setIsEditing(true);
+    setSelectedItem(item);
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
-    
+
     try {
       const response = await fetch(`/api/gallery/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       if (!response.ok) throw new Error('Failed to delete gallery item');
-      
+
       await fetchGalleryItems();
     } catch (error) {
       console.error('Error deleting gallery item:', error);
@@ -102,7 +120,6 @@ export default function GalleryManager() {
       <h2 className="text-2xl font-bold mb-6">Gallery Management</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Form */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -110,9 +127,7 @@ export default function GalleryManager() {
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Title
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
               <input
                 type="text"
                 value={formData.title}
@@ -123,9 +138,7 @@ export default function GalleryManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -135,27 +148,7 @@ export default function GalleryManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                required
-              >
-                {CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Images
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Images</label>
               <div className="space-y-4">
                 {formData.images.map((image, index) => (
                   <div key={index} className="flex items-center space-x-4">
@@ -184,10 +177,12 @@ export default function GalleryManager() {
                 ))}
                 <button
                   type="button"
-                  onClick={() => setFormData({
-                    ...formData,
-                    images: [...formData.images, '']
-                  })}
+                  onClick={() => {
+                    setFormData(prevState => ({
+                      ...prevState,
+                      images: [...prevState.images, '']
+                    }));
+                  }}
                   className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
                 >
                   <IoAddOutline className="w-5 h-5" />
@@ -196,23 +191,28 @@ export default function GalleryManager() {
               </div>
             </div>
 
-            <div className="flex space-x-4 mt-6">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                required
               >
-                {isEditing ? 'Update' : 'Add'} Gallery Item
-              </button>
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-              )}
+                {CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              {isEditing ? 'Update' : 'Add'} Gallery Item
+            </button>
           </form>
         </motion.div>
 
@@ -225,55 +225,24 @@ export default function GalleryManager() {
           <div className="space-y-4">
             {Array.isArray(galleryItems) && galleryItems.length > 0 ? (
               galleryItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="p-4 border rounded-lg hover:border-blue-500 transition-colors"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">{item.title}</h3>
-                      <p className="text-sm text-gray-500">{item.category}</p>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => {
-                          setIsEditing(true);
-                          setSelectedItem(item);
-                          setFormData({
-                            title: item.title,
-                            description: item.description || '',
-                            images: item.images,
-                            category: item.category
-                          });
-                        }}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                      >
-                        <IoCreateOutline className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                      >
-                        <IoTrashOutline className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="mt-4 grid grid-cols-3 gap-2">
-                    {item.images.map((image, index) => (
-                      <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
-                        <Image
-                          src={image}
-                          alt={`${item.title} - ${index + 1}`}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
+                <div key={item._id} className="p-4 border rounded-lg hover:border-blue-500 transition-colors">
+                  <h3 className="font-medium">{item.title}</h3>
+                  <p className="text-sm text-gray-500">{item.category}</p>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {item.images.map((img, idx) => (
+                      <Image key={idx} src={img} alt={`Gallery Image ${idx + 1}`} width={100} height={100} className="object-cover rounded" />
                     ))}
                   </div>
+                  <button onClick={() => handleEdit(item)} className="text-blue-600 hover:text-blue-800">
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-800">
+                    Delete
+                  </button>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center py-4">No gallery items found</p>
+              <p>No gallery items found.</p>
             )}
           </div>
         </motion.div>

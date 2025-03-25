@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import ProductModel from '@/app/models/Product';
-import { parseExcelPreview } from '@/lib/excelParser';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,11 +9,6 @@ export async function GET(request: Request) {
   try {
     await connectDB();
     const product = await ProductModel.findOne({ slug });
-
-    if (product?.catalogExcel) {
-      product.excelPreview = await parseExcelPreview(product.catalogExcel);
-    }
-
     return NextResponse.json(product);
   } catch (error) {
     console.error('Error:', error);

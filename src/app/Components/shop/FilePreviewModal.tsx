@@ -4,8 +4,8 @@ interface FilePreviewModalProps {
     isOpen: boolean;
     onClose: () => void;
     fileUrl: string;
-    fileType: 'pdf' | 'excel';
-    excelData: { headers: string[]; rows: any[][] } | null | undefined;
+    fileType: 'pdf';
+    excelData: null;
 }
 
 export default function FilePreviewModal({
@@ -29,40 +29,11 @@ export default function FilePreviewModal({
 
                 <div className="p-6 h-full">
                     <div className="h-full">
-                        {fileType === 'pdf' ? (
-                            <iframe
-                                src={`${fileUrl}#toolbar=0`}
-                                className="w-full h-full rounded-lg"
-                                title="PDF Preview"
-                            />
-                        ) : (
-                            <div className="overflow-auto h-full">
-                                {excelData && (
-                                    <table className="min-w-full border-collapse border border-gray-200">
-                                        <thead>
-                                            <tr className="bg-gray-50">
-                                                {excelData.headers.map((header, index) => (
-                                                    <th key={index} className="border border-gray-200 px-4 py-2 text-left text-sm font-medium text-gray-600">
-                                                        {header}
-                                                    </th>
-                                                ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {excelData.rows.map((row, rowIndex) => (
-                                                <tr key={rowIndex}>
-                                                    {row.map((cell, cellIndex) => (
-                                                        <td key={cellIndex} className="border border-gray-200 px-4 py-2 text-sm text-gray-600">
-                                                            {cell}
-                                                        </td>
-                                                    ))}
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                )}
-                            </div>
-                        )}
+                        <iframe
+                            src={`${fileUrl}#toolbar=0`}
+                            className="w-full h-full rounded-lg"
+                            title="PDF Preview"
+                        />
                     </div>
                 </div>
             </div>

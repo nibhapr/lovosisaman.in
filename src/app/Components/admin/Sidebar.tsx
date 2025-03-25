@@ -28,9 +28,10 @@ const menuItems = [
   { name: 'Categories', icon: HiOutlineSquares2X2, path: '/admin/dashboard/categories' },
   { name: 'Subcategories', icon: HiOutlineRectangleStack, path: '/admin/dashboard/subcategories' },
   { name: 'Products', icon: HiOutlineShoppingBag, path: '/admin/dashboard/products' },
+  { name: 'Catalog Requests', icon: HiOutlineRectangleStack, path: '/admin/dashboard/catalog-requests' },
   { name: 'Reviews', icon: HiOutlineStar, path: '/admin/dashboard/reviews' },
-  { name: 'Profile', icon: HiOutlineUserCircle, path: '/admin/dashboard/profile' },
   { name: 'Gallery', icon: HiOutlinePhoto, path: '/admin/dashboard/gallery' },
+  { name: 'Profile', icon: HiOutlineUserCircle, path: '/admin/dashboard/profile' },
 ];
 
 interface SidebarProps {

@@ -20,7 +20,6 @@ export default function ProductManager() {
         features: [''],
         specifications: {} as Record<string, string>,
         catalogPdf: '',
-        catalogExcel: ''
     });
     const [isEditing, setIsEditing] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -71,7 +70,6 @@ export default function ProductManager() {
             features: [''],
             specifications: {},
             catalogPdf: '',
-            catalogExcel: ''
         });
         setIsEditing(false);
         setSelectedProduct(null);
@@ -116,7 +114,7 @@ export default function ProductManager() {
     const handleDelete = async (productId: string | undefined) => {
         if (!productId) return;
         if (!confirm('Are you sure you want to delete this product?')) return;
-        
+
         try {
             const response = await fetch(`/api/products/${productId}`, {
                 method: 'DELETE',
@@ -124,7 +122,7 @@ export default function ProductManager() {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             if (response.ok) {
                 await fetchProducts();
             } else {
@@ -315,36 +313,6 @@ export default function ProductManager() {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Catalog Excel
-                        </label>
-                        <input
-                            type="file"
-                            accept=".xlsx,.xls"
-                            onChange={async (e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    const formData = new FormData();
-                                    formData.append('file', file);
-                                    try {
-                                        const response = await fetch('/api/upload', {
-                                            method: 'POST',
-                                            body: formData,
-                                        });
-                                        if (response.ok) {
-                                            const data = await response.json();
-                                            setFormData(prev => ({ ...prev, catalogExcel: data.url }));
-                                        }
-                                    } catch (error) {
-                                        console.error('Error uploading Excel:', error);
-                                    }
-                                }
-                            }}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Features
                         </label>
                         {formData.features.map((feature, index) => (
@@ -484,7 +452,6 @@ export default function ProductManager() {
                                             features: product.features || [''],
                                             specifications: product.specifications || {},
                                             catalogPdf: product.catalogPdf || '',
-                                            catalogExcel: product.catalogExcel || ''
                                         });
                                     }}
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"

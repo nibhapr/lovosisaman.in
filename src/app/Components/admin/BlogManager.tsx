@@ -1,39 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-
-interface BlogPost {
-    _id: string;
-    title: string;
-    content?: string;
-    content2?: string;
-    content3?: string;
-    content4?: string;
-    excerpt: string;
-    image?: string;
-    image2?: string;
-    image3?: string;
-    date: string;
-    author: string;
-    category: string;
-    slug: string;
-    youtubeUrl?: string;
-}
-
-interface ImageUploadResponse {
-    url: string;
-    success: boolean;
-    error?: string;
-}
+import { IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
+import type { BlogPost } from '@/types/blog';
+import ImageUpload from '@/app/Components/shared/ImageUpload';
 
 const BLOG_CATEGORIES = [
     'Technology',
-    'Innovation',
+    'Innovation', 
     'Education',
     'Manufacturing',
     'Digital Services'
 ];
+
+const generateSlug = (title: string): string => {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+        .replace(/(^-|-$)+/g, ''); // Remove leading/trailing hyphens
+};
 
 export default function BlogManager() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -52,10 +37,14 @@ export default function BlogManager() {
         youtubeUrl: '',
         category: '',
         slug: '',
-        author: ''
+        author: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         fetchPosts();
@@ -64,16 +53,13 @@ export default function BlogManager() {
     const fetchPosts = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/blog');
+            const response = await fetch('/api/blogs');
             if (!response.ok) {
-                throw new Error('Failed to fetch posts');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to fetch posts');
             }
             const data = await response.json();
-            if (Array.isArray(data)) {
-                setPosts(data);
-            } else {
-                throw new Error('Invalid data format');
-            }
+            setPosts(data);
         } catch (error) {
             console.error('Failed to fetch posts:', error);
             setError(error instanceof Error ? error.message : 'Failed to fetch posts');
@@ -84,102 +70,84 @@ export default function BlogManager() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!formData.title || !formData.content) {
+            setError('Title and content are required');
+            return;
+        }
+
+        if (!formData.image) {
+            setError('Main image is required');
+            return;
+        }
+
         try {
-            const url = isEditing ? `/api/blog/${selectedPost?.slug}` : '/api/blog';
+            const blogData = {
+                ...formData,
+                author: formData.author || "Default Author Name",
+                slug: generateSlug(formData.title),
+                content: formData.content || undefined,
+                content2: formData.content2 || undefined,
+                content3: formData.content3 || undefined,
+                content4: formData.content4 || undefined,
+                image: formData.image || undefined,
+                image2: formData.image2 || undefined,
+                image3: formData.image3 || undefined
+            };
+
+            const url = isEditing ? `/api/blog/${selectedPost?._id}` : '/api/blog';
             const method = isEditing ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(blogData)
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to save blog post');
+                throw new Error(errorData.error || errorData.message || 'Failed to save post');
             }
 
-            // Fetch fresh data immediately after successful update
-            const fetchResponse = await fetch('/api/blog');
-            if (fetchResponse.ok) {
-                const data = await fetchResponse.json();
-                setPosts(data);
-            }
-
-            // Reset form
+            await fetchPosts();
+            resetForm();
             setIsEditing(false);
-            setSelectedPost(null);
-            setFormData({
-                title: '',
-                content: '',
-                content2: '',
-                content3: '',
-                content4: '',
-                excerpt: '',
-                image: '',
-                image2: '',
-                image3: '',
-                youtubeUrl: '',
-                category: '',
-                slug: '',
-                author: ''
-            });
         } catch (error) {
-            console.error('Failed to save post:', error);
-            alert(error instanceof Error ? error.message : 'Failed to save post');
+            console.error('Error saving post:', error);
+            setError(error instanceof Error ? error.message : 'Failed to save post');
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const uploadImage = async (file: File): Promise<ImageUploadResponse> => {
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to upload image');
-            }
-
-            const data = await response.json();
-            return {
-                url: data.url,
-                success: true
-            };
-        } catch (error) {
-            console.error('Image upload error:', error);
-            return {
-                url: '',
-                success: false,
-                error: error instanceof Error ? error.message : 'Failed to upload image'
-            };
-        }
-    };
-
-    const getYoutubeVideoId = (url: string) => {
-        if (!url) return '';
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return match && match[2].length === 11 ? match[2] : '';
+    const handleEdit = (post: BlogPost) => {
+        setSelectedPost(post);
+        setFormData({
+            title: post.title,
+            content: post.content || '',
+            content2: post.content2 || '',
+            content3: post.content3 || '',
+            content4: post.content4 || '',
+            excerpt: post.excerpt || '',
+            image: post.image || '',
+            image2: post.image2 || '',
+            image3: post.image3 || '',
+            youtubeUrl: post.youtubeUrl || '',
+            category: post.category,
+            slug: post.slug,
+            author: post.author,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt
+        });
+        setIsEditing(true);
     };
 
     const handleDelete = async (slug: string) => {
-        if (!confirm('Are you sure you want to delete this post?')) return;
+        if (!window.confirm('Are you sure you want to delete this post?')) {
+            return;
+        }
 
         try {
-            const response = await fetch(`/api/blog/${slug}`, {
-                method: 'DELETE',
+            const response = await fetch(`/api/blogs/${slug}`, {
+                method: 'DELETE'
             });
 
             if (!response.ok) {
@@ -187,460 +155,188 @@ export default function BlogManager() {
             }
 
             await fetchPosts();
-            setSelectedPost(null);
-            setIsEditing(false);
-            setFormData({
-                title: '',
-                content: '',
-                content2: '',
-                content3: '',
-                content4: '',
-                excerpt: '',
-                image: '',
-                image2: '',
-                image3: '',
-                youtubeUrl: '',
-                category: '',
-                slug: '',
-                author: ''
-            });
         } catch (error) {
-            console.error('Failed to delete post:', error);
+            console.error('Error deleting post:', error);
             setError(error instanceof Error ? error.message : 'Failed to delete post');
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    const resetForm = () => {
+        setFormData({
+            title: '',
+            content: '',
+            content2: '',
+            content3: '',
+            content4: '',
+            excerpt: '',
+            image: '',
+            image2: '',
+            image3: '',
+            youtubeUrl: '',
+            category: '',
+            slug: '',
+            author: '',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+        setIsEditing(false);
+        setSelectedPost(null);
+    };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="p-6"
-        >
-            <h2 className="text-2xl font-bold mb-6">Blog Management</h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Post List */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold">Posts</h3>
-                        <button
-                            onClick={() => {
-                                setIsEditing(false);
-                                setSelectedPost(null);
-                                setFormData({
-                                    title: '',
-                                    content: '',
-                                    content2: '',
-                                    content3: '',
-                                    content4: '',
-                                    excerpt: '',
-                                    image: '',
-                                    image2: '',
-                                    image3: '',
-                                    youtubeUrl: '',
-                                    category: '',
-                                    slug: '',
-                                    author: ''
-                                });
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            New Post
-                        </button>
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Blog Manager</h1>
+            
+            <form onSubmit={handleSubmit} className="mb-8 space-y-4">
+                {/* Form fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block mb-2">Title</label>
+                        <input
+                            type="text"
+                            value={formData.title}
+                            onChange={(e) => setFormData({...formData, title: e.target.value})}
+                            className="w-full p-2 border rounded"
+                            required
+                        />
                     </div>
+                    
+                    <div>
+                        <label className="block mb-2">Category</label>
+                        <select
+                            value={formData.category}
+                            onChange={(e) => setFormData({...formData, category: e.target.value})}
+                            className="w-full p-2 border rounded"
+                            required
+                        >
+                            <option value="">Select Category</option>
+                            {BLOG_CATEGORIES.map(category => (
+                                <option key={category} value={category}>{category}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
 
-                    <div className="space-y-4">
-                        {posts.map((post) => (
-                            <div
-                                key={post._id}
-                                className="p-4 rounded-lg border hover:border-blue-500 transition-colors"
-                            >
-                                <div className="flex justify-between items-start">
-                                    <div
-                                        className="flex-grow cursor-pointer"
-                                        onClick={() => {
-                                            setSelectedPost(post);
-                                            setFormData({
-                                                title: post.title || '',
-                                                content: post.content || '',
-                                                content2: post.content2 || '',
-                                                content3: post.content3 || '',
-                                                content4: post.content4 || '',
-                                                excerpt: post.excerpt || '',
-                                                image: post.image || '',
-                                                image2: post.image2 || '',
-                                                image3: post.image3 || '',
-                                                youtubeUrl: post.youtubeUrl || '',
-                                                category: post.category || '',
-                                                slug: post.slug || '',
-                                                author: post.author || ''
-                                            });
-                                            setIsEditing(true);
-                                        }}
-                                    >
-                                        <h4 className="font-medium">{post.title}</h4>
-                                        <p className="text-sm text-gray-600">
-                                            {new Date(post.date).toLocaleDateString()}
-                                        </p>
-                                    </div>
+                <div>
+                    <label className="block mb-2">Author</label>
+                    <input
+                        type="text"
+                        value={formData.author}
+                        onChange={(e) => setFormData({...formData, author: e.target.value})}
+                        className="w-full p-2 border rounded"
+                        required
+                    />
+                </div>
+
+                {/* Image Upload Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <ImageUpload
+                            value={formData.image || ''}
+                            onChange={(url) => setFormData({...formData, image: url})}
+                            label="Main Image"
+                        />
+                    </div>
+                    <div>
+                        <ImageUpload
+                            value={formData.image2 || ''}
+                            onChange={(url) => setFormData({...formData, image2: url})}
+                            label="Second Image"
+                        />
+                    </div>
+                    <div>
+                        <ImageUpload
+                            value={formData.image3 || ''}
+                            onChange={(url) => setFormData({...formData, image3: url})}
+                            label="Third Image"
+                        />
+                    </div>
+                </div>
+
+                {/* Content Fields */}
+                <div className="space-y-4">
+                    <div>
+                        <label className="block mb-2">Main Content</label>
+                        <textarea
+                            value={formData.content}
+                            onChange={(e) => setFormData({...formData, content: e.target.value})}
+                            className="w-full p-2 border rounded"
+                            rows={6}
+                            required
+                        />
+                    </div>
+                    
+                    {/* Additional Content Fields */}
+                    {['content2', 'content3', 'content4'].map((field, index) => (
+                        <div key={field}>
+                            <label className="block mb-2">Additional Content {index + 1}</label>
+                            <textarea
+                                value={formData[field as keyof typeof formData] as string}
+                                onChange={(e) => setFormData({...formData, [field]: e.target.value})}
+                                className="w-full p-2 border rounded"
+                                rows={4}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-2">
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        {isSubmitting ? 'Saving...' : (isEditing ? 'Update Post' : 'Create Post')}
+                    </button>
+                </div>
+            </form>
+
+            {/* Error Display */}
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {error}
+                </div>
+            )}
+
+            {/* Posts List */}
+            <div className="space-y-4">
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    posts.map(post => (
+                        <div key={post._id} className="border p-4 rounded">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="text-xl font-semibold">{post.title}</h3>
+                                    <p className="text-gray-600">{post.category}</p>
+                                </div>
+                                <div className="flex space-x-2">
                                     <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDelete(post.slug);
-                                        }}
-                                        className="ml-4 p-2 text-red-600 hover:text-red-800 transition-colors"
+                                        onClick={() => handleEdit(post)}
+                                        className="text-blue-600 hover:text-blue-800"
                                     >
-                                        Delete
+                                        <IoCreateOutline className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(post.slug)}
+                                        className="text-red-600 hover:text-red-800"
+                                    >
+                                        <IoTrashOutline className="w-5 h-5" />
                                     </button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Post Form */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">
-                        {isEditing ? 'Edit Post' : 'New Post'}
-                    </h3>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                                Title
-                            </label>
-                            <input
-                                type="text"
-                                id="title"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
                         </div>
-
-                        <div>
-                            <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-1">
-                                Excerpt
-                            </label>
-                            <textarea
-                                id="excerpt"
-                                name="excerpt"
-                                value={formData.excerpt}
-                                onChange={handleInputChange}
-                                rows={3}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-                                Content (Optional)
-                            </label>
-                            <textarea
-                                id="content"
-                                name="content"
-                                value={formData.content || ''}
-                                onChange={handleInputChange}
-                                rows={6}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="content2" className="block text-sm font-medium text-gray-700 mb-1">
-                                Content 2 (Optional)
-                            </label>
-                            <textarea
-                                id="content2"
-                                name="content2"
-                                value={formData.content2 || ''}
-                                onChange={handleInputChange}
-                                rows={6}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="content3" className="block text-sm font-medium text-gray-700 mb-1">
-                                Content 3 (Optional)
-                            </label>
-                            <textarea
-                                id="content3"
-                                name="content3"
-                                value={formData.content3 || ''}
-                                onChange={handleInputChange}
-                                rows={6}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="content4" className="block text-sm font-medium text-gray-700 mb-1">
-                                Content 4 (Optional)
-                            </label>
-                            <textarea
-                                id="content4"
-                                name="content4"
-                                value={formData.content4 || ''}
-                                onChange={handleInputChange}
-                                rows={6}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
-                                Image (Optional)
-                            </label>
-                            <div className="flex items-center space-x-4">
-                                <input
-                                    type="file"
-                                    id="image"
-                                    accept="image/*"
-                                    onChange={async (e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            const result = await uploadImage(file);
-                                            if (result.success) {
-                                                setFormData(prev => ({
-                                                    ...prev,
-                                                    image: result.url
-                                                }));
-                                            } else {
-                                                setError(result.error || 'Failed to upload image');
-                                            }
-                                        }
-                                    }}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                {formData.image && (
-                                    <div className="relative">
-                                        <img
-                                            src={formData.image}
-                                            alt="Preview"
-                                            className="h-20 w-20 object-cover rounded-lg"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
-                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label htmlFor="image2" className="block text-sm font-medium text-gray-700 mb-1">
-                                Image 2 (Optional)
-                            </label>
-                            <div className="flex items-center space-x-4">
-                                <input
-                                    type="file"
-                                    id="image2"
-                                    accept="image/*"
-                                    onChange={async (e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            const result = await uploadImage(file);
-                                            if (result.success) {
-                                                setFormData(prev => ({
-                                                    ...prev,
-                                                    image2: result.url
-                                                }));
-                                            } else {
-                                                setError(result.error || 'Failed to upload image');
-                                            }
-                                        }
-                                    }}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                {formData.image2 && (
-                                    <div className="relative">
-                                        <img
-                                            src={formData.image2}
-                                            alt="Preview"
-                                            className="h-20 w-20 object-cover rounded-lg"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setFormData(prev => ({ ...prev, image2: '' }))}
-                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label htmlFor="image3" className="block text-sm font-medium text-gray-700 mb-1">
-                                Image 3 (Optional)
-                            </label>
-                            <div className="flex items-center space-x-4">
-                                <input
-                                    type="file"
-                                    id="image3"
-                                    accept="image/*"
-                                    onChange={async (e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            const result = await uploadImage(file);
-                                            if (result.success) {
-                                                setFormData(prev => ({
-                                                    ...prev,
-                                                    image3: result.url
-                                                }));
-                                            } else {
-                                                setError(result.error || 'Failed to upload image');
-                                            }
-                                        }
-                                    }}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                {formData.image3 && (
-                                    <div className="relative">
-                                        <img
-                                            src={formData.image3}
-                                            alt="Preview"
-                                            className="h-20 w-20 object-cover rounded-lg"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setFormData(prev => ({ ...prev, image3: '' }))}
-                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label htmlFor="youtubeUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                                YouTube Video URL (optional)
-                            </label>
-                            <input
-                                type="url"
-                                id="youtubeUrl"
-                                name="youtubeUrl"
-                                value={formData.youtubeUrl}
-                                onChange={handleInputChange}
-                                placeholder="https://www.youtube.com/watch?v=..."
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            {formData.youtubeUrl && getYoutubeVideoId(formData.youtubeUrl) && (
-                                <div className="mt-2">
-                                    <iframe
-                                        width="200"
-                                        height="113"
-                                        src={`https://www.youtube.com/embed/${getYoutubeVideoId(formData.youtubeUrl)}`}
-                                        title="YouTube video preview"
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className="rounded-lg"
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        <div>
-                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-                                Category
-                            </label>
-                            <select
-                                id="category"
-                                name="category"
-                                value={formData.category}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            >
-                                <option value="">Select a category</option>
-                                {BLOG_CATEGORIES.map((category) => (
-                                    <option key={category} value={category}>
-                                        {category}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-1">
-                                Author
-                            </label>
-                            <input
-                                type="text"
-                                id="author"
-                                name="author"
-                                value={formData.author}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
-                                Slug
-                            </label>
-                            <input
-                                type="text"
-                                id="slug"
-                                name="slug"
-                                value={formData.slug}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                        </div>
-
-                        <div className="flex justify-end space-x-3">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    setSelectedPost(null);
-                                    setFormData({
-                                        title: '',
-                                        content: '',
-                                        content2: '',
-                                        content3: '',
-                                        content4: '',
-                                        excerpt: '',
-                                        image: '',
-                                        image2: '',
-                                        image3: '',
-                                        youtubeUrl: '',
-                                        category: '',
-                                        slug: '',
-                                        author: ''
-                                    });
-                                }}
-                                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                            >
-                                {isEditing ? 'Update Post' : 'Create Post'}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    ))
+                )}
             </div>
-        </motion.div>
+        </div>
     );
-} 
+}

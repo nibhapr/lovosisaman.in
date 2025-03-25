@@ -4,6 +4,8 @@ import { useState } from "react";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
 import { BsTelephoneFill } from "react-icons/bs";
+import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaThreads } from "react-icons/fa6";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -65,6 +67,13 @@ export default function Contact() {
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Have questions or want to collaborate? We&apos;d love to hear from you.
           </p>
+          {/* Add Social Media Icons */}
+          <div className="flex justify-center gap-4 mt-6">
+            <SocialIcon href="https://facebook.com/yourpage" icon={<FaFacebookF />} type="facebook" />
+            <SocialIcon href="https://instagram.com/yourpage" icon={<FaInstagram />} type="instagram" />
+            <SocialIcon href="https://threads.net/yourpage" icon={<FaThreads />} type="threads" />
+            <SocialIcon href="https://linkedin.com/company/yourpage" icon={<FaLinkedinIn />} type="linkedin" />
+          </div>
         </div>
 
         {/* Contact Info Cards */}
@@ -272,3 +281,26 @@ const FormTextArea = ({
     />
   </div>
 );
+
+// Add this new component at the bottom of the file
+const SocialIcon = ({ href, icon, type }: { href: string; icon: React.ReactNode; type: 'facebook' | 'instagram' | 'threads' | 'linkedin' }) => {
+  const hoverColors = {
+    facebook: 'group-hover:text-[#1877f2]',
+    instagram: 'group-hover:text-[#e4405f]',
+    threads: 'group-hover:text-[#000000]',
+    linkedin: 'group-hover:text-[#0077b5]'
+  };
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-gray-600 group"
+    >
+      <span className={`text-lg ${hoverColors[type]}`}>
+        {icon}
+      </span>
+    </a>
+  );
+};

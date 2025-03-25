@@ -33,6 +33,14 @@ export async function POST(request: Request) {
     await connectDB();
     const data = await request.json();
     
+    // Add validation here
+    if (!data.title || !data.content) {
+      return NextResponse.json(
+        { error: 'Title and content are required' },
+        { status: 400 }
+      );
+    }
+
     // Generate slug from title if not provided
     if (!data.slug) {
       data.slug = data.title
@@ -57,9 +65,9 @@ export async function POST(request: Request) {
     const post = await Blog.create(blogData);
     return NextResponse.json(post);
   } catch (error) {
-    console.error('Blog creation error:', error);
+    console.error('Detailed error:', error);
     return NextResponse.json(
-      { error: 'Failed to create blog post' },
+      { error: 'Failed to create blog post', details: error },
       { status: 500 }
     );
   }

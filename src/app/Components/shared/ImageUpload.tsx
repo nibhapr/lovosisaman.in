@@ -28,7 +28,7 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
 
       if (response.ok) {
         const data = await response.json();
-        // Use local URL for storage but keep full URL for reference
+        // Use the MongoDB file URL
         onChange(data.url);
       }
     } catch (error) {
@@ -38,16 +38,10 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
     }
   };
 
-  // Helper function to determine if URL is absolute
-  const isAbsoluteUrl = (url: string) => {
-    return url.startsWith('http://') || url.startsWith('https://');
-  };
-
   // Get display URL for the image
   const getDisplayUrl = (url: string) => {
     if (!url) return '';
-    if (isAbsoluteUrl(url)) return url;
-    return url.startsWith('/') ? url : `/${url}`;
+    return url;
   };
 
   return (

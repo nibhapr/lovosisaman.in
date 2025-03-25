@@ -8,7 +8,7 @@ import type { Review } from '@/types/review';
 import EventDetail from '@/app/Components/events/EventDetail';
 import type { Event } from '@/types/event';
 
-export default function EventPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
   const [event, setEvent] = useState<Event | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -25,7 +25,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
 
   useEffect(() => {
     async function fetchEvent() {
-      const response = await fetch(`/api/events/${resolvedParams.id}`);
+      const response = await fetch(`/api/events/${resolvedParams.slug}`);
       if (response.ok) {
         const data = await response.json();
         setEvent(data);
@@ -33,7 +33,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
       }
     }
     fetchEvent();
-  }, [resolvedParams.id]);
+  }, [resolvedParams.slug]);
 
   if (!event) return <div>Loading...</div>;
 
@@ -50,7 +50,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
       <EventDetail event={event} />
 
       <div className="max-w-5xl mx-auto px-6 py-12">
-        <button 
+        <button
           onClick={() => setIsReviewsOpen(true)}
           className="flex flex-col sm:flex-row items-center justify-between bg-white p-8 rounded-xl shadow-sm hover:bg-gray-50 transition-colors w-full border border-gray-100 gap-4"
         >
@@ -62,7 +62,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
             <div className="flex items-center space-x-3">
               <div className="flex items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  star <= Math.round(averageRating) 
+                  star <= Math.round(averageRating)
                     ? <IoStar key={star} className="w-6 h-6 text-yellow-400" />
                     : <IoStarOutline key={star} className="w-6 h-6 text-yellow-400" />
                 ))}
@@ -78,7 +78,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
         {isReviewsOpen && (
           <>
             <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 transition-all duration-300" />
-            
+
             <div className="fixed inset-x-0 top-[100px] bottom-0 z-50 flex items-start justify-center overflow-hidden p-4">
               <div className="bg-white rounded-xl max-w-3xl w-full shadow-2xl animate-modalSlideIn max-h-[calc(100vh-120px)] flex flex-col">
                 <div className="sticky top-0 bg-white p-6 border-b flex items-center justify-between z-10 rounded-t-xl">
@@ -86,7 +86,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
                     <h2 className="text-2xl font-bold text-gray-900">Event Reviews</h2>
                     <p className="text-sm text-gray-500 mt-1">Share your experience with others</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setIsReviewsOpen(false)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
@@ -121,7 +121,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
                               <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg">
                                 <div className="flex">
                                   {[1, 2, 3, 4, 5].map((star) => (
-                                    star <= review.rating 
+                                    star <= review.rating
                                       ? <IoStar key={star} className="w-5 h-5 text-yellow-400" />
                                       : <IoStarOutline key={star} className="w-5 h-5 text-yellow-400" />
                                   ))}
@@ -134,7 +134,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
                             <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg">{review.comment}</p>
                           </div>
                         ))}
-                        
+
                         {reviews.length > 1 && (
                           <button
                             onClick={() => setVisibleReviews(visibleReviews === 1 ? reviews.length : 1)}

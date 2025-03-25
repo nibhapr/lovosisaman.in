@@ -13,4 +13,7 @@ export interface Event {
   image3?: string;
   status: 'upcoming' | 'ongoing' | 'completed';
   category: 'Technology' | 'Innovation' | 'Education' | 'Manufacturing' | 'Digital Services';
+  slug: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 } 

@@ -1,6 +1,7 @@
 import BlogCard from '../Components/blog/BlogCard';
 import { getBlogPosts } from '@/lib/blog';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 const BLOG_CATEGORIES = [
   'Technology',
@@ -9,6 +10,31 @@ const BLOG_CATEGORIES = [
   'Manufacturing',
   'Digital Services'
 ];
+
+export const metadata: Metadata = {
+  title: "Our Blog - Latest Insights and Trends",
+  description: "Stay updated with the latest insights, trends, and news in technology, innovation, and education.",
+  keywords: "blog, technology, innovation, education, manufacturing, digital services, trends, insights",
+  robots: {
+    index: true,
+    follow: true
+  },
+  authors: [{ name: "Lovosis Technologies" }],
+  viewport: "width=device-width, initial-scale=1",
+  openGraph: {
+    title: "Our Blog - Latest Insights and Trends",
+    description: "Explore our blog for the latest insights and trends in technology and innovation.",
+    url: "https://lovosis.com/blogs",
+    images: [
+      {
+        url: "https://lovosis.com/blogs",
+        width: 800,
+        height: 600,
+        alt: "Our Blog - Latest Insights and Trends"
+      }
+    ]
+  }
+};
 
 export default async function BlogPage({
   searchParams
@@ -65,7 +91,7 @@ export default async function BlogPage({
               title={post.title}
               excerpt={post.excerpt}
               image={post.image}
-              date={new Date(post.date).toLocaleDateString()}
+              date={post.date}
               author={post.author}
               category={post.category}
               slug={post.slug}

@@ -8,6 +8,9 @@ export function middleware(request: NextRequest) {
     
     if (!token) {
       return NextResponse.redirect(new URL('/auth/login', request.url));
+    } else if (request.nextUrl.pathname === '/admin') {
+      // Redirect to /admin/dashboard if accessing /admin
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
   }
 

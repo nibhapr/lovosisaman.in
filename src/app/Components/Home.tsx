@@ -276,6 +276,7 @@ export default function Home() {
                           fill
                           className="w-full h-full object-cover"
                           priority
+                          unoptimized
                         />
                       </div>
                     </div>

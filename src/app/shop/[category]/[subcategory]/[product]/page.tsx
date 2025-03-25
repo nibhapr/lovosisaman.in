@@ -3,11 +3,9 @@
 import { useEffect, useState, use } from 'react';
 import Image from 'next/image';
 import { IoDownloadOutline, IoEyeOutline, IoStarOutline, IoStar, IoClose } from 'react-icons/io5';
-import { FaFileExcel } from 'react-icons/fa';
 import FilePreviewModal from '@/app/Components/shop/FilePreviewModal';
 import ReviewForm from '@/app/Components/shared/ReviewForm';
 import type { Product, Review } from '@/types/shop';
-import { parseExcelPreview } from '@/lib/excelParser';
 import Link from 'next/link';
 
 export default function ProductPage({
@@ -17,15 +15,13 @@ export default function ProductPage({
 }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
-  const [excelPreviewOpen, setExcelPreviewOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [categoryName, setCategoryName] = useState<string>('');
   const [subcategoryName, setSubcategoryName] = useState<string>('');
-  const [excelPreviewData, setExcelPreviewData] = useState<{ headers: string[]; rows: any[][] } | null>(null);
   const resolvedParams = use(params);
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
 
   // Move fetchReviews outside useEffect
   const fetchReviews = async () => {
@@ -87,21 +83,6 @@ export default function ProductPage({
     };
   }, [isReviewsOpen]);
 
-  // Add Excel preview data fetching
-  useEffect(() => {
-    async function fetchExcelPreview() {
-      if (product?.catalogExcel) {
-        try {
-          const data = await parseExcelPreview(product.catalogExcel);
-          setExcelPreviewData(data);
-        } catch (error) {
-          console.error('Error fetching Excel preview:', error);
-        }
-      }
-    }
-    fetchExcelPreview();
-  }, [product?.catalogExcel]);
-
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -117,14 +98,20 @@ export default function ProductPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      {/* Breadcrumb navigation with enhanced styling */}
+      {/* Parallax background effect */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-purple-50/30"></div>
+        <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-10"></div>
+      </div>
+
+      {/* Enhanced Breadcrumb with animated underline */}
       <nav className="mb-8">
-        <ol className="flex items-center space-x-2 text-sm">
+        <ol className="flex items-center space-x-2 text-sm bg-white/90 backdrop-blur-lg p-4 rounded-xl shadow-[0_8px_32px_rgba(31,_38,_135,_0.1)] border border-white/20">
           {categoryName && (
             <>
               <Link
                 href={`/shop/${resolvedParams.category}`}
-                className="text-blue-600 hover:text-blue-800 transition-colors"
+                className="text-blue-600 hover:text-blue-800 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full"
               >
                 {categoryName}
               </Link>
@@ -146,15 +133,15 @@ export default function ProductPage({
         </ol>
       </nav>
 
-      {/* Main product grid with glass morphism effect */}
+      {/* Main grid with staggered animation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Image gallery with enhanced container */}
-        <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square w-full rounded-2xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+        {/* Image gallery with perspective effect */}
+        <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square w-full rounded-2xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 shadow-[0_20px_50px_rgba(8,_112,_184,_0.1)] hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.3)] transition-all duration-500 transform hover:-translate-y-1 perspective-1000">
           {product.images.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-500 ${currentImageIndex === index ? 'opacity-100' : 'opacity-0'
-                }`}
+              className={`absolute inset-0 transition-opacity duration-500 ${currentImageIndex === index ? 'opacity-100' : 'opacity-0'}`}
+              style={{ transform: `rotateY(${currentImageIndex === index ? 0 : 10}deg)` }}
             >
               <Image
                 src={image}
@@ -205,23 +192,29 @@ export default function ProductPage({
           )}
         </div>
 
-        {/* Product info with glass morphism effect */}
-        <div className="space-y-8 bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-gray-100">
+        {/* Product info with typewriter effect */}
+        <div className="space-y-8 bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-[0_8px_32px_rgba(31,_38,_135,_0.1)] border border-white/20 hover:shadow-[0_8px_32px_rgba(31,_38,_135,_0.2)] transition-all duration-500">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
-            <p className="text-lg text-gray-600 leading-relaxed">{product.description}</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-blue-600">
+              {product.name}
+            </h1>
+            <p className="text-lg text-gray-600 leading-relaxed animate-fadeIn">{product.description}</p>
           </div>
 
-          {/* Features with enhanced cards */}
+          {/* Features with staggered animation */}
           {product.features?.length > 0 && (
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+              <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-slideIn">
                 Features
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {product.features.map((feature: string, index: number) => (
-                  <li key={index} className="flex items-center space-x-3 bg-white/80 p-3 rounded-lg shadow-sm">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></span>
+                  <li 
+                    key={index} 
+                    className="flex items-center space-x-3 bg-white/90 p-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 animate-fadeInUp"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse"></span>
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
@@ -229,15 +222,19 @@ export default function ProductPage({
             </div>
           )}
 
-          {/* Specifications with enhanced styling */}
+          {/* Specifications with accordion effect */}
           {specifications && Object.keys(specifications).length > 0 && (
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+              <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-slideIn">
                 Specifications
               </h2>
               <div className="grid grid-cols-1 gap-3">
-                {Object.entries(specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-3 px-4 bg-white/80 rounded-lg shadow-sm">
+                {Object.entries(specifications).map(([key, value], index) => (
+                  <div 
+                    key={key} 
+                    className="flex justify-between py-3 px-4 bg-white/90 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 animate-fadeInUp"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
                     <span className="font-medium text-gray-900">{key}</span>
                     <span className="text-gray-600">{String(value)}</span>
                   </div>
@@ -248,83 +245,49 @@ export default function ProductPage({
         </div>
       </div>
 
-      {/* Catalogs Section - Enhanced styling */}
-      <div className="space-y-4">
-        {/* PDF Catalog */}
+      {/* Catalogs Section with glowing effect */}
+      <div className="space-y-4 mt-12">
         {product.catalogPdf && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-xl font-semibold mb-4 text-gray-900">PDF Catalog</h3>
-            <div className="space-y-4">
-              <div
-                className="h-48 border rounded-lg overflow-hidden cursor-pointer transform hover:scale-[1.02] transition-transform duration-200 shadow-sm"
-                onClick={() => setPdfPreviewOpen(true)}
+          <div className="bg-white/90 backdrop-blur-lg rounded-xl p-6 shadow-[0_8px_32px_rgba(31,_38,_135,_0.1)] border border-white/20 relative overflow-hidden">
+            {/* Glowing background */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,_102,_241,_0.1),_transparent)] animate-pulse"></div>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 relative z-10">PDF Catalog</h3>
+            <div className="flex flex-wrap gap-3 relative z-10">
+              <button
+                onClick={() => setIsContactFormOpen(true)}
+                className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden"
               >
-                <iframe
-                  src={`${product.catalogPdf}#toolbar=0&view=FitH`}
-                  className="w-full h-full pointer-events-none"
-                  title="PDF Preview"
-                />
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={() => setPdfPreviewOpen(true)}
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                >
-                  <IoEyeOutline className="w-5 h-5 mr-2" />
-                  Preview PDF
-                </button>
-                <a
-                  href={product.catalogPdf}
-                  download
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-                >
-                  <IoDownloadOutline className="w-5 h-5 mr-2" />
-                  Download PDF
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Excel Catalog */}
-        {product.catalogExcel && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-xl font-semibold mb-4 text-gray-900">Excel Catalog</h3>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center">
-                <FaFileExcel className="w-10 h-10 text-green-600 mr-3" />
-                <span className="text-gray-700">Excel Specifications</span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    setPdfPreviewOpen(false);
-                    setExcelPreviewOpen(true);
-                  }}
-                  className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                >
-                  <IoEyeOutline className="w-5 h-5 mr-2" />
-                  Preview Excel
-                </button>
-                <a
-                  href={product.catalogExcel}
-                  download
-                  className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-                >
-                  <IoDownloadOutline className="w-5 h-5 mr-2" />
-                  Download Excel
-                </a>
-              </div>
+                {/* Button glow */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,_255,_255,_0.3),_transparent)] opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                <IoDownloadOutline className="w-5 h-5 mr-2" />
+                Download Catalog
+              </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Reviews Section - Enhanced styling */}
-      <div className="mt-16">
+      {/* Reviews Section with particle effect */}
+      <div className="mt-16 relative">
+        {/* Particle container */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-blue-500/20 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDuration: `${Math.random() * 5 + 5}s`,
+                animationDelay: `${Math.random() * 2}s`
+              }}
+            />
+          ))}
+        </div>
+        
         <button
           onClick={() => setIsReviewsOpen(true)}
-          className="flex flex-col sm:flex-row items-center justify-between bg-white p-8 rounded-xl shadow-sm hover:bg-gray-50 transition-colors w-full border border-gray-100 gap-4"
+          className="flex flex-col sm:flex-row items-center justify-between bg-white/90 backdrop-blur-lg p-8 rounded-xl shadow-[0_8px_32px_rgba(31,_38,_135,_0.1)] hover:shadow-[0_8px_32px_rgba(31,_38,_135,_0.2)] transition-all duration-500 transform hover:-translate-y-1 w-full border border-white/20 relative overflow-hidden"
         >
           <div className="flex flex-col items-center sm:items-start">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Reviews</h2>
@@ -348,15 +311,12 @@ export default function ProductPage({
         </button>
       </div>
 
-      {/* Reviews Modal - Updated styles */}
+      {/* Reviews Modal with enhanced glass morphism */}
       {isReviewsOpen && (
         <>
-          {/* Blur Backdrop */}
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 transition-all duration-300" />
-
-          {/* Modal Content - Increased top spacing */}
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-lg z-40 transition-all duration-300" />
           <div className="fixed inset-x-0 top-[100px] bottom-0 z-50 flex items-start justify-center overflow-hidden p-4">
-            <div className="bg-white rounded-xl max-w-3xl w-full shadow-2xl animate-modalSlideIn max-h-[calc(100vh-120px)] flex flex-col">
+            <div className="bg-white/95 backdrop-blur-xl rounded-xl max-w-3xl w-full shadow-[0_8px_32px_rgba(31,_38,_135,_0.2)] animate-modalSlideIn max-h-[calc(100vh-120px)] flex flex-col border border-white/20">
               {/* Modal Header - Sticky */}
               <div className="sticky top-0 bg-white p-6 border-b flex items-center justify-between z-10 rounded-t-xl">
                 <div>
@@ -507,17 +467,122 @@ export default function ProductPage({
         </>
       )}
 
-      {/* Preview Modal */}
-      <FilePreviewModal
-        isOpen={pdfPreviewOpen || excelPreviewOpen}
-        onClose={() => {
-          setPdfPreviewOpen(false);
-          setExcelPreviewOpen(false);
-        }}
-        fileUrl={product.catalogPdf || product.catalogExcel || ''}
-        fileType={pdfPreviewOpen ? 'pdf' : 'excel'}
-        excelData={excelPreviewData}
-      />
+      {/* Contact Form Modal with glass morphism */}
+      {isContactFormOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-lg z-40 transition-all duration-300" />
+          <div className="fixed inset-x-0 top-[100px] bottom-0 z-50 flex items-start justify-center overflow-hidden p-4">
+            <div className="bg-white/95 backdrop-blur-xl rounded-xl max-w-md w-full shadow-[0_8px_32px_rgba(31,_38,_135,_0.2)] animate-modalSlideIn border border-white/20">
+              <div className="p-6 border-b flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-gray-900">Download Catalog</h2>
+                <button
+                  onClick={() => setIsContactFormOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <IoClose className="w-6 h-6" />
+                </button>
+              </div>
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+
+                try {
+                  const response = await fetch('/api/catalog-requests', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      fullName: formData.get('fullName'),
+                      companyName: formData.get('companyName'),
+                      email: formData.get('email'),
+                      phone: formData.get('phone'),
+                      productName: product.name,
+                      catalogUrl: product.catalogPdf
+                    })
+                  });
+
+                  const data = await response.json();
+
+                  if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit request');
+                  }
+
+                  alert('Thank you! We will send the catalog to your email id or phone number shortly.');
+                  setIsContactFormOpen(false);
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Failed to submit request. Please try again.');
+                }
+              }} className="p-6 space-y-4">
+                <div>
+                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    id="fullName"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
+                    Company Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    Email ID *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <p className="text-sm text-gray-500 italic">
+                  We'll send the catalog to your email address & phone number.
+                </p>
+
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Submit & Download
+                </button>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 } 

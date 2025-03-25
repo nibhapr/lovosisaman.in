@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import ImageUpload from '@/app/Components/shared/ImageUpload';
 
 interface GalleryImage {
     _id: string;
@@ -21,6 +22,7 @@ export default function Gallery() {
     const [selectedItem, setSelectedItem] = useState<GalleryImage | null>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [newImage, setNewImage] = useState<string>('');
 
     useEffect(() => {
         fetchGalleryItems();
@@ -59,6 +61,29 @@ export default function Gallery() {
         }
     };
 
+    const handleImageUpload = (url: string) => {
+        setNewImage(url);
+    };
+
+    const handleSubmitNewImage = async () => {
+        if (!newImage) return;
+
+        try {
+            const response = await fetch('/api/gallery', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ images: [newImage], category: selectedCategory }),
+            });
+
+            if (!response.ok) throw new Error('Failed to upload image');
+
+            fetchGalleryItems();
+            setNewImage('');
+        } catch (error) {
+            console.error('Error uploading new image:', error);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
@@ -69,18 +94,17 @@ export default function Gallery() {
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
                         Explore our collection of images showcasing our products, events, and company culture.
                     </p>
-
-                    {/* Categories */}
-                    <div className="flex flex-wrap justify-center gap-4 mb-12">
+                    
+                    <div className="flex flex-wrap justify-center gap-4 mb-8">
                         {CATEGORIES.map((category) => (
                             <button
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
-                                className={`px-8 py-3 rounded-full transition-all duration-300 text-lg font-medium
-                                    ${selectedCategory === category
-                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-                                        : 'bg-white/80 hover:bg-white hover:shadow-md border border-blue-100'
-                                    }`}
+                                className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                                    selectedCategory === category
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                                        : 'bg-white/80 text-gray-600 hover:bg-blue-50'
+                                }`}
                             >
                                 {category}
                             </button>
@@ -88,10 +112,8 @@ export default function Gallery() {
                     </div>
                 </div>
 
-                {/* Gallery Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-8 rounded-3xl bg-gradient-to-br from-white/80 to-white/40 backdrop-blur-sm shadow-xl">
                     {isLoading ? (
-                        // Loading skeleton
                         [...Array(9)].map((_, i) => (
                             <div key={i} className="aspect-square animate-pulse bg-gradient-to-br from-gray-200 to-gray-100 rounded-xl shadow-md" />
                         ))
@@ -145,7 +167,6 @@ export default function Gallery() {
                     )}
                 </div>
 
-                {/* Modal */}
                 {selectedItem && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -163,7 +184,6 @@ export default function Gallery() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex flex-col md:flex-row h-[90vh] md:h-[80vh]">
-                                {/* Image Section */}
                                 <div className="relative flex-1 bg-black">
                                     <Image
                                         src={selectedItem.images[currentImageIndex]}
@@ -174,7 +194,6 @@ export default function Gallery() {
                                         sizes="(max-width: 768px) 100vw, 60vw"
                                     />
                                     
-                                    {/* Navigation Arrows */}
                                     {selectedItem.images.length > 1 && (
                                         <div className="absolute inset-y-0 inset-x-4 flex items-center justify-between">
                                             {currentImageIndex > 0 && (
@@ -201,7 +220,6 @@ export default function Gallery() {
                                     )}
                                 </div>
 
-                                {/* Info Section */}
                                 <div className="w-full md:w-80 p-6 flex flex-col bg-white dark:bg-gray-900">
                                     <div className="flex items-center justify-between mb-4">
                                         <h2 className="text-xl font-semibold dark:text-white">{selectedItem.title}</h2>
@@ -219,7 +237,6 @@ export default function Gallery() {
                                         <p className="text-gray-600 dark:text-gray-300 mb-6">{selectedItem.description}</p>
                                     )}
 
-                                    {/* Thumbnails */}
                                     {selectedItem.images.length > 1 && (
                                         <div className="mt-auto">
                                             <div className="grid grid-cols-4 gap-2">

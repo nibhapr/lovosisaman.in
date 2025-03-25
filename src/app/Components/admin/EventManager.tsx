@@ -86,7 +86,7 @@ export default function EventManager() {
 
     const fetchRegistrations = async (event: Event) => {
         try {
-            const response = await fetch(`/api/events/${event._id}/registrations`);
+            const response = await fetch(`/api/events/${event.slug}/registrations`);
             if (!response.ok) throw new Error('Failed to fetch registrations');
             const data = await response.json();
             setRegistrations(data);
@@ -110,7 +110,7 @@ export default function EventManager() {
                 image3: formData.image3 || undefined
             };
 
-            const url = isEditing ? `/api/events/${selectedEvent?._id}` : '/api/events';
+            const url = isEditing ? `/api/events/${selectedEvent?.slug}` : '/api/events';
             const method = isEditing ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
@@ -122,7 +122,7 @@ export default function EventManager() {
             if (!response.ok) {
                 throw new Error('Failed to save event');
             }
-            
+
             await fetchEvents();
             resetForm();
             setIsEditing(false);
@@ -131,13 +131,25 @@ export default function EventManager() {
         }
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (slug: string) => {
         if (!confirm('Are you sure you want to delete this event?')) return;
         try {
-            const response = await fetch(`/api/events/${id}`, {
+            const event = events.find(e => e.slug === slug);
+            const response = await fetch(`/api/events/${slug}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Failed to delete event');
+
+            // Delete associated images from MongoDB if they exist
+            const imagesToDelete = [event?.image, event?.image2, event?.image3].filter(img => img?.startsWith('/api/files/'));
+            
+            for (const imageUrl of imagesToDelete) {
+                if (imageUrl) {
+                    const fileId = imageUrl.split('/').pop();
+                    await fetch(`/api/files/${fileId}`, { method: 'DELETE' });
+                }
+            }
+
             fetchEvents();
         } catch (error) {
             console.error('Error deleting event:', error);
@@ -168,15 +180,26 @@ export default function EventManager() {
     const handleRegistration = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch(`/api/events/${selectedEvent?._id}/registrations`, {
+            // Find the selected event 
+            const event = events.find(e => e._id === registrationData.eventId);
+            if (!event) {
+                throw new Error('Event not found');
+            }
+            
+            const response = await fetch(`/api/events/${event.slug}/registrations`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(registrationData)
             });
+            
             if (!response.ok) throw new Error('Failed to register');
             setShowRegistrationModal(false);
+            
+            // Optional: Show a success message
+            alert('Registration successful!');
         } catch (error) {
             console.error('Error registering:', error);
+            alert('Registration failed. Please try again.');
         }
     };
 
@@ -236,7 +259,7 @@ export default function EventManager() {
                             Image (Optional)
                         </label>
                         <ImageUpload
-                            value={formData.image}
+                            value={formData.image || ''}
                             onChange={(url) => setFormData({ ...formData, image: url })}
                             label="Event Image"
                         />
@@ -393,7 +416,7 @@ export default function EventManager() {
                 <div className="space-y-4">
                     {events.map((event) => (
                         <div
-                            key={event._id}
+                            key={event.slug}
                             className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                         >
                             <div className="flex items-center space-x-4">
@@ -452,7 +475,7 @@ export default function EventManager() {
                                     <IoCreateOutline className="w-5 h-5" />
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(event._id)}
+                                    onClick={() => handleDelete(event.slug)}
                                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                 >
                                     <IoTrashOutline className="w-5 h-5" />
@@ -545,14 +568,14 @@ export default function EventManager() {
                     <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-semibold">Event Registrations</h3>
-                            <button 
+                            <button
                                 onClick={() => setSelectedEventForRegistrations(null)}
                                 className="text-gray-500 hover:text-gray-700"
                             >
                                 ✕
                             </button>
                         </div>
-                        
+
                         <div className="space-y-4">
                             {registrations.map((reg) => (
                                 <div key={reg._id} className="border rounded-lg p-4">
