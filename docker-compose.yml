@@ -9,11 +9,8 @@ services:
       - NODE_ENV=production
       - NEXT_PUBLIC_DOMAIN=lovosis.in
       - NEXTAUTH_URL=https://lovosis.in
-      - MONGODB_URI=mongodb+srv://websitedata0102:Digitech%402030@lovosisdb.pyhn5.mongodb.net/lovosisdb?retryWrites=true&w=majority&appName=lovosisDB
-      - JWT_SECRET=94af5eb59932b5aef9a3c1bfe8b1c8e860d5771324b2dee91414fccb21489a4ee9f980d02b887556d986fa88058f705bdf0cbd2c962da56ee2797a1b84e45c50
-      - WEBSOCKET_PORT=8081
-      - NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
-      - NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:3001
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
       - SKIP_BUILD_STATIC_GENERATION=true
     volumes:
       - ./.next/static/videos:/app/.next/static/videos:rw
@@ -36,43 +33,5 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    networks:
-      - app-network
     security_opt:
-      - no-new-privileges:true
-
-  websocket:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["npm", "run", "websocket"]
-    ports:
-      - "81:81"
-    environment:
-      - NODE_ENV=production
-      - WEBSOCKET_PORT=81
-      - NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
-      - NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:3001
-    depends_on:
-      - web
-    networks:
-      - app-network
-    security_opt:
-      - no-new-privileges:true
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-networks:
-  app-network:
-    driver: bridge 
+      - no-new-privileges:true 
