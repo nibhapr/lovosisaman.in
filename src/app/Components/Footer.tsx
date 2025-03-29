@@ -113,7 +113,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {['About', 'Services', 'Shop', 'Contact', 'Gallery', 'Careers'].map((item) => (
                 <li key={item}>
-                  <Link 
+                  <Link
                     href={`/${item.toLowerCase()}`}
                     className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
                   >
@@ -128,16 +128,54 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Resources</h3>
             <ul className="space-y-2">
-              {['Blogs', 'Events', 'Terms', 'Privacy', 'Cookie'].map((item) => (
-                <li key={item}>
-                  <Link 
-                    href={`/${item.toLowerCase()}`}
-                    className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/events"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  Events
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms-of-service"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/cookie-policy"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/sitemap.xml"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  Sitemap
+                </Link>
+              </li>
             </ul>
           </div>
 
