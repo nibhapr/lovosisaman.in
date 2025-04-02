@@ -115,32 +115,32 @@ const portfolioCategories = ["All", "Web Development", "Software Development", "
 
 const portfolioProjects = [
   {
-    title: "E-Commerce Platform",
+    title: "Chenarabia",
     category: "Web Development",
-    image: "/portfolio/ecommerce.jpg",
+    image: "/images/services/portfolio/chenarabia.jpg",
     description: "A full-stack e-commerce solution with advanced features",
-    url: "https://ecommerce-example.com"
+    url: "https://chenarabia.com"
   },
   {
-    title: "Mobile Banking App",
+    title: "Nexmedia App",
     category: "Software Development",
-    image: "/portfolio/banking.jpg",
-    description: "Secure and user-friendly mobile banking application",
-    url: "https://banking-app-example.com"
+    image: "/images/services/portfolio/andriod-ios.jpg",
+    description: "Secure and user-friendly social media application",
+    url: "https://nexmedia.com"
   },
   {
     title: "Digital Marketing Campaign",
     category: "Digital Marketing",
-    image: "/portfolio/marketing.jpg",
+    image: "/images/services/portfolio/marketing.jpg",
     description: "Successful marketing campaign for a major retail brand",
-    url: "https://marketing-campaign.com"
+    url: "https://hikvision-dubai.ae/"
   },
   {
     title: "SEO Optimization Project",
     category: "SEO",
-    image: "/portfolio/seo.jpg",
+    image: "/images/services/portfolio/seo.jpg",
     description: "Improved search rankings and organic traffic by 200%",
-    url: "https://seo-project.com"
+    url: "https://uniview-uae.ae/"
   }
 ];
 
@@ -262,16 +262,16 @@ export default function ITServices() {
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-                  <span className="text-sm text-blue-300 font-medium mb-2">
+                  <span className="text-sm text-white font-medium mb-2">
                     {project.category}
                   </span>
                   <h3 className="text-xl font-bold text-white mb-2">
                     {project.title}
                   </h3>
-                  <p className="text-gray-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     {project.description}
                   </p>
-                  <span className="text-blue-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                  <span className="text-white text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
                     Visit Website
                     <svg
                       className="w-4 h-4"
