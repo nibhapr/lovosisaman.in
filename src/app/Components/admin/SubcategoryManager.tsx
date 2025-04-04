@@ -4,20 +4,23 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
-import type { Category, Subcategory } from '@/types/shop';
+import type { Category, Subcategory, NavbarCategory } from '@/types/shop';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
 export default function SubcategoryManager() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [navbarCategories, setNavbarCategories] = useState<NavbarCategory[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     image: '',
     categoryId: '',
+    navbarCategoryId: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory | null>(null);
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
 
   const generateSlug = (name: string) => {
     return name.toLowerCase()
@@ -54,9 +57,27 @@ export default function SubcategoryManager() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', image: '', categoryId: '' });
+    setFormData({ 
+      name: '', 
+      description: '', 
+      image: '', 
+      categoryId: '',
+      navbarCategoryId: '' 
+    });
     setIsEditing(false);
     setSelectedSubcategory(null);
+  };
+
+  const fetchNavbarCategories = async () => {
+    try {
+      const response = await fetch('/api/navbarcategories');
+      if (response.ok) {
+        const data = await response.json();
+        setNavbarCategories(data);
+      }
+    } catch (error) {
+      console.error('Error fetching navbar categories:', error);
+    }
   };
 
   const fetchCategories = async () => {
@@ -83,15 +104,24 @@ export default function SubcategoryManager() {
     }
   };
 
+  const handleNavbarCategoryChange = (navbarCategoryId: string) => {
+    setFormData(prev => ({ ...prev, navbarCategoryId, categoryId: '' }));
+    const filtered = categories.filter(cat => cat.navbarCategoryId === navbarCategoryId);
+    setFilteredCategories(filtered);
+  };
+
   const handleEdit = (subcategory: Subcategory) => {
+    const category = categories.find(cat => cat._id === subcategory.categoryId);
     setFormData({
       name: subcategory.name,
       description: subcategory.description || '',
       image: subcategory.image || '',
       categoryId: subcategory.categoryId,
+      navbarCategoryId: category?.navbarCategoryId || ''
     });
     setIsEditing(true);
     setSelectedSubcategory(subcategory);
+    handleNavbarCategoryChange(category?.navbarCategoryId || '');
   };
 
   const handleDelete = async (id: string) => {
@@ -111,14 +141,19 @@ export default function SubcategoryManager() {
   };
 
   useEffect(() => {
+    fetchNavbarCategories();
     fetchCategories();
     fetchSubcategories();
   }, []);
 
-  // Get category name by ID
   const getCategoryName = (categoryId: string) => {
     const category = categories.find(cat => cat._id === categoryId);
     return category ? category.name : 'Unknown Category';
+  };
+
+  const getNavbarCategoryName = (navbarCategoryId: string) => {
+    const navbarCategory = navbarCategories.find(nc => nc._id === navbarCategoryId);
+    return navbarCategory ? navbarCategory.name : 'Unknown Navbar Category';
   };
 
   return (
@@ -133,6 +168,25 @@ export default function SubcategoryManager() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
+              Navbar Category
+            </label>
+            <select
+              value={formData.navbarCategoryId}
+              onChange={(e) => handleNavbarCategoryChange(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Select a navbar category</option>
+              {navbarCategories.map((navbarCategory) => (
+                <option key={navbarCategory._id} value={navbarCategory._id}>
+                  {navbarCategory.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Category
             </label>
             <select
@@ -140,9 +194,10 @@ export default function SubcategoryManager() {
               onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
               required
+              disabled={!formData.navbarCategoryId}
             >
               <option value="">Select a category</option>
-              {categories.map((category) => (
+              {filteredCategories.map((category) => (
                 <option key={category._id} value={category._id}>
                   {category.name}
                 </option>
@@ -212,44 +267,50 @@ export default function SubcategoryManager() {
       >
         <h2 className="text-2xl font-semibold mb-6">Subcategories</h2>
         <div className="space-y-4">
-          {subcategories.map((subcategory) => (
-            <div
-              key={subcategory._id}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-            >
-              <div className="flex items-center space-x-4">
-                {subcategory.image && (
-                  <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                    <Image
-                      src={subcategory.image}
-                      alt={subcategory.name}
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
+          {subcategories.map((subcategory) => {
+            const category = categories.find(cat => cat._id === subcategory.categoryId);
+            return (
+              <div
+                key={subcategory._id}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              >
+                <div className="flex items-center space-x-4">
+                  {subcategory.image && (
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                      <Image
+                        src={subcategory.image}
+                        alt={subcategory.name}
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-medium">{subcategory.name}</h3>
+                    <p className="text-sm text-gray-500">
+                      {getCategoryName(subcategory.categoryId)} - 
+                      {category && getNavbarCategoryName(category.navbarCategoryId || '')}
+                    </p>
                   </div>
-                )}
-                <div>
-                  <h3 className="font-medium">{subcategory.name}</h3>
-                  <p className="text-sm text-gray-500">{getCategoryName(subcategory.categoryId)}</p>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleEdit(subcategory)}
+                    className="p-2 text-blue-600 hover:text-blue-800"
+                  >
+                    <IoCreateOutline className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(subcategory._id!)}
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <IoTrashOutline className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleEdit(subcategory)}
-                  className="p-2 text-blue-600 hover:text-blue-800"
-                >
-                  <IoCreateOutline className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(subcategory._id!)}
-                  className="p-2 text-red-600 hover:text-red-800"
-                >
-                  <IoTrashOutline className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           {subcategories.length === 0 && (
             <p className="text-gray-500 text-center py-4">No subcategories found</p>
           )}

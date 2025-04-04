@@ -15,7 +15,6 @@ import {
   HiOutlineStar,
   HiOutlineArrowRightOnRectangle,
   HiOutlineDocumentText,
-  HiOutlineUserCircle,
   HiOutlinePhoto,
 } from 'react-icons/hi2';
 
@@ -25,13 +24,13 @@ const menuItems = [
   { name: 'Newsletter', icon: HiOutlineNewspaper, path: '/admin/dashboard/newsletter' },
   { name: 'Blog', icon: HiOutlineDocumentText, path: '/admin/dashboard/blog' },
   { name: 'Events', icon: HiOutlineCalendar, path: '/admin/dashboard/events' },
+  { name: 'Navbar Category', icon: HiOutlineSquares2X2, path: '/admin/dashboard/navbarcategories' },
   { name: 'Categories', icon: HiOutlineSquares2X2, path: '/admin/dashboard/categories' },
   { name: 'Subcategories', icon: HiOutlineRectangleStack, path: '/admin/dashboard/subcategories' },
   { name: 'Products', icon: HiOutlineShoppingBag, path: '/admin/dashboard/products' },
   { name: 'Catalog Requests', icon: HiOutlineRectangleStack, path: '/admin/dashboard/catalog-requests' },
   { name: 'Reviews', icon: HiOutlineStar, path: '/admin/dashboard/reviews' },
   { name: 'Gallery', icon: HiOutlinePhoto, path: '/admin/dashboard/gallery' },
-  { name: 'Profile', icon: HiOutlineUserCircle, path: '/admin/dashboard/profile' },
 ];
 
 interface SidebarProps {

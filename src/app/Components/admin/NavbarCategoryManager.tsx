@@ -2,23 +2,27 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
-import type { Category, NavbarCategory } from '@/types/shop';
+import Image from 'next/image';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
-export default function CategoryManager() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [navbarCategories, setNavbarCategories] = useState<NavbarCategory[]>([]);
+interface NavbarCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+}
+
+export default function NavbarCategoryManager() {
+  const [categories, setCategories] = useState<NavbarCategory[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     image: '',
-    navbarCategoryId: '',
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<NavbarCategory | null>(null);
 
   const generateSlug = (name: string) => {
     return name.toLowerCase()
@@ -26,26 +30,28 @@ export default function CategoryManager() {
       .replace(/(^-|-$)+/g, '');
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/navbarcategories');
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    if (!formData.navbarCategoryId) {
-      setError('Please select a Navbar Category');
-      return;
-    }
 
     const categoryData = {
       ...formData,
       slug: generateSlug(formData.name),
     };
 
-    console.log('Submitting category data:', categoryData);
-
     try {
       const url = isEditing
-        ? `/api/categories/${selectedCategory?._id}`
-        : '/api/categories';
+        ? `/api/navbarcategories/${selectedCategory?._id}`
+        : '/api/navbarcategories';
 
       const response = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
@@ -53,55 +59,17 @@ export default function CategoryManager() {
         body: JSON.stringify(categoryData),
       });
 
-      const data = await response.json();
-      console.log('Response data:', data);
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to save category');
-        return;
+      if (response.ok) {
+        fetchCategories();
+        resetForm();
       }
-
-      fetchCategories();
-      resetForm();
     } catch (error) {
       console.error('Error saving category:', error);
-      setError('Failed to save category. Please check the console for details.');
     }
   };
 
-  const resetForm = () => {
-    setFormData({ name: '', description: '', image: '', navbarCategoryId: '' });
-    setIsEditing(false);
-    setSelectedCategory(null);
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/categories');
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-
-  const fetchNavbarCategories = async () => {
-    try {
-      const response = await fetch('/api/navbarcategories');
-      if (response.ok) {
-        const data = await response.json();
-        setNavbarCategories(data);
-      }
-    } catch (error) {
-      console.error('Error fetching navbar categories:', error);
-    }
-  };
-
-  const handleEdit = (category: Category) => {
+  const handleEdit = (category: NavbarCategory) => {
     setFormData({
-      navbarCategoryId: category.navbarCategoryId || '',
       name: category.name,
       description: category.description || '',
       image: category.image || '',
@@ -112,9 +80,9 @@ export default function CategoryManager() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
-
+    
     try {
-      const response = await fetch(`/api/categories/${id}`, {
+      const response = await fetch(`/api/navbarcategories/${id}`, {
         method: 'DELETE',
       });
 
@@ -126,9 +94,14 @@ export default function CategoryManager() {
     }
   };
 
+  const resetForm = () => {
+    setFormData({ name: '', description: '', image: '' });
+    setIsEditing(false);
+    setSelectedCategory(null);
+  };
+
   useEffect(() => {
     fetchCategories();
-    fetchNavbarCategories();
   }, []);
 
   return (
@@ -139,26 +112,8 @@ export default function CategoryManager() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-xl shadow-lg p-6"
       >
-        <h2 className="text-2xl font-semibold mb-6">{isEditing ? 'Edit' : 'Add'} Category</h2>
+        <h2 className="text-2xl font-semibold mb-6">{isEditing ? 'Edit' : 'Add'} Navbar Category</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Navbar Category
-            </label>
-            <select
-              value={formData.navbarCategoryId}
-              onChange={(e) => setFormData({ ...formData, navbarCategoryId: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Select Navbar Category</option>
-              {navbarCategories.map((navbarCategory) => (
-                <option key={navbarCategory._id} value={navbarCategory._id}>
-                  {navbarCategory.name}
-                </option>
-              ))}
-            </select>
-          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Name
@@ -186,14 +141,13 @@ export default function CategoryManager() {
 
           <div>
             <ImageUpload
-              key={formData.image}
               value={formData.image}
               onChange={(url: string) => setFormData({ ...formData, image: url })}
               label="Category Image"
             />
           </div>
 
-          <div className="flex space-x-4 mt-6">
+          <div className="flex space-x-4">
             <button
               type="submit"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -211,11 +165,6 @@ export default function CategoryManager() {
             )}
           </div>
         </form>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-            {error}
-          </div>
-        )}
       </motion.div>
 
       {/* List Section */}
@@ -224,7 +173,7 @@ export default function CategoryManager() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-xl shadow-lg p-6"
       >
-        <h2 className="text-2xl font-semibold mb-6">Categories</h2>
+        <h2 className="text-2xl font-semibold mb-6">Navbar Categories</h2>
         <div className="space-y-4">
           {categories.map((category) => (
             <div
@@ -235,16 +184,16 @@ export default function CategoryManager() {
                 {category.image && (
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden">
                     <Image
-                      src={category.image}
+                      src={category.image || '/images/placeholder.jpg'}
                       alt={category.name}
-                      fill
-                      sizes="48px"
+                      width={48}
+                      height={48}
                       className="object-cover"
                     />
                   </div>
                 )}
                 <div>
-                  <h3 className="font-medium">{category.name} {category.navbarCategoryId}</h3>
+                  <h3 className="font-medium">{category.name}</h3>
                   <p className="text-sm text-gray-500">{category.slug}</p>
                 </div>
               </div>

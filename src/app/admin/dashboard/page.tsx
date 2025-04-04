@@ -1,10 +1,10 @@
 import DashboardLayout from '../../Components/admin/DashboardLayout';
-import Dashboard from '../../Components/admin/Dashboard';
+import AdminProfileDashboard from '../../Components/admin/AdminProfileDashboard';
 
 export default function DashboardPage() {
   return (
     <DashboardLayout>
-      <Dashboard />
+      <AdminProfileDashboard />
     </DashboardLayout>
   );
 } 

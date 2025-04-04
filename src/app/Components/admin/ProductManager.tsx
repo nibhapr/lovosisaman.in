@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { IoAddOutline, IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
-import type { Category, Subcategory, Product } from '@/types/shop';
+import type { NavbarCategory, Category, Subcategory, Product } from '@/types/shop';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
 export default function ProductManager() {
+    const [navbarCategories, setNavbarCategories] = useState<NavbarCategory[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
@@ -15,11 +16,11 @@ export default function ProductManager() {
         name: '',
         description: '',
         images: [''],
+        navbarCategoryId: '',
         categoryId: '',
         subcategoryId: '',
         features: [''],
         specifications: {} as Record<string, string>,
-        catalogPdf: '',
     });
     const [isEditing, setIsEditing] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -33,11 +34,20 @@ export default function ProductManager() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate navbarCategoryId
+        if (!formData.navbarCategoryId || !navbarCategories.some(nc => nc._id === formData.navbarCategoryId)) {
+            alert('Please select a valid navbar category');
+            return;
+        }
+
+        // Prepare product data, removing empty optional fields
         const productData = {
             ...formData,
             slug: generateSlug(formData.name),
             images: formData.images.filter(img => img.trim() !== ''),
             features: formData.features.filter(feature => feature.trim() !== ''),
+            categoryId: formData.categoryId || undefined, // Set to undefined if empty
+            subcategoryId: formData.subcategoryId || undefined // Set to undefined if empty
         };
 
         try {
@@ -51,12 +61,19 @@ export default function ProductManager() {
                 body: JSON.stringify(productData),
             });
 
-            if (response.ok) {
-                fetchProducts();
-                resetForm();
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('API Error:', errorData);
+                alert(`Failed to save product: ${errorData.error || 'Unknown error'}`);
+                return;
             }
+
+            const result = await response.json();
+            fetchProducts();
+            resetForm();
         } catch (error) {
             console.error('Error saving product:', error);
+            alert('An error occurred while saving the product. Check the console for details.');
         }
     };
 
@@ -65,14 +82,42 @@ export default function ProductManager() {
             name: '',
             description: '',
             images: [''],
+            navbarCategoryId: '',
             categoryId: '',
             subcategoryId: '',
             features: [''],
             specifications: {},
-            catalogPdf: '',
         });
         setIsEditing(false);
         setSelectedProduct(null);
+    };
+
+    const fetchNavbarCategories = async () => {
+        try {
+            console.log('Fetching navbar categories...');
+            const response = await fetch('/api/navbarcategories');
+
+            // Log the raw response for debugging
+            console.log('Response status:', response.status);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Received navbar categories:', data);
+
+                if (Array.isArray(data) && data.length > 0) {
+                    setNavbarCategories(data);
+                } else {
+                    console.warn('Received empty or invalid navbar categories data:', data);
+                }
+            } else {
+                console.error('Failed to fetch navbar categories:', response.status, response.statusText);
+                // Try to get error details
+                const errorText = await response.text();
+                console.error('Error details:', errorText);
+            }
+        } catch (error) {
+            console.error('Error fetching navbar categories:', error);
+        }
     };
 
     const fetchCategories = async () => {
@@ -104,6 +149,7 @@ export default function ProductManager() {
             const response = await fetch('/api/products');
             if (response.ok) {
                 const data = await response.json();
+                console.log('Fetched products:', data);
                 setProducts(data);
             }
         } catch (error) {
@@ -135,10 +181,16 @@ export default function ProductManager() {
     };
 
     useEffect(() => {
+        console.log('Component mounted, fetching data...');
+        fetchNavbarCategories();
         fetchCategories();
         fetchSubcategories();
         fetchProducts();
     }, []);
+
+    useEffect(() => {
+        console.log('Navbar categories updated:', navbarCategories);
+    }, [navbarCategories]);
 
     const filteredSubcategories = subcategories.filter(
         sub => sub.categoryId === formData.categoryId
@@ -159,6 +211,32 @@ export default function ProductManager() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Navbar Category
+                        </label>
+                        <select
+                            value={formData.navbarCategoryId}
+                            onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    navbarCategoryId: e.target.value,
+                                    categoryId: '',
+                                    subcategoryId: '',
+                                });
+                            }}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            required
+                        >
+                            <option value="">Select a navbar category</option>
+                            {navbarCategories.map((navbarCategory) => (
+                                <option key={navbarCategory._id} value={navbarCategory._id}>
+                                    {navbarCategory.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Category
                         </label>
                         <select
@@ -171,14 +249,16 @@ export default function ProductManager() {
                                 });
                             }}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                            required
+                            disabled={!formData.navbarCategoryId}
                         >
-                            <option value="">Select a category</option>
-                            {categories.map((category) => (
-                                <option key={category._id} value={category._id}>
-                                    {category.name}
-                                </option>
-                            ))}
+                            <option value="">Select a category (optional)</option>
+                            {categories
+                                .filter(cat => cat.navbarCategoryId === formData.navbarCategoryId)
+                                .map((category) => (
+                                    <option key={category._id} value={category._id}>
+                                        {category.name}
+                                    </option>
+                                ))}
                         </select>
                     </div>
 
@@ -190,10 +270,9 @@ export default function ProductManager() {
                             value={formData.subcategoryId}
                             onChange={(e) => setFormData({ ...formData, subcategoryId: e.target.value })}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                            required
                             disabled={!formData.categoryId}
                         >
-                            <option value="">Select a subcategory</option>
+                            <option value="">Select a subcategory (optional)</option>
                             {filteredSubcategories.map((subcategory) => (
                                 <option key={subcategory._id} value={subcategory._id}>
                                     {subcategory.name}
@@ -279,36 +358,6 @@ export default function ProductManager() {
                                 <span>Add Another Image</span>
                             </button>
                         </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Catalog PDF
-                        </label>
-                        <input
-                            type="file"
-                            accept=".pdf"
-                            onChange={async (e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    const formData = new FormData();
-                                    formData.append('file', file);
-                                    try {
-                                        const response = await fetch('/api/upload', {
-                                            method: 'POST',
-                                            body: formData,
-                                        });
-                                        if (response.ok) {
-                                            const data = await response.json();
-                                            setFormData(prev => ({ ...prev, catalogPdf: data.url }));
-                                        }
-                                    } catch (error) {
-                                        console.error('Error uploading PDF:', error);
-                                    }
-                                }
-                            }}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300"
-                        />
                     </div>
 
                     <div>
@@ -431,7 +480,9 @@ export default function ProductManager() {
                                 <div>
                                     <h3 className="font-medium">{product.name}</h3>
                                     <p className="text-sm text-gray-500">
-                                        Category: {categories.find(c => c._id === product.categoryId)?.name} | Subcategory: {subcategories.find(s => s._id === product.subcategoryId)?.name}
+                                        Navbar Category: {typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId.name} | 
+                                        {product.categoryId && `Category: ${categories.find(c => c._id === product.categoryId)?.name} | `}
+                                        {product.subcategoryId && `Subcategory: ${subcategories.find(s => s._id === product.subcategoryId)?.name}`}
                                     </p>
                                 </div>
                             </div>
@@ -444,6 +495,7 @@ export default function ProductManager() {
                                             _id: product._id
                                         });
                                         setFormData({
+                                            navbarCategoryId: typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId?._id || '',
                                             name: product.name,
                                             description: product.description,
                                             images: product.images,
@@ -451,7 +503,6 @@ export default function ProductManager() {
                                             subcategoryId: product.subcategoryId,
                                             features: product.features || [''],
                                             specifications: product.specifications || {},
-                                            catalogPdf: product.catalogPdf || '',
                                         });
                                     }}
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"

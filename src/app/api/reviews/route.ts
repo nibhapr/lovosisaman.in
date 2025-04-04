@@ -3,27 +3,30 @@ import { connectDB } from '@/lib/db';
 import Review from '@/app/models/Review';
 
 export async function GET(request: Request) {
+  await connectDB();
   const { searchParams } = new URL(request.url);
   const itemId = searchParams.get('itemId');
   const itemType = searchParams.get('itemType');
-
-  try {
-    await connectDB();
-    const query = itemId && itemType ? { itemId, itemType } : {};
-    const reviews = await Review.find(query).sort({ createdAt: -1 });
-    return NextResponse.json(reviews);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch reviews' }, { status: 500 });
-  }
+  
+  const query: any = {};
+  if (itemId) query.itemId = itemId;
+  if (itemType) query.itemType = itemType;
+  
+  const reviews = await Review.find(query);
+  return NextResponse.json(reviews);
 }
 
 export async function POST(request: Request) {
+  await connectDB();
+  const body = await request.json();
+  
   try {
-    await connectDB();
-    const data = await request.json();
-    const review = await Review.create(data);
+    const review = await Review.create(body);
     return NextResponse.json(review);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create review' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create review' },
+      { status: 500 }
+    );
   }
 } 

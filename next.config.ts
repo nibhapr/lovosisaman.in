@@ -4,16 +4,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000'
+      },
+      {
         protocol: 'https',
         hostname: 'lovosis.in'
       },
       {
         protocol: 'https',
         hostname: 'www.lovosis.in'
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost'
       }
     ]
   },

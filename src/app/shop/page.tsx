@@ -1,7 +1,21 @@
 import { connectDB } from '@/lib/db';
+import NavbarCategory from '@/app/models/NavbarCategory';
 import Category from '@/app/models/Category';
 import Image from 'next/image';
 import Link from 'next/link';
+
+interface NavbarCategoryItem {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  description?: string;
+}
+
+async function getNavbarCategories() {
+  await connectDB();
+  return await NavbarCategory.find({});
+}
 
 async function getCategories() {
   await connectDB();
@@ -9,39 +23,48 @@ async function getCategories() {
 }
 
 export default async function ShopPage() {
+  const navbarCategories = await getNavbarCategories();
   const categories = await getCategories();
 
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8 text-center">Product Categories</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {categories.map((category) => (
-          <Link 
-            key={category._id} 
-            href={`/shop/${category.slug}`}
-            className="group"
-          >
-            <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
-              <div className="relative h-48 w-full">
-                <Image
-                  src={category.image || '/images/placeholder.jpg'}
-                  alt={category.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">{category.name}</h2>
-                {category.description && (
-                  <p className="text-gray-600 line-clamp-2">{category.description}</p>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {navbarCategories.map((navbarCategory) => {
+          const categoryItems = categories.filter(
+            (category) => category.navbarCategoryId === navbarCategory._id.toString()
+          );
+
+          return (
+            <div key={navbarCategory._id.toString()} className="mb-12">
+              <Link href={`/shop/${navbarCategory.slug}`} className="block">
+                <h2 className="text-xl font-semibold mb-4 text-blue-600 hover:underline">
+                  {navbarCategory.name}
+                </h2>
+
+                {navbarCategory.image && (
+                  <div className="relative h-32 w-full mb-4">
+                    <Image
+                      src={navbarCategory.image.startsWith('/api/files/')
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL}${navbarCategory.image}`
+                        : navbarCategory.image}
+                      alt={navbarCategory.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 )}
-              </div>
+
+                {navbarCategory.description && (
+                  <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
+                )}
+              </Link>
             </div>
-          </Link>
-        ))}
+          );
+        })}
       </div>
-    </div>
+    </div >
   );
 } 

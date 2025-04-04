@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Product from '@/app/models/Product';
-import File from '@/app/models/File';
+import mongoose from 'mongoose';
+import NavbarCategory from '@/app/models/NavbarCategory';
 
 export async function GET(
   request: Request,
@@ -9,7 +10,7 @@ export async function GET(
 ) {
   try {
     await connectDB();
-    const product = await Product.findById(params.id);
+    const product = await Product.findById(params.id).populate('navbarCategoryId');
     
     if (!product) {
       return NextResponse.json(
@@ -20,7 +21,6 @@ export async function GET(
     
     return NextResponse.json(product);
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch product' },
       { status: 500 }
@@ -35,51 +35,34 @@ export async function PUT(
   try {
     await connectDB();
     const data = await request.json();
-    
-    if (!data.name || !data.categoryId || !data.subcategoryId) {
+
+    // Validate navbarCategoryId if it's being updated
+    if (data.navbarCategoryId && !mongoose.Types.ObjectId.isValid(data.navbarCategoryId)) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Invalid navbarCategoryId' },
         { status: 400 }
       );
     }
 
-    // Generate slug if not provided
-    if (!data.slug) {
-      data.slug = data.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)+/g, '');
-    }
-
-    // Check if another product with the same slug exists (excluding this one)
-    const existingProduct = await Product.findOne({
-      slug: data.slug,
-      _id: { $ne: params.id }
-    });
-    
-    if (existingProduct) {
+    // Optional validation for categoryId if it's being updated
+    if (data.categoryId && !mongoose.Types.ObjectId.isValid(data.categoryId)) {
       return NextResponse.json(
-        { error: 'Another product with this slug already exists' },
-        { status: 409 }
+        { error: 'Invalid categoryId' },
+        { status: 400 }
       );
     }
 
-    const product = await Product.findByIdAndUpdate(
-      params.id,
-      data,
-      { new: true, runValidators: true }
-    );
-    
-    if (!product) {
+    // Optional validation for subcategoryId if it's being updated
+    if (data.subcategoryId && !mongoose.Types.ObjectId.isValid(data.subcategoryId)) {
       return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
+        { error: 'Invalid subcategoryId' },
+        { status: 400 }
       );
     }
-    
+
+    const product = await Product.findByIdAndUpdate(params.id, data, { new: true });
     return NextResponse.json(product);
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { error: 'Failed to update product' },
       { status: 500 }
@@ -93,51 +76,9 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
-    
-    // Find the product first to get its images and PDF
-    const product = await Product.findById(params.id);
-    
-    if (!product) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
-    }
-    
-    // Delete the product
     await Product.findByIdAndDelete(params.id);
-    
-    // Delete associated files from MongoDB
-    const filesToDelete = [];
-    
-    // Check for images
-    if (product.images && product.images.length > 0) {
-      for (const image of product.images) {
-        if (image && image.startsWith('/api/files/')) {
-          const fileId = image.split('/').pop();
-          if (fileId) {
-            filesToDelete.push(fileId);
-          }
-        }
-      }
-    }
-    
-    // Check for catalog PDF
-    if (product.catalogPdf && product.catalogPdf.startsWith('/api/files/')) {
-      const fileId = product.catalogPdf.split('/').pop();
-      if (fileId) {
-        filesToDelete.push(fileId);
-      }
-    }
-    
-    // Delete all associated files
-    if (filesToDelete.length > 0) {
-      await File.deleteMany({ _id: { $in: filesToDelete } });
-    }
-    
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: 'Product deleted successfully' });
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { error: 'Failed to delete product' },
       { status: 500 }

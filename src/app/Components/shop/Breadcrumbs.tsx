@@ -21,7 +21,7 @@ export default function Breadcrumbs() {
             </Link>
           </li>
           {paths.map((path, index) => (
-            <li key={path} className="flex items-center space-x-2">
+            <li key={`${path}-${index}`} className="flex items-center space-x-2">
               <IoChevronForward className="w-4 h-4 text-gray-400" />
               <Link
                 href={`/${paths.slice(0, index + 1).join('/')}`}

@@ -5,9 +5,18 @@ const categorySchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   description: String,
   image: String,
-}, { timestamps: true });
+  navbarCategoryId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'NavbarCategory', 
+    required: true 
+  }
+}, { 
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
-// Add index for better query performance
+// Add index here if needed
 categorySchema.index({ slug: 1 }, { unique: true });
 
 const Category = mongoose.models.Category || mongoose.model('Category', categorySchema);

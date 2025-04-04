@@ -2,19 +2,18 @@ import mongoose from 'mongoose';
 
 let isConnected = false;
 
-export const connectDB = async () => {
-  if (isConnected) return;
-
+export async function connectDB() {
   try {
-    const uri = process.env.MONGODB_URI;
-    if (!uri) {
-      throw new Error('MONGODB_URI is not defined in environment variables');
+    if (mongoose.connection.readyState === 1) {
+      console.log('Already connected to MongoDB');
+      return;
     }
-    await mongoose.connect(uri);
-    isConnected = true;
-    console.log('MongoDB connected');
+
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGODB_URI!);
+    console.log('Connected to MongoDB successfully');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
   }
-}; 
+} 

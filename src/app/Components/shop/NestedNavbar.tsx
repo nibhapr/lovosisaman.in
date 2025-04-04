@@ -21,6 +21,16 @@ export default function NestedNavbar() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const pathname = usePathname();
 
+  const fetchCategories = async (navbarCategoryId: string) => {
+    const response = await fetch(`/api/categories?navbarCategoryId=${navbarCategoryId}`);
+    return await response.json();
+  };
+
+  const fetchSubcategories = async (categoryId: string) => {
+    const response = await fetch(`/api/subcategories?categoryId=${categoryId}`);
+    return await response.json();
+  };
+
   return (
     <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4">

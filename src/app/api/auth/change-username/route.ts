@@ -15,12 +15,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      id: string;
-      username: string;
-    };
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
     const { newUsername, currentPassword } = await request.json();
+
+    if (!newUsername || !currentPassword) {
+      return NextResponse.json({ error: 'New username and current password are required' }, { status: 400 });
+    }
 
     const admin = await Admin.findById(decoded.id);
     if (!admin) {

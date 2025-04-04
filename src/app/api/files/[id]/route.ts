@@ -6,32 +6,17 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  try {
-    await connectDB();
-    
-    const fileId = params.id;
-    const file = await File.findById(fileId);
-    
-    if (!file) {
-      return NextResponse.json(
-        { error: 'File not found' },
-        { status: 404 }
-      );
-    }
-    
-    // Create a response with the file data
-    const response = new NextResponse(file.data);
-    
-    // Set appropriate headers
-    response.headers.set('Content-Type', file.contentType);
-    response.headers.set('Content-Disposition', `inline; filename="${file.filename}"`);
-    
-    return response;
-  } catch (error) {
-    console.error('File retrieval error:', error);
-    return NextResponse.json(
-      { error: 'Failed to retrieve file' },
-      { status: 500 }
-    );
+  await connectDB();
+  
+  const file = await File.findById(params.id);
+  if (!file) {
+    return NextResponse.json({ error: 'File not found' }, { status: 404 });
   }
+
+  return new NextResponse(file.data, {
+    headers: {
+      'Content-Type': file.type || 'image/jpeg',
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  });
 } 

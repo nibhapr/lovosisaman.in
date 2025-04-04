@@ -1,3 +1,11 @@
+interface NavbarCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+}
+
 interface Category {
   id: string;
   _id?: string;  // Add this for MongoDB compatibility
@@ -7,11 +15,13 @@ interface Category {
   image: string;
   createdAt?: Date;
   updatedAt?: Date;
+  navbarCategoryId?: string;
 }
 
 interface Subcategory {
   id: string;
   _id?: string;  // Add this for MongoDB compatibility
+  navbarCategoryId: string;
   categoryId: string;
   name: string;
   slug: string;
@@ -26,6 +36,7 @@ interface Product {
   slug: string;
   description: string;
   images: string[];
+  navbarCategoryId: string | NavbarCategory;
   categoryId: string;
   subcategoryId: string;
   features: string[];
@@ -43,4 +54,4 @@ export interface Review {
   createdAt: string;
 }
 
-export type { Category, Subcategory, Product };
+export type { NavbarCategory, Category, Subcategory, Product };

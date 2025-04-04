@@ -14,10 +14,10 @@ async function getProducts(subcategoryId: string) {
   return await Product.find({ subcategoryId });
 }
 
-export default async function SubcategoryPage({ 
-  params 
-}: { 
-  params: { category: string; subcategory: string } 
+export default async function SubcategoryPage({
+  params
+}: {
+  params: { category: string; subcategory: string }
 }) {
   const subcategory = await getSubcategory(params.subcategory);
   const products = subcategory ? await getProducts(subcategory._id) : [];

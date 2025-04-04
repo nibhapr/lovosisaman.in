@@ -13,7 +13,7 @@ export async function GET(
     
     if (!category) {
       return NextResponse.json(
-        { error: 'Category not found' },
+        { error: 'Navbar Category not found' },
         { status: 404 }
       );
     }
@@ -34,19 +34,19 @@ export async function PUT(
 ) {
   try {
     await connectDB();
+    const { id } = params;
     const data = await request.json();
     
-    if (!data.name || !data.slug) {
+    if (!data.name || !data.slug || !data.navbarCategoryId) {
       return NextResponse.json(
-        { error: 'Name and slug are required' },
+        { error: 'Name, slug, and navbarCategoryId are required' },
         { status: 400 }
       );
     }
 
-    // Check if another category with the same slug exists (excluding this one)
     const existingCategory = await Category.findOne({
       slug: data.slug,
-      _id: { $ne: params.id }
+      _id: { $ne: id }
     });
     
     if (existingCategory) {
@@ -57,7 +57,7 @@ export async function PUT(
     }
 
     const category = await Category.findByIdAndUpdate(
-      params.id,
+      id,
       data,
       { new: true, runValidators: true }
     );
@@ -86,20 +86,17 @@ export async function DELETE(
   try {
     await connectDB();
     
-    // Find the category first to get its image
     const category = await Category.findById(params.id);
     
     if (!category) {
       return NextResponse.json(
-        { error: 'Category not found' },
+        { error: 'Navbar Category not found' },
         { status: 404 }
       );
     }
     
-    // Delete the category
     await Category.findByIdAndDelete(params.id);
     
-    // If the category has an image stored in MongoDB, delete it too
     if (category.image && category.image.startsWith('/api/files/')) {
       const fileId = category.image.split('/').pop();
       if (fileId) {

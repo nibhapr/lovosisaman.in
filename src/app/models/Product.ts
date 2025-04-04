@@ -1,20 +1,58 @@
 import mongoose from 'mongoose';
 
-const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
-  description: String,
-  categoryId: { type: String, required: true },
-  subcategoryId: { type: String, required: true },
-  images: [String],
-  features: [String],
+const ProductSchema = new mongoose.Schema({
+  name: { type: String },
+  slug: { type: String, unique: true },
+  description: { type: String },
+  images: [{ type: String }],
+  navbarCategoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'NavbarCategory',
+    required: true
+  },
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  },
+  subcategoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Subcategory'
+  },
+  features: [{ type: String }],
   specifications: { type: Map, of: String },
-  catalogPdf: String,
-}, { timestamps: true });
+  catalogPdf: { type: String },
+  createdAt: { type: Date, default: Date.now }
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
 // Add indexes for better query performance
-productSchema.index({ categoryId: 1, subcategoryId: 1 });
+ProductSchema.index({ name: 'text', description: 'text' });
+ProductSchema.index({ navbarCategoryId: 1 });
+ProductSchema.index({ categoryId: 1 });
+ProductSchema.index({ subcategoryId: 1 });
 
-const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+// Virtual population
+ProductSchema.virtual('navbarCategory', {
+  ref: 'NavbarCategory',
+  localField: 'navbarCategoryId',
+  foreignField: '_id',
+  justOne: true
+});
 
-export default Product; 
+ProductSchema.virtual('category', {
+  ref: 'Category',
+  localField: 'categoryId',
+  foreignField: '_id',
+  justOne: true
+});
+
+ProductSchema.virtual('subcategory', {
+  ref: 'Subcategory',
+  localField: 'subcategoryId',
+  foreignField: '_id',
+  justOne: true
+});
+
+export default mongoose.models.Product || mongoose.model('Product', ProductSchema); 

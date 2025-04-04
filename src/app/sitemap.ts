@@ -3,16 +3,18 @@ import { connectDB } from '@/lib/db'
 import Category from '@/app/models/Category'
 import Subcategory from '@/app/models/Subcategory'
 import Product from '@/app/models/Product'
+import NavbarCategory from '@/app/models/NavbarCategory'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'localhost:3000'
   
   await connectDB()
 
-  // Fetch all categories, subcategories and products
+  // Fetch all categories, subcategories, products, and navbar categories
   const categories = await Category.find({})
   const subcategories = await Subcategory.find({})
   const products = await Product.find({})
+  const navbarCategories = await NavbarCategory.find({})
 
   // Generate shop routes
   const shopRoutes = categories.flatMap(category => {
@@ -72,5 +74,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1 : 0.8,
   }))
 
-  return [...staticRoutes, ...shopRoutes]
+  // Generate navbar category routes
+  const navbarCategoryRoutes = navbarCategories.map(category => ({
+    url: `${baseUrl}/shop/${category.slug}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }))
+
+  return [...staticRoutes, ...shopRoutes, ...navbarCategoryRoutes]
 } 

@@ -20,20 +20,26 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     const data = await request.json();
-    
-    // Set default status to pending if not provided
-    if (!data.status) {
-      data.status = 'pending';
+
+    // Validate required fields
+    if (!data.fullName || !data.companyName || !data.email || !data.phone || !data.productName) {
+      return NextResponse.json(
+        { error: 'All fields are required' },
+        { status: 400 }
+      );
     }
-    
+
+    // Set default status to pending if not provided
+    data.status = data.status || 'pending';
+
     const newRequest = new CatalogRequest(data);
     await newRequest.save();
-    
+
     return NextResponse.json(newRequest, { status: 201 });
   } catch (error) {
     console.error('Error creating catalog request:', error);
     return NextResponse.json(
-      { error: 'Failed to create catalog request' },
+      { error: 'Failed to create catalog request: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
     );
   }

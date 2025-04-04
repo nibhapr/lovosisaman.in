@@ -38,7 +38,10 @@ export default function ReviewForm({ itemId, itemType, onSuccess }: ReviewFormPr
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to submit review');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit review');
+      }
       
       setSuccess(true);
       setFormData({ name: '', email: '', phone: '', rating: 0, comment: '' });

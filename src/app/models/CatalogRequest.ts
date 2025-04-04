@@ -27,11 +27,6 @@ const catalogRequestSchema = new Schema({
     required: true,
     trim: true
   },
-  catalogUrl: {
-    type: String,
-    required: true,
-    trim: true
-  },
   status: {
     type: String,
     enum: ['pending', 'sent', 'failed'],
