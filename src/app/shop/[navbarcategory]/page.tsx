@@ -35,6 +35,9 @@ export default async function NavbarCategoryPage({
   const categories = await getCategories(navbarCategory._id.toString());
   const products = await getProducts(navbarCategory._id.toString());
 
+  console.log('Products:', products);
+  console.log('Navbar Category ID:', navbarCategory._id.toString());
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
