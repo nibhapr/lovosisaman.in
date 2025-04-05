@@ -29,20 +29,17 @@ interface Subcategory {
   image: string;
 }
 
-interface Product {
-  id: string;
-  _id?: string;
-  name: string;
-  slug: string;
-  description: string;
-  images: string[];
-  navbarCategoryId: string | NavbarCategory;
-  categoryId: string;
-  subcategoryId: string;
-  features: string[];
-  specifications: Record<string, string>;
-  catalogPdf?: string;
-}
+type Product = {
+    _id: string;
+    name: string;
+    images: string[];
+    navbarCategoryId: string | NavbarCategory;
+    categoryId?: string;
+    subcategoryId?: string;
+    catalogImage?: string | null;
+    catalogImages?: string[];
+    // other properties
+};
 
 export interface Review {
   _id: string;

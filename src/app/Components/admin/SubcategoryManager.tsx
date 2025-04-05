@@ -30,17 +30,22 @@ export default function SubcategoryManager() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    if (formData.name.length < 2) {
+        console.error('Name must be at least 2 characters long');
+        return; // Prevent submission
+    }
+
     const subcategoryData = {
       ...formData,
       slug: generateSlug(formData.name),
     };
 
     try {
-      const url = isEditing 
+      const url = isEditing
         ? `/api/subcategories/${selectedSubcategory?._id}`
         : '/api/subcategories';
-      
+
       const response = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,12 +62,12 @@ export default function SubcategoryManager() {
   };
 
   const resetForm = () => {
-    setFormData({ 
-      name: '', 
-      description: '', 
-      image: '', 
+    setFormData({
+      name: '',
+      description: '',
+      image: '',
       categoryId: '',
-      navbarCategoryId: '' 
+      navbarCategoryId: ''
     });
     setIsEditing(false);
     setSelectedSubcategory(null);
@@ -85,7 +90,10 @@ export default function SubcategoryManager() {
       const response = await fetch('/api/categories');
       if (response.ok) {
         const data = await response.json();
+        console.log('Fetched categories:', data);
         setCategories(data);
+      } else {
+        console.error('Failed to fetch categories:', response.status);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -105,8 +113,11 @@ export default function SubcategoryManager() {
   };
 
   const handleNavbarCategoryChange = (navbarCategoryId: string) => {
+    console.log('Selected navbarCategoryId:', navbarCategoryId);
+    console.log('All categories:', categories);
     setFormData(prev => ({ ...prev, navbarCategoryId, categoryId: '' }));
     const filtered = categories.filter(cat => cat.navbarCategoryId === navbarCategoryId);
+    console.log('Filtered categories:', filtered);
     setFilteredCategories(filtered);
   };
 
@@ -126,12 +137,12 @@ export default function SubcategoryManager() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this subcategory?')) return;
-    
+
     try {
       const response = await fetch(`/api/subcategories/${id}`, {
         method: 'DELETE',
       });
-      
+
       if (response.ok) {
         fetchSubcategories();
       }
@@ -289,7 +300,7 @@ export default function SubcategoryManager() {
                   <div>
                     <h3 className="font-medium">{subcategory.name}</h3>
                     <p className="text-sm text-gray-500">
-                      {getCategoryName(subcategory.categoryId)} - 
+                      {getCategoryName(subcategory.categoryId)} -
                       {category && getNavbarCategoryName(category.navbarCategoryId || '')}
                     </p>
                   </div>

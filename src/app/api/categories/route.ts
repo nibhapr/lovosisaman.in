@@ -7,10 +7,10 @@ import NavbarCategory from '@/app/models/NavbarCategory';
 export async function GET() {
   try {
     await connectDB();
-    const categories = await Category.find({}).sort({ name: 1 });
+    const categories = await Category.find({}).select('_id name slug navbarCategoryId');
     return NextResponse.json(categories);
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('Error fetching categories:', error);
     return NextResponse.json(
       { error: 'Failed to fetch categories' },
       { status: 500 }
@@ -74,4 +74,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

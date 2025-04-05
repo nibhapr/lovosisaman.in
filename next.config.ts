@@ -20,12 +20,12 @@ const nextConfig: NextConfig = {
   },
   webpack: (config) => {
     config.module.rules.push({
-      test: /\.(mp4|webm|ogg|mov)$/,
+      test: /\.(mp4|webm|ogg|mov|pdf)$/,
       use: {
         loader: 'file-loader',
         options: {
-          publicPath: '/_next/static/videos/',
-          outputPath: 'static/videos/',
+          publicPath: '/_next/static/files/',
+          outputPath: 'static/files/',
           name: '[name].[hash].[ext]',
         },
       },

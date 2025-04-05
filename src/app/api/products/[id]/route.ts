@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Product from '@/app/models/Product';
 import mongoose from 'mongoose';
-import NavbarCategory from '@/app/models/NavbarCategory';
+import File from '@/app/models/File';
 
 export async function GET(
   request: Request,
@@ -60,11 +60,35 @@ export async function PUT(
       );
     }
 
+    // Validate catalogImage URL if provided
+    if (data.catalogImage && typeof data.catalogImage === 'string') {
+      try {
+        new URL(data.catalogImage);
+      } catch (error) {
+        return NextResponse.json(
+          { error: 'Invalid image URL format' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Ensure catalogImage is properly formatted
+    if (data.catalogImage === '') {
+      data.catalogImage = null;
+    }
+
     const product = await Product.findByIdAndUpdate(params.id, data, { new: true });
+    if (!product) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(product);
   } catch (error) {
+    console.error('Error updating product:', error);
     return NextResponse.json(
-      { error: 'Failed to update product' },
+      { error: 'Failed to update product', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
@@ -76,12 +100,34 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
+    
+    // First find the product to get its catalog image
+    const product = await Product.findById(params.id);
+    
+    if (!product) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Delete the product
     await Product.findByIdAndDelete(params.id);
-    return NextResponse.json({ message: 'Product deleted successfully' });
+    
+    // If the product has a catalog image stored in MongoDB, delete it too
+    if (product.catalogImage && product.catalogImage.startsWith('/api/files/')) {
+      const fileId = product.catalogImage.split('/').pop();
+      if (fileId) {
+        await File.findByIdAndDelete(fileId);
+      }
+    }
+    
+    return NextResponse.json({ message: 'Product and associated files deleted successfully' });
   } catch (error) {
+    console.error('Error deleting product:', error);
     return NextResponse.json(
       { error: 'Failed to delete product' },
       { status: 500 }
     );
   }
-} 
+}

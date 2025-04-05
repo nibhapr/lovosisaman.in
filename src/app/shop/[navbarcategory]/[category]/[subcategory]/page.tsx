@@ -17,7 +17,7 @@ async function getProducts(subcategoryId: string) {
 export default async function SubcategoryPage({
   params
 }: {
-  params: { category: string; subcategory: string }
+  params: { navbarcategory: string; category: string; subcategory: string }
 }) {
   const subcategory = await getSubcategory(params.subcategory);
   const products = subcategory ? await getProducts(subcategory._id) : [];
@@ -50,7 +50,7 @@ export default async function SubcategoryPage({
         {products.map((product) => (
           <Link
             key={product._id}
-            href={`/shop/${params.category}/${params.subcategory}/${product.slug}`}
+            href={`/shop/${params.navbarcategory}/${params.category}/${params.subcategory}/${product.slug}`}
             className="group"
           >
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-100">

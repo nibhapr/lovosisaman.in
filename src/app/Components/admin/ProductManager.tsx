@@ -14,16 +14,16 @@ export default function ProductManager() {
     const [products, setProducts] = useState<Product[]>([]);
     const [formData, setFormData] = useState({
         name: '',
-        description: '',
         images: [''],
         navbarCategoryId: '',
         categoryId: '',
         subcategoryId: '',
-        features: [''],
-        specifications: {} as Record<string, string>,
+        catalogImage: null as string | null,
+        catalogImages: [''],
     });
     const [isEditing, setIsEditing] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [isLoadingPdf, setIsLoadingPdf] = useState(false);
 
     const generateSlug = (name: string) => {
         return name.toLowerCase()
@@ -31,29 +31,46 @@ export default function ProductManager() {
             .replace(/(^-|-$)+/g, '');
     };
 
+    const generateSignature = async (timestamp: number) => {
+        const response = await fetch('/api/generate-signature', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ timestamp }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate signature');
+        }
+
+        const { signature } = await response.json();
+        return signature;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validate navbarCategoryId
-        if (!formData.navbarCategoryId || !navbarCategories.some(nc => nc._id === formData.navbarCategoryId)) {
-            alert('Please select a valid navbar category');
-            return;
-        }
-
-        // Prepare product data, removing empty optional fields
-        const productData = {
-            ...formData,
-            slug: generateSlug(formData.name),
-            images: formData.images.filter(img => img.trim() !== ''),
-            features: formData.features.filter(feature => feature.trim() !== ''),
-            categoryId: formData.categoryId || undefined, // Set to undefined if empty
-            subcategoryId: formData.subcategoryId || undefined // Set to undefined if empty
-        };
-
         try {
-            const url = isEditing && selectedProduct?._id
-                ? `/api/products/${selectedProduct._id}`
-                : '/api/products';
+            // Validate navbarCategoryId
+            if (!formData.navbarCategoryId || !navbarCategories.some(nc => nc._id === formData.navbarCategoryId)) {
+                alert('Please select a valid navbar category');
+                return;
+            }
+
+            console.log('Submitting form data:', formData);
+
+            const productData = {
+                ...formData,
+                slug: generateSlug(formData.name),
+                images: formData.images.filter(img => img.trim() !== ''),
+                catalogImage: formData.catalogImage,
+                categoryId: formData.categoryId || undefined,
+                subcategoryId: formData.subcategoryId || undefined
+            };
+
+            console.log('Processed product data:', productData);
+
+            const url = isEditing && selectedProduct?._id ? `/api/products/${selectedProduct._id}` : '/api/products';
+            console.log('Sending request to:', url);
 
             const response = await fetch(url, {
                 method: isEditing ? 'PUT' : 'POST',
@@ -63,30 +80,26 @@ export default function ProductManager() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('API Error:', errorData);
-                alert(`Failed to save product: ${errorData.error || 'Unknown error'}`);
-                return;
+                throw new Error(errorData.error || 'Failed to save product');
             }
 
-            const result = await response.json();
-            fetchProducts();
+            await fetchProducts();
             resetForm();
         } catch (error) {
             console.error('Error saving product:', error);
-            alert('An error occurred while saving the product. Check the console for details.');
+            alert(error instanceof Error ? error.message : 'An error occurred while saving the product');
         }
     };
 
     const resetForm = () => {
         setFormData({
             name: '',
-            description: '',
             images: [''],
             navbarCategoryId: '',
             categoryId: '',
             subcategoryId: '',
-            features: [''],
-            specifications: {},
+            catalogImage: null,
+            catalogImages: [''],
         });
         setIsEditing(false);
         setSelectedProduct(null);
@@ -150,7 +163,11 @@ export default function ProductManager() {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Fetched products:', data);
-                setProducts(data);
+                setProducts(data.map((product: any) => ({
+                    ...product,
+                    categoryId: product.categoryId?._id || product.categoryId,
+                    subcategoryId: product.subcategoryId?._id || product.subcategoryId
+                })));
             }
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -188,13 +205,60 @@ export default function ProductManager() {
         fetchProducts();
     }, []);
 
-    useEffect(() => {
-        console.log('Navbar categories updated:', navbarCategories);
-    }, [navbarCategories]);
-
-    const filteredSubcategories = subcategories.filter(
-        sub => sub.categoryId === formData.categoryId
+    // Add new filtered categories state
+    const filteredCategories = categories.filter(
+        cat => cat.navbarCategoryId === formData.navbarCategoryId
     );
+
+    // Update filteredSubcategories to consider navbarCategoryId
+    const filteredSubcategories = subcategories.filter(
+        sub => sub.categoryId === formData.categoryId &&
+            categories.find(cat => cat._id === sub.categoryId)?.navbarCategoryId === formData.navbarCategoryId
+    );
+
+    const handlePdfError = (pdfUrl: string) => {
+        console.error('Failed to load PDF:', pdfUrl);
+        setIsLoadingPdf(false);
+        alert('Failed to load PDF. Please make sure it\'s a valid PDF file and properly uploaded.');
+
+        // Try reloading with cache-busting
+        const iframe = document.querySelector(`iframe[src="${pdfUrl}"]`) as HTMLIFrameElement;
+        if (iframe) {
+            const newUrl = `${pdfUrl}?t=${new Date().getTime()}`;
+            iframe.src = newUrl;
+        }
+    };
+
+    const handleCatalogImageUpload = async (index: number, file: File) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'catalog');
+
+            const response = await fetch('/api/files', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload catalog image');
+            }
+
+            const data = await response.json();
+
+            setFormData(prev => {
+                const newCatalogImages = [...prev.catalogImages];
+                newCatalogImages[index] = data.secure_url;
+                return {
+                    ...prev,
+                    catalogImages: newCatalogImages,
+                };
+            });
+        } catch (error) {
+            console.error('Error uploading catalog image:', error);
+            alert('Failed to upload catalog image');
+        }
+    };
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -252,13 +316,11 @@ export default function ProductManager() {
                             disabled={!formData.navbarCategoryId}
                         >
                             <option value="">Select a category (optional)</option>
-                            {categories
-                                .filter(cat => cat.navbarCategoryId === formData.navbarCategoryId)
-                                .map((category) => (
-                                    <option key={category._id} value={category._id}>
-                                        {category.name}
-                                    </option>
-                                ))}
+                            {filteredCategories.map((category) => (
+                                <option key={category._id} value={category._id}>
+                                    {category.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -290,19 +352,6 @@ export default function ProductManager() {
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Description
-                        </label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                            rows={4}
                             required
                         />
                     </div>
@@ -361,78 +410,40 @@ export default function ProductManager() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Features
-                        </label>
-                        {formData.features.map((feature, index) => (
-                            <div key={`feature-${index}`} className="flex space-x-2">
-                                <input
-                                    type="text"
-                                    value={feature}
-                                    onChange={(e) => {
-                                        const newFeatures = [...formData.features];
-                                        newFeatures[index] = e.target.value;
-                                        setFormData({ ...formData, features: newFeatures });
-                                    }}
-                                    className="flex-1 px-4 py-2 rounded-lg border border-gray-300"
-                                />
+                        <div className="flex items-center space-x-4">
+                            <ImageUpload
+                                value={formData.catalogImage || ''}
+                                onChange={(url: string) => {
+                                    console.log('Catalog image URL received:', url);
+                                    setFormData(prevState => {
+                                        const newState = {
+                                            ...prevState,
+                                            catalogImage: url
+                                        };
+                                        console.log('Updated form data:', newState);
+                                        return newState;
+                                    });
+                                }}
+                                label="Catalog Image"
+                            />
+                        </div>
+                        {formData.catalogImage && (
+                            <div className="mt-2">
+                                <p className="text-sm text-gray-500">Catalog image uploaded successfully</p>
                                 <button
                                     type="button"
                                     onClick={() => {
-                                        const newFeatures = formData.features.filter((_, i) => i !== index);
-                                        setFormData({ ...formData, features: newFeatures });
+                                        setFormData(prevState => ({
+                                            ...prevState,
+                                            catalogImage: null
+                                        }));
                                     }}
-                                    className="text-red-600 hover:text-red-700"
+                                    className="text-red-600 hover:text-red-700 text-sm"
                                 >
-                                    Remove
+                                    Remove catalog image
                                 </button>
                             </div>
-                        ))}
-                        <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, features: [...formData.features, ''] })}
-                            className="text-blue-600 hover:text-blue-700"
-                        >
-                            + Add another feature
-                        </button>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Specifications
-                        </label>
-                        {Object.entries(formData.specifications).map(([key, value], index) => (
-                            <div key={`spec-${index}`} className="flex space-x-2">
-                                <input
-                                    type="text"
-                                    value={key}
-                                    onChange={(e) => {
-                                        const newSpecs = { ...formData.specifications };
-                                        const oldValue = newSpecs[key];
-                                        delete newSpecs[key];
-                                        newSpecs[e.target.value] = oldValue;
-                                        setFormData({ ...formData, specifications: newSpecs });
-                                    }}
-                                    className="flex-1 px-4 py-2 rounded-lg border border-gray-300"
-                                    placeholder="Specification name"
-                                />
-                                <input
-                                    type="text"
-                                    value={value}
-                                    onChange={(e) => {
-                                        setFormData({
-                                            ...formData,
-                                            specifications: {
-                                                ...formData.specifications,
-                                                [key]: e.target.value
-                                            }
-                                        });
-                                    }}
-                                    className="flex-1 px-4 py-2 rounded-lg border border-gray-300"
-                                    placeholder="Specification value"
-                                />
-                            </div>
-                        ))}
+                        )}
                     </div>
 
                     <div className="flex space-x-4">
@@ -480,9 +491,23 @@ export default function ProductManager() {
                                 <div>
                                     <h3 className="font-medium">{product.name}</h3>
                                     <p className="text-sm text-gray-500">
-                                        Navbar Category: {typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId.name} | 
-                                        {product.categoryId && `Category: ${categories.find(c => c._id === product.categoryId)?.name} | `}
-                                        {product.subcategoryId && `Subcategory: ${subcategories.find(s => s._id === product.subcategoryId)?.name}`}
+                                        Navbar Category: {typeof product.navbarCategoryId === 'string'
+                                            ? navbarCategories.find(nc => nc._id === product.navbarCategoryId)?.name || 'Unknown Navbar Category'
+                                            : product.navbarCategoryId.name} |
+                                        Category: {product.categoryId ? (categories.find(c =>
+                                            String(c._id) === String(product.categoryId)
+                                        )?.name || 'Unknown Category') : 'No Category'} |
+                                        {product.subcategoryId ? `Subcategory: ${subcategories.find(s =>
+                                            String(s._id) === String(product.subcategoryId)
+                                        )?.name || 'Unknown Subcategory'} |` : ''}
+                                        {product.catalogImage && (
+                                            <button
+                                                onClick={() => product.catalogImage && window.open(product.catalogImage, '_blank')}
+                                                className="text-blue-600 hover:text-blue-700 underline ml-1"
+                                            >
+                                                View Catalog
+                                            </button>
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -497,12 +522,11 @@ export default function ProductManager() {
                                         setFormData({
                                             navbarCategoryId: typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId?._id || '',
                                             name: product.name,
-                                            description: product.description,
                                             images: product.images,
-                                            categoryId: product.categoryId,
-                                            subcategoryId: product.subcategoryId,
-                                            features: product.features || [''],
-                                            specifications: product.specifications || {},
+                                            categoryId: product.categoryId || '',
+                                            subcategoryId: product.subcategoryId || '',
+                                            catalogImage: product.catalogImage || null,
+                                            catalogImages: product.catalogImages || [''],
                                         });
                                     }}
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -522,4 +546,4 @@ export default function ProductManager() {
             </motion.div>
         </div>
     );
-} 
+}

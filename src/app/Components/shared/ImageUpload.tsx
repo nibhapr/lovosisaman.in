@@ -18,31 +18,50 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size should be less than 5MB');
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload a valid image file');
+      return;
+    }
+
     try {
       setUploading(true);
       const formData = new FormData();
       formData.append('file', file);
+
+      console.log('Uploading file:', file.name);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // Use the MongoDB file URL
-        onChange(data.url);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Upload error:', errorData);
+        throw new Error('Failed to upload image');
       }
+
+      const data = await response.json();
+      console.log('Upload successful, received URL:', data.url);
+      onChange(data.url);
     } catch (error) {
       console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
     } finally {
       setUploading(false);
     }
   };
 
-  // Get display URL for the image
   const getDisplayUrl = (url: string) => {
     if (!url) return '';
+    // Use the URL directly since the API endpoint will handle the image display
     return url;
   };
 
@@ -88,4 +107,4 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
       </label>
     </div>
   );
-} 
+}

@@ -38,6 +38,14 @@ export async function POST(request: Request) {
     await connectDB();
     const data = await request.json();
 
+    // Validate name length
+    if (!data.name || data.name.length < 2) {
+      return NextResponse.json(
+        { error: 'Name must be at least 2 characters long' },
+        { status: 400 }
+      );
+    }
+
     // Validate categoryId
     if (!data.categoryId || !mongoose.Types.ObjectId.isValid(data.categoryId)) {
       return NextResponse.json(
