@@ -1,5 +1,5 @@
-import NestedNavbar from '../Components/shop/NestedNavbar';
-import Breadcrumbs from '../Components/shop/Breadcrumbs';
+import NestedNavbar from '../Components/products/NestedNavbar';
+import Breadcrumbs from '../Components/products/Breadcrumbs';
 
 export default function ShopLayout({
   children,

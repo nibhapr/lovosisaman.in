@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Generate shop routes
   const shopRoutes = categories.flatMap(category => {
     const categoryRoute = {
-      url: `${baseUrl}/shop/${category.slug}`,
+      url: `${baseUrl}/products/${category.slug}`,
       lastModified: new Date().toISOString(),
       changeFrequency: 'daily' as const,
       priority: 0.8,
@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const subcategoryRoutes = subcategories
       .filter(sub => sub.categoryId === category._id.toString())
       .map(sub => ({
-        url: `${baseUrl}/shop/${category.slug}/${sub.slug}`,
+        url: `${baseUrl}/products/${category.slug}/${sub.slug}`,
         lastModified: new Date().toISOString(),
         changeFrequency: 'daily' as const,
         priority: 0.7,
@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .map(prod => {
         const sub = subcategories.find(sub => sub._id.toString() === prod.subcategoryId);
         return {
-          url: `${baseUrl}/shop/${category.slug}/${sub?.slug}/${prod.slug}`,
+          url: `${baseUrl}/products/${category.slug}/${sub?.slug}/${prod.slug}`,
           lastModified: new Date().toISOString(),
           changeFrequency: 'daily' as const,
           priority: 0.6,
@@ -66,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/robots.txt',
     '/services/it-services',
     '/services/electronics-manufacturing',
-    '/shop',
+    '/products',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
@@ -76,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate navbar category routes
   const navbarCategoryRoutes = navbarCategories.map(category => ({
-    url: `${baseUrl}/shop/${category.slug}`,
+    url: `${baseUrl}/products/${category.slug}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'daily' as const,
     priority: 0.8,

@@ -42,7 +42,7 @@ export default async function NavbarCategoryPage({
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
         <nav className="flex space-x-2 text-sm text-gray-600">
-          <Link href="/shop" className="hover:text-blue-600 hover:underline">
+          <Link href="/products" className="hover:text-blue-600 hover:underline">
             Shop
           </Link>
           <span>/</span>
@@ -62,7 +62,7 @@ export default async function NavbarCategoryPage({
             {categories.map((category) => (
               <Link
                 key={category._id}
-                href={`/shop/${params.navbarcategory}/${category.slug}`}
+                href={`/products/${params.navbarcategory}/${category.slug}`}
                 className="group"
               >
                 <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
@@ -95,7 +95,7 @@ export default async function NavbarCategoryPage({
             {uncategorizedProducts.map((product) => (
               <Link
                 key={product._id as string}
-                href={`/shop/${params.navbarcategory}/_/_/${product.slug}`}
+                href={`/products/${params.navbarcategory}/_/_/${product.slug}`}
                 className="group"
               >
                 <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1">

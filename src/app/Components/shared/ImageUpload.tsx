@@ -61,7 +61,9 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
 
   const getDisplayUrl = (url: string) => {
     if (!url) return '';
-    // Use the URL directly since the API endpoint will handle the image display
+    if (url.startsWith('/api/files/')) {
+      return `https://${process.env.NEXT_PUBLIC_DOMAIN}${url}`;
+    }
     return url;
   };
 

@@ -62,7 +62,7 @@ export default async function CategoryPage({
           The category "{params.category}" does not exist.
         </p>
         <Link
-          href={`/shop/${params.navbarcategory}`}
+          href={`/products/${params.navbarcategory}`}
           className="mt-4 text-blue-600 hover:underline"
         >
           &larr; Back to {params.navbarcategory}
@@ -90,7 +90,7 @@ export default async function CategoryPage({
             {subcategories.map((subcategory) => (
               <Link
                 key={subcategory._id}
-                href={`/shop/${params.navbarcategory}/${params.category}/${subcategory.slug}`}
+                href={`/products/${params.navbarcategory}/${params.category}/${subcategory.slug}`}
                 className="group"
               >
                 <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
@@ -124,7 +124,7 @@ export default async function CategoryPage({
             {products.map((product) => (
               <Link
                 key={product._id}
-                href={`/shop/${params.navbarcategory}/${params.category}/_/${product.slug}`}
+                href={`/products/${params.navbarcategory}/${params.category}/_/${product.slug}`}
                 className="group"
               >
                 <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1">

@@ -43,7 +43,7 @@ export default function NestedNavbar() {
               onMouseLeave={() => setActiveCategory(null)}
             >
               <Link
-                href={`/shop/${category.slug}`}
+                href={`/products/${category.slug}`}
                 className="flex items-center space-x-1 py-4 text-gray-700 hover:text-blue-600 transition-colors"
               >
                 <span>{category.name}</span>
@@ -61,7 +61,7 @@ export default function NestedNavbar() {
                     {category.subcategories?.map((subcategory) => (
                       <Link
                         key={subcategory.slug}
-                        href={`/shop/${category.slug}/${subcategory.slug}`}
+                        href={`/products/${category.slug}/${subcategory.slug}`}
                         className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         {subcategory.name}

@@ -38,7 +38,7 @@ export default async function ShopPage() {
 
           return (
             <div key={navbarCategory._id.toString()} className="mb-12">
-              <Link href={`/shop/${navbarCategory.slug}`} className="block">
+              <Link href={`/products/${navbarCategory.slug}`} className="block">
                 <h2 className="text-xl font-semibold mb-4 text-blue-600 hover:underline">
                   {navbarCategory.name}
                 </h2>
@@ -47,7 +47,7 @@ export default async function ShopPage() {
                   <div className="relative h-32 w-full mb-4">
                     <Image
                       src={navbarCategory.image.startsWith('/api/files/')
-                        ? `${process.env.NEXT_PUBLIC_BASE_URL}${navbarCategory.image}`
+                        ? `https://${process.env.NEXT_PUBLIC_DOMAIN}${navbarCategory.image}`
                         : navbarCategory.image}
                       alt={navbarCategory.name}
                       fill
@@ -67,4 +67,4 @@ export default async function ShopPage() {
       </div>
     </div >
   );
-} 
+}

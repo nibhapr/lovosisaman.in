@@ -50,7 +50,7 @@ export default async function SubcategoryPage({
         {products.map((product) => (
           <Link
             key={product._id}
-            href={`/shop/${params.navbarcategory}/${params.category}/${params.subcategory}/${product.slug}`}
+            href={`/products/${params.navbarcategory}/${params.category}/${params.subcategory}/${product.slug}`}
             className="group"
           >
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-100">
