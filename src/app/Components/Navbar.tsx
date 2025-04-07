@@ -214,27 +214,42 @@ const Navbar = () => {
                           {navbarCategories.map((navbarCategory) => (
                             <div
                               key={navbarCategory.id}
-                              onClick={() => handleNavbarCategoryClick(navbarCategory.id)}
-                              className={`font-medium text-gray-300 hover:text-white cursor-pointer flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${expandedNavbarCategory === navbarCategory.id
-                                ? 'bg-gradient-to-r from-slate-700/90 to-slate-700/50 text-white shadow-lg'
-                                : 'hover:bg-slate-700/40 hover:shadow-md'
-                                }`}
+                              className={`font-medium text-gray-300 hover:text-white flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                                expandedNavbarCategory === navbarCategory.id
+                                  ? 'bg-gradient-to-r from-slate-700/90 to-slate-700/50 text-white shadow-lg'
+                                  : 'hover:bg-slate-700/40 hover:shadow-md'
+                              }`}
                             >
-                              <span className="flex items-center gap-2">
+                              <Link
+                                href={`/products/${navbarCategory.slug}`}
+                                className="flex items-center gap-2 flex-grow"
+                                onClick={() => {
+                                  setIsMegaMenuOpen(false);
+                                  setExpandedNavbarCategory(null);
+                                  setExpandedCategory(null);
+                                }}
+                              >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
                                 </svg>
                                 {navbarCategory.name}
-                              </span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className={`h-4 w-4 transition-transform duration-300 ${expandedNavbarCategory === navbarCategory.id ? 'rotate-180 text-indigo-400' : 'text-gray-500'}`}
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                              </Link>
+                              <button
+                                onClick={() => handleNavbarCategoryClick(navbarCategory.id)}
+                                className="p-1"
                               >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className={`h-4 w-4 transition-transform duration-300 ${
+                                    expandedNavbarCategory === navbarCategory.id ? 'rotate-180 text-indigo-400' : 'text-gray-500'
+                                  }`}
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </button>
                             </div>
                           ))}
                         </div>
@@ -252,27 +267,42 @@ const Navbar = () => {
                                 ?.categories.map((category) => (
                                   <div
                                     key={category.id}
-                                    onClick={() => handleCategoryClick(category.id)}
-                                    className={`font-medium text-gray-300 hover:text-white cursor-pointer flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${expandedCategory === category.id
-                                      ? 'bg-gradient-to-r from-slate-700/90 to-slate-700/50 text-white shadow-lg'
-                                      : 'hover:bg-slate-700/40 hover:shadow-md'
-                                      }`}
+                                    className={`font-medium text-gray-300 hover:text-white flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                                      expandedCategory === category.id
+                                        ? 'bg-gradient-to-r from-slate-700/90 to-slate-700/50 text-white shadow-lg'
+                                        : 'hover:bg-slate-700/40 hover:shadow-md'
+                                    }`}
                                   >
-                                    <span className="flex items-center gap-2">
+                                    <Link 
+                                      href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${category.slug}`}
+                                      className="flex items-center gap-2 flex-grow"
+                                      onClick={() => {
+                                        setIsMegaMenuOpen(false);
+                                        setExpandedNavbarCategory(null);
+                                        setExpandedCategory(null);
+                                      }}
+                                    >
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                       </svg>
                                       {category.name}
-                                    </span>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className={`h-4 w-4 transition-transform duration-300 ${expandedCategory === category.id ? 'rotate-180 text-purple-400' : 'text-gray-500'}`}
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
+                                    </Link>
+                                    <button
+                                      onClick={() => handleCategoryClick(category.id)}
+                                      className="p-1"
                                     >
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`h-4 w-4 transition-transform duration-300 ${
+                                          expandedCategory === category.id ? 'rotate-180 text-purple-400' : 'text-gray-500'
+                                        }`}
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                      </svg>
+                                    </button>
                                   </div>
                                 ))}
                             </div>
@@ -312,7 +342,6 @@ const Navbar = () => {
                           </>
                         )}
                       </div>
-
                     </>
                   ) : (
                     <div className="col-span-3 text-center py-8 bg-gradient-to-b from-slate-700/30 to-slate-700/10 rounded-xl">
