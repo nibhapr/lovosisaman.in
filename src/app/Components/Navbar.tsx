@@ -92,7 +92,7 @@ const Navbar = () => {
           } overflow-hidden`}
         >
           <div className="px-3 pt-3 pb-4 space-y-3 bg-gradient-to-b from-white to-blue-50 rounded-2xl shadow-inner my-2 border border-gray-100">
-            {['Home', 'About', 'Services', 'Products', 'Blogs', 'Events', 'Gallery'].map((item) => (
+            {['About', 'Services', 'Products', 'Blogs', 'Events', 'Gallery'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
