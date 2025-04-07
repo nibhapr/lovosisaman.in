@@ -43,7 +43,7 @@ export default async function NavbarCategoryPage({
       <div className="mb-8">
         <nav className="flex space-x-2 text-sm text-gray-600">
           <Link href="/products" className="hover:text-blue-600 hover:underline">
-            Shop
+            Products
           </Link>
           <span>/</span>
           <span className="text-gray-800">{navbarCategory.name}</span>
