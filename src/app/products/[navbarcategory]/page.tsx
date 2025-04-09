@@ -90,7 +90,7 @@ export default async function NavbarCategoryPage({
 
       {uncategorizedProducts.length > 0 && (
         <div>
-          <h2 className="text-2xl font-semibold mb-6">Uncategorized Products</h2>
+          <h2 className="text-2xl font-semibold mb-6">other Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {uncategorizedProducts.map((product) => (
               <Link
