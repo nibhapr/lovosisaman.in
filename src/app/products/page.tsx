@@ -55,6 +55,24 @@ export default async function ShopPage() {
                   <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
                 )}
               </Link>
+              
+              {/* Display categories under this navbar category */}
+              {categoryItems.length > 0 && (
+                <div className="ml-4 mt-2">
+                  <ul className="space-y-2">
+                    {categoryItems.map((category) => (
+                      <li key={category._id.toString()}>
+                        <Link 
+                          href={`/products/${navbarCategory.slug}/${category.slug}`}
+                          className="text-gray-700 hover:text-blue-600 hover:underline text-sm"
+                        >
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           );
         })}
@@ -92,6 +110,24 @@ export default async function ShopPage() {
                   <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
                 )}
               </Link>
+              
+              {/* Display categories under this navbar category for mobile */}
+              {categoryItems.length > 0 && (
+                <div className="ml-2 mt-1">
+                  <ul className="space-y-2">
+                    {categoryItems.map((category) => (
+                      <li key={category._id.toString()}>
+                        <Link 
+                          href={`/products/${navbarCategory.slug}/${category.slug}`}
+                          className="text-gray-700 hover:text-blue-600 hover:underline text-sm"
+                        >
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           );
         })}
