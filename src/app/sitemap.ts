@@ -6,7 +6,7 @@ import Product from '@/app/models/Product'
 import NavbarCategory from '@/app/models/NavbarCategory'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'localhost:3000'
+  const baseUrl = 'lovosis.in'
   
   await connectDB()
 
