@@ -57,17 +57,17 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 px-4 sm:px-6">
+    <div className="min-h-screen bg-black px-4 sm:px-6">
       <main className="max-w-7xl mx-auto py-12 md:py-20">
         {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
             Get in Touch
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Have questions or want to collaborate? We&apos;d love to hear from you.
           </p>
-          {/* Add Social Media Icons */}
+          {/* Social Media Icons */}
           <div className="flex justify-center gap-4 mt-6">
             <SocialIcon href="https://facebook.com/yourpage" icon={<FaFacebookF />} type="facebook" />
             <SocialIcon href="https://instagram.com/yourpage" icon={<FaInstagram />} type="instagram" />
@@ -81,30 +81,30 @@ export default function Contact() {
           <ContactCard
             icon={<MdOutlineEmail className="w-full h-full" />}
             title="Email Us"
-            content={`<a href="mailto:info@lovosis.in" class="hover:text-blue-700">info@lovosis.in</a><br/><a href="mailto:lovosist@gmail.com" class="hover:text-blue-700">lovosist@gmail.com</a>`}
-            bgColor="bg-blue-100"
-            textColor="text-blue-600"
+            content={`<a href="mailto:info@lovosis.in" class="hover:text-blue-400">info@lovosis.in</a><br/><a href="mailto:lovosist@gmail.com" class="hover:text-blue-400">lovosist@gmail.com</a>`}
+            bgColor="bg-zinc-800"
+            textColor="text-blue-400"
           />
           <ContactCard
             icon={<IoLocationSharp className="w-full h-full" />}
             title="Visit Us"
             content="4-72/2, Swathi Building,<br/>3rd Floor, Opp. Singapura Garden,<br/>1st Main Lakshmipura Road,<br/>Abbigere, Bengaluru,<br/>Karnataka 560090"
-            bgColor="bg-indigo-100"
-            textColor="text-indigo-600"
+            bgColor="bg-zinc-800"
+            textColor="text-indigo-400"
           />
           <ContactCard
             icon={<BsTelephoneFill className="w-full h-full" />}
             title="Call Us"
-            content={`<a href="tel:+917012970281" class="hover:text-blue-700">+91 7012970281</a><br/><a href="tel:+919747745544" class="hover:text-blue-700">+91 9747745544</a>`}
-            bgColor="bg-blue-100"
-            textColor="text-blue-600"
+            content={`<a href="tel:+917012970281" class="hover:text-blue-400">+91 7012970281</a><br/><a href="tel:+919747745544" class="hover:text-blue-400">+91 9747745544</a>`}
+            bgColor="bg-zinc-800"
+            textColor="text-blue-400"
           />
         </div>
 
         {/* Form and Map Container */}
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+          <div className="bg-zinc-900 rounded-2xl shadow-xl p-8">
+            <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Send us a Message
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -154,12 +154,12 @@ export default function Contact() {
               </button>
 
               {submitStatus === "success" && (
-                <div className="text-green-600 text-center py-2 bg-green-50 rounded-lg">
+                <div className="text-green-400 text-center py-2 bg-green-900/20 rounded-lg">
                   Message sent successfully!
                 </div>
               )}
               {submitStatus === "error" && (
-                <div className="text-red-600 text-center py-2 bg-red-50 rounded-lg">
+                <div className="text-red-400 text-center py-2 bg-red-900/20 rounded-lg">
                   Failed to send message. Please try again.
                 </div>
               )}
@@ -167,8 +167,8 @@ export default function Contact() {
           </div>
 
           {/* Map Section */}
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Find Us</h2>
+          <div className="bg-zinc-900 rounded-2xl shadow-xl p-8">
+            <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Find Us</h2>
             <div className="w-full h-[500px] rounded-xl overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.4851882392584!2d77.53277827516318!3d13.068673887276683!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae23ee22c0d0d9%3A0x7c75d6374c699d3e!2s4-72%2F2%2C%201st%20Main%20Rd%2C%20Lakshmipura%2C%20Abbigere%2C%20Bengaluru%2C%20Karnataka%20560090!5e0!3m2!1sen!2sin!4v1710312671044!5m2!1sen!2sin"
@@ -188,7 +188,7 @@ export default function Contact() {
   );
 }
 
-// ContactCard component
+// Update ContactCard component styles
 const ContactCard = ({
   icon,
   title,
@@ -202,7 +202,7 @@ const ContactCard = ({
   bgColor: string;
   textColor: string;
 }) => (
-  <div className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+  <div className="bg-zinc-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-zinc-800">
     <div
       className={`${bgColor} w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4`}
     >
@@ -212,13 +212,13 @@ const ContactCard = ({
       {title}
     </h3>
     <p
-      className="text-gray-600 text-center"
+      className="text-gray-400 text-center"
       dangerouslySetInnerHTML={{ __html: content }}
     ></p>
   </div>
 );
 
-// FormInput component
+// Update FormInput component styles
 const FormInput = ({
   label,
   name,
@@ -235,7 +235,7 @@ const FormInput = ({
   <div>
     <label
       htmlFor={name}
-      className="block text-sm font-semibold text-gray-700 mb-2"
+      className="block text-sm font-semibold text-gray-300 mb-2"
     >
       {label}
     </label>
@@ -245,13 +245,13 @@ const FormInput = ({
       id={name}
       value={value}
       onChange={onChange}
-      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ease-in-out"
+      className="w-full px-4 py-3 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200/20 transition-all duration-200 ease-in-out text-white"
       required
     />
   </div>
 );
 
-// FormTextArea component
+// Update FormTextArea component styles
 const FormTextArea = ({
   label,
   name,
@@ -266,7 +266,7 @@ const FormTextArea = ({
   <div>
     <label
       htmlFor={name}
-      className="block text-sm font-semibold text-gray-700 mb-2"
+      className="block text-sm font-semibold text-gray-300 mb-2"
     >
       {label}
     </label>
@@ -276,18 +276,18 @@ const FormTextArea = ({
       value={value}
       onChange={onChange}
       rows={4}
-      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ease-in-out"
+      className="w-full px-4 py-3 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200/20 transition-all duration-200 ease-in-out text-white"
       required
     />
   </div>
 );
 
-// Add this new component at the bottom of the file
+// Update SocialIcon component styles
 const SocialIcon = ({ href, icon, type }: { href: string; icon: React.ReactNode; type: 'facebook' | 'instagram' | 'threads' | 'linkedin' }) => {
   const hoverColors = {
     facebook: 'group-hover:text-[#1877f2]',
     instagram: 'group-hover:text-[#e4405f]',
-    threads: 'group-hover:text-[#000000]',
+    threads: 'group-hover:text-[#ffffff]',
     linkedin: 'group-hover:text-[#0077b5]'
   };
 
@@ -296,7 +296,7 @@ const SocialIcon = ({ href, icon, type }: { href: string; icon: React.ReactNode;
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-gray-600 group"
+      className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-gray-400 group border border-zinc-700"
     >
       <span className={`text-lg ${hoverColors[type]}`}>
         {icon}

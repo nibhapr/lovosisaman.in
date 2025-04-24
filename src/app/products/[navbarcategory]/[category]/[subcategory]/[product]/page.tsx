@@ -176,12 +176,12 @@ export default function ProductPage({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-b from-black to-zinc-900 flex flex-col items-center text-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 w-full">
+      <div className="bg-gradient-to-r from-blue-900/30 to-blue-800/30 w-full border-b border-zinc-800">
         {renderBreadcrumbs()}
         <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 animate-fade-in">
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4 animate-fade-in">
             {product.name}
           </h1>
           <div className="w-16 h-1 bg-blue-600 rounded-full mx-auto"></div>
@@ -194,7 +194,7 @@ export default function ProductPage({
           <div className="space-y-6 mx-auto w-full max-w-md">
             {/* Main Product Image */}
             <div className="group">
-              <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-100 shadow-md h-[450px]">
+              <div className="aspect-square relative rounded-lg overflow-hidden border border-zinc-800 shadow-xl h-[450px] bg-zinc-900">
                 <Image
                   src={product.images[currentImageIndex]}
                   alt={product.name}
@@ -213,7 +213,7 @@ export default function ProductPage({
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`relative aspect-square rounded-md overflow-hidden
-                      ${currentImageIndex === index ? 'ring-2 ring-blue-600' : 'ring-1 ring-gray-200'}`}
+                      ${currentImageIndex === index ? 'ring-2 ring-blue-600' : 'ring-1 ring-zinc-700'}`}
                   >
                     <Image
                       src={image}
@@ -229,33 +229,33 @@ export default function ProductPage({
             {/* Catalog Request Button */}
             <button
               onClick={() => setIsContactFormOpen(true)}
-              className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center justify-center gap-2 text-sm"
+              className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all flex items-center justify-center gap-2 text-sm"
             >
               <IoDownloadOutline className="w-4 h-4" />
               Request Product Catalog
             </button>
 
             {/* Reviews Section */}
-            <div className="bg-white rounded-lg shadow p-4 border border-gray-100">
+            <div className="bg-zinc-900/50 rounded-lg shadow-xl p-4 border border-zinc-800">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
                     <span className="w-1 h-5 bg-yellow-400 rounded-full"></span>
                     Customer Reviews
                   </h2>
                 </div>
                 <button
                   onClick={() => setIsReviewsOpen(true)}
-                  className="px-4 py-1.5 bg-yellow-400 text-white text-sm rounded-lg hover:bg-yellow-500"
+                  className="px-4 py-1.5 bg-yellow-500 text-black text-sm rounded-lg hover:bg-yellow-400"
                 >
                   Write a Review
                 </button>
               </div>
 
-              <div className="bg-yellow-50 p-4 rounded-lg mb-4">
+              <div className="bg-zinc-800/50 p-4 rounded-lg mb-4">
                 <div className="flex items-center gap-4">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900">
+                    <div className="text-3xl font-bold text-white">
                       {averageRating.toFixed(1)}
                     </div>
                     <div className="flex items-center gap-0.5">
@@ -263,10 +263,10 @@ export default function ProductPage({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm text-gray-900">
+                    <div className="text-sm text-gray-300">
                       {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
                     </div>
-                    <div className="h-1.5 bg-gray-200 rounded-full mt-1">
+                    <div className="h-1.5 bg-zinc-700 rounded-full mt-1">
                       <div
                         className="h-full bg-yellow-400 rounded-full"
                         style={{ width: `${(averageRating / 5) * 100}%` }}
@@ -282,39 +282,39 @@ export default function ProductPage({
                   reviews.slice(0, 2).map((review) => (
                     <div
                       key={review._id}
-                      className="bg-gray-50 p-3 rounded-lg"
+                      className="bg-zinc-800/50 p-3 rounded-lg"
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                          <span className="text-blue-600 font-semibold text-xs">
+                        <div className="h-8 w-8 rounded-full bg-blue-900 flex items-center justify-center">
+                          <span className="text-blue-400 font-semibold text-xs">
                             {review.name.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <h3 className="font-medium text-gray-900 text-sm">{review.name}</h3>
+                          <h3 className="font-medium text-white text-sm">{review.name}</h3>
                           <div className="flex items-center gap-2">
                             <div className="flex">{renderStars(review.rating)}</div>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-400">
                               {new Date(review.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
                       </div>
-                      <p className="text-gray-700 text-xs">
+                      <p className="text-gray-300 text-xs">
                         {review.comment.substring(0, 100)}{review.comment.length > 100 ? '...' : ''}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-4 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500 text-sm">No reviews yet</p>
+                  <div className="text-center py-4 bg-zinc-800/50 rounded-lg">
+                    <p className="text-gray-400 text-sm">No reviews yet</p>
                   </div>
                 )}
 
                 {reviews.length > 2 && (
                   <button
                     onClick={() => setIsReviewsOpen(true)}
-                    className="w-full py-2 text-blue-600 bg-blue-50 rounded-lg text-sm hover:bg-blue-100"
+                    className="w-full py-2 text-blue-400 bg-blue-900/30 rounded-lg text-sm hover:bg-blue-900/50"
                   >
                     See all {reviews.length} reviews
                   </button>
@@ -325,13 +325,13 @@ export default function ProductPage({
 
           {/* Right Side - Catalog Preview */}
           <div className="mx-auto w-full max-w-md">
-            <div className="bg-white rounded-lg shadow p-6 border border-gray-100 min-h-[550px]">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-zinc-900/50 rounded-lg shadow-xl p-6 border border-zinc-800 min-h-[550px]">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
                 Product Catalog
               </h2>
 
-              <div className="aspect-[3/4] relative rounded-lg overflow-hidden border border-gray-100 bg-white">
+              <div className="aspect-[3/4] relative rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900">
                 {catalogImages.length > 0 ? (
                   <div className="relative h-full">
                     <Image
@@ -348,7 +348,7 @@ export default function ProductPage({
                             key={index}
                             onClick={() => setCurrentCatalogIndex(index)}
                             className={`w-2 h-2 rounded-full transition-all
-                              ${currentCatalogIndex === index ? 'bg-blue-600' : 'bg-gray-300'}`}
+                              ${currentCatalogIndex === index ? 'bg-blue-600' : 'bg-zinc-700'}`}
                             aria-label={`View catalog page ${index + 1}`}
                           />
                         ))}
@@ -357,7 +357,7 @@ export default function ProductPage({
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-gray-500 text-sm">No catalog images available</p>
+                    <p className="text-gray-400 text-sm">No catalog images available</p>
                   </div>
                 )}
               </div>
@@ -369,20 +369,20 @@ export default function ProductPage({
       {/* Review Modal */}
       {isReviewsOpen && (
         <>
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-all duration-300" />
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-all duration-300" />
           <div className="fixed inset-x-0 top-[100px] bottom-0 z-50 flex items-start justify-center overflow-hidden p-4">
-            <div className="bg-white rounded-lg max-w-3xl w-full shadow-lg animate-modalSlideIn max-h-[calc(100vh-120px)] flex flex-col">
-              <div className="sticky top-0 bg-white p-4 border-b flex items-center justify-between z-10 rounded-t-lg">
+            <div className="bg-zinc-900 rounded-lg max-w-3xl w-full shadow-2xl animate-modalSlideIn max-h-[calc(100vh-120px)] flex flex-col border border-zinc-800">
+              <div className="sticky top-0 bg-zinc-900 p-4 border-b border-zinc-800 flex items-center justify-between z-10 rounded-t-lg">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">Product Reviews</h2>
-                  <p className="text-xs text-gray-500 mt-1">Share your experience with others</p>
+                  <h2 className="text-lg font-bold text-white">Product Reviews</h2>
+                  <p className="text-xs text-gray-400 mt-1">Share your experience with others</p>
                 </div>
                 <button
                   onClick={() => setIsReviewsOpen(false)}
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-1 hover:bg-zinc-800 rounded-full transition-colors"
                   aria-label="Close"
                 >
-                  <IoClose className="w-5 h-5" />
+                  <IoClose className="w-5 h-5 text-gray-400" />
                 </button>
               </div>
 

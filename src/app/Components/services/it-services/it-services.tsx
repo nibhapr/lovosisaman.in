@@ -152,14 +152,14 @@ export default function ITServices() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-6">
             IT Services
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Empowering your business with cutting-edge technology solutions and expert IT services
           </p>
         </div>
@@ -172,18 +172,18 @@ export default function ITServices() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                className="bg-zinc-900/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-zinc-800"
               >
                 <div className="flex flex-col items-center text-center gap-3 mb-4">
                   <div className="w-12 h-12 flex items-center justify-center">
-                    <service.icon className="w-6 h-6 text-blue-600" />
+                    <service.icon className="w-6 h-6 text-blue-400" />
                   </div>
-                  <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                     {service.title}
                   </h3>
                 </div>
 
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                <p className="text-gray-400 mb-4 text-sm leading-relaxed">
                   {service.description}
                 </p>
 
@@ -191,10 +191,10 @@ export default function ITServices() {
                   {service.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors duration-200 text-sm"
+                      className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors duration-200 text-sm"
                     >
                       <svg
-                        className="w-4 h-4 text-blue-600 flex-shrink-0"
+                        className="w-4 h-4 text-blue-400 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -217,13 +217,13 @@ export default function ITServices() {
       </section>
 
       {/* Portfolio Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-900/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
               Our Portfolio
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
               Explore some of our recent projects and success stories
             </p>
 
@@ -236,7 +236,7 @@ export default function ITServices() {
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
                     ${selectedCategory === category
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700'
                     }`}
                 >
                   {category}

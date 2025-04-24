@@ -38,9 +38,9 @@ export default function EventsPage() {
     : events.filter(event => event.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+        <h1 className="text-4xl md:text-6xl font-bold text-center bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent mb-6">
           Events
         </h1>
 
@@ -53,7 +53,7 @@ export default function EventsPage() {
               className={`px-4 py-2 rounded-full transition-colors ${
                 selectedCategory === category
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-blue-50'
+                  : 'bg-zinc-900 text-gray-300 hover:bg-zinc-800'
               }`}
             >
               {category}
@@ -76,4 +76,4 @@ export default function EventsPage() {
       </div>
     </div>
   );
-} 
+}

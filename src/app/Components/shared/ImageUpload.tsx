@@ -69,8 +69,10 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
-      <div className="relative w-24 h-24 border rounded-lg overflow-hidden">
+      <label className="block text-sm font-medium bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+        {label}
+      </label>
+      <div className="relative w-24 h-24 border border-zinc-800 rounded-lg overflow-hidden bg-black">
         {value ? (
           <>
             <Image
@@ -83,14 +85,14 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
             <button
               type="button"
               onClick={() => onChange('')}
-              className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+              className="absolute top-1 right-1 p-1 bg-red-500/80 text-white rounded-full hover:bg-red-600/80 backdrop-blur-sm"
             >
               <IoTrashOutline className="w-4 h-4" />
             </button>
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100">
-            <IoCloudUploadOutline className="w-8 h-8 text-gray-400" />
+          <div className="w-full h-full flex items-center justify-center bg-zinc-900 border border-zinc-800">
+            <IoCloudUploadOutline className="w-8 h-8 text-zinc-600" />
           </div>
         )}
       </div>
@@ -103,7 +105,7 @@ export default function ImageUpload({ value, onChange, label = 'Image', index = 
       />
       <label
         htmlFor={`image-upload-${label}-${index}`}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer inline-block"
+        className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg hover:from-blue-700 hover:to-blue-900 cursor-pointer inline-block transition-all duration-300 shadow-lg shadow-blue-500/20"
       >
         {uploading ? 'Uploading...' : 'Upload Image'}
       </label>

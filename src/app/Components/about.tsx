@@ -36,15 +36,15 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-900/5 via-purple-900/5 to-pink-900/5">
+      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900/5 via-gray-800/5 to-gray-700/5">
         <div className="max-w-7xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-800 to-purple-800 bg-clip-text text-transparent mb-8 leading-tight"
+            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8 leading-tight"
           >
             Discover Lovosis Technology Private Limited
           </motion.h1>
@@ -52,7 +52,7 @@ const About = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed"
+            className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
           >
             Revolutionizing education and business through cutting-edge technology solutions and precision engineering
           </motion.p>
@@ -77,7 +77,7 @@ const About = () => {
       </section>
 
       {/* Mission & Vision Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
           {/* Mission */}
           <motion.div
@@ -85,12 +85,12 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             whileHover={{ scale: 1.02 }}
-            className="bg-white/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100"
+            className="bg-gray-800/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-700"
           >
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8">
               Our Mission
             </h2>
-            <p className="text-gray-700 text-lg leading-relaxed">
+            <p className="text-gray-300 text-lg leading-relaxed">
               To empower educational institutions and businesses with state-of-the-art technology solutions that drive innovation, enhance learning experiences, and accelerate digital transformation.
             </p>
           </motion.div>
@@ -101,12 +101,12 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             whileHover={{ scale: 1.02 }}
-            className="bg-white/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100"
+            className="bg-gray-800/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-700"
           >
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-8">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8">
               Our Vision
             </h2>
-            <p className="text-gray-700 text-lg leading-relaxed">
+            <p className="text-gray-300 text-lg leading-relaxed">
               To become the premier provider of innovative educational equipment and digital solutions, revolutionizing the way institutions teach and businesses operate in the digital era.
             </p>
           </motion.div>
@@ -121,7 +121,7 @@ const About = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-3xl md:text-4xl font-bold text-gray-900 mb-6"
+              className="text-3xl md:text-4xl font-bold text-white mb-6"
             >
               Our Core Services
             </motion.h2>
@@ -129,7 +129,7 @@ const About = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-gray-700 text-lg max-w-3xl mx-auto"
+              className="text-gray-300 text-lg max-w-3xl mx-auto"
             >
               We synergize innovation with expertise to deliver outstanding results across diverse domains
             </motion.p>
@@ -145,19 +145,19 @@ const About = () => {
                 transition={{ duration: 0.3 }}
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
-                className={`p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border ${
+                className={`p-8 bg-gray-800/90 backdrop-blur rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border ${
                   hoveredService === index
                     ? `border-transparent bg-gradient-to-br ${service.color}`
-                    : 'border-gray-100'
+                    : 'border-gray-700'
                 }`}
               >
-                <service.icon className={`w-12 h-12 mb-4 transition-colors ${hoveredService === index ? 'text-white' : 'text-blue-700'
+                <service.icon className={`w-12 h-12 mb-4 transition-colors ${hoveredService === index ? 'text-white' : 'text-blue-400'
                   }`} />
-                <h3 className={`text-xl font-semibold mb-3 transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-900'
+                <h3 className={`text-xl font-semibold mb-3 transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-100'
                   }`}>
                   {service.title}
                 </h3>
-                <p className={`text-base transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-700'
+                <p className={`text-base transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-300'
                   }`}>
                   {service.description}
                 </p>
@@ -168,14 +168,14 @@ const About = () => {
       </section>
 
       {/* Educational Equipment Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+              className="text-4xl md:text-5xl font-bold text-white mb-6"
             >
               Educational Equipment Solutions
             </motion.h2>
@@ -183,7 +183,7 @@ const About = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-gray-700 text-xl max-w-3xl mx-auto"
+              className="text-white text-xl max-w-3xl mx-auto"
             >
               High-quality equipment tailored for engineering colleges, polytechnics, and technical schools
             </motion.p>
@@ -262,7 +262,7 @@ const About = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+              className="text-4xl md:text-5xl font-bold text-white mb-6"
             >
               Comprehensive Digital Solutions
             </motion.h2>
@@ -270,7 +270,7 @@ const About = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-gray-700 text-xl max-w-3xl mx-auto"
+              className="text-white text-xl max-w-3xl mx-auto"
             >
               Helping businesses thrive in the digital world with tailored solutions
             </motion.p>
@@ -342,7 +342,7 @@ const About = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

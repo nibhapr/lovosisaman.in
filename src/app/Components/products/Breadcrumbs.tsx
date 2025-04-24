@@ -9,26 +9,26 @@ export default function Breadcrumbs() {
   const paths = pathname.split('/').filter(Boolean);
 
   return (
-    <nav className="bg-gray-50 py-3 px-4">
+    <nav className="bg-gray-900 py-3 px-4 border-b border-gray-800">
       <div className="max-w-7xl mx-auto">
         <ol className="flex items-center space-x-2">
           <li>
             <Link
               href="/"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
+              className="text-gray-400 hover:text-blue-400 transition-colors"
             >
               Home
             </Link>
           </li>
           {paths.map((path, index) => (
             <li key={`${path}-${index}`} className="flex items-center space-x-2">
-              <IoChevronForward className="w-4 h-4 text-gray-400" />
+              <IoChevronForward className="w-4 h-4 text-gray-600" />
               <Link
                 href={`/${paths.slice(0, index + 1).join('/')}`}
                 className={`capitalize ${
                   index === paths.length - 1
-                    ? 'text-blue-600 font-medium'
-                    : 'text-gray-500 hover:text-blue-600'
+                    ? 'text-blue-400 font-medium'
+                    : 'text-gray-400 hover:text-blue-400'
                 } transition-colors`}
               >
                 {path.replace(/-/g, ' ')}
@@ -39,4 +39,4 @@ export default function Breadcrumbs() {
       </div>
     </nav>
   );
-} 
+}

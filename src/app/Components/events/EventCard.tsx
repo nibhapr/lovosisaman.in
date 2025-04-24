@@ -25,7 +25,7 @@ export default function EventCard({ event }: EventCardProps) {
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+      className="bg-black rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-shadow border border-zinc-800"
       onClick={handleCardClick}
     >
       <div className="relative h-48 w-full">
@@ -39,35 +39,35 @@ export default function EventCard({ event }: EventCardProps) {
       </div>
       <div className="p-6">
         <Link href={`/events/${event.slug}`}>
-          <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
+          <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-700 transition-all">
             {event.title}
           </h3>
         </Link>
-        <p className="text-gray-600 mb-4">{event.description}</p>
+        <p className="text-gray-400 mb-4">{event.description}</p>
         
         <div className="space-y-2">
-          <div className="flex items-center text-gray-500">
-            <span className="font-medium">Date:</span>
+          <div className="flex items-center text-gray-400">
+            <span className="font-medium text-gray-300">Date:</span>
             <span className="ml-2">{new Date(event.date).toLocaleDateString()}</span>
           </div>
-          <div className="flex items-center text-gray-500">
-            <span className="font-medium">Time:</span>
+          <div className="flex items-center text-gray-400">
+            <span className="font-medium text-gray-300">Time:</span>
             <span className="ml-2">{event.time}</span>
           </div>
-          <div className="flex items-center text-gray-500">
-            <span className="font-medium">Location:</span>
+          <div className="flex items-center text-gray-400">
+            <span className="font-medium text-gray-300">Location:</span>
             <span className="ml-2">{event.location}</span>
           </div>
         </div>
 
         <div className="flex items-center space-x-2 mb-4">
-          <span className="text-sm px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+          <span className="text-sm px-2 py-1 rounded-full bg-blue-900/30 text-blue-400 border border-blue-800/50">
             {event.category}
           </span>
           <span className={`text-sm px-2 py-1 rounded-full ${
-            event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
-            event.status === 'ongoing' ? 'bg-green-100 text-green-800' :
-            'bg-gray-100 text-gray-800'
+            event.status === 'upcoming' ? 'bg-blue-900/30 text-blue-400 border border-blue-800/50' :
+            event.status === 'ongoing' ? 'bg-green-900/30 text-green-400 border border-green-800/50' :
+            'bg-zinc-900/30 text-gray-400 border border-zinc-800/50'
           }`}>
             {event.status}
           </span>
@@ -75,7 +75,7 @@ export default function EventCard({ event }: EventCardProps) {
 
         <button
           onClick={() => setShowModal(true)}
-          className="mt-6 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
+          className="mt-6 w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={event.status === 'completed'}
         >
           {event.status === 'completed' ? 'Event Completed' : 'Register Now'}
@@ -90,4 +90,4 @@ export default function EventCard({ event }: EventCardProps) {
       )}
     </div>
   );
-} 
+}

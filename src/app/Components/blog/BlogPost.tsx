@@ -83,26 +83,26 @@ export default function BlogPost({ post }: BlogPostProps) {
         <motion.article
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="max-w-4xl mx-auto p-6"
+            className="max-w-4xl mx-auto p-6 bg-black text-gray-300"
         >
             <header className="mb-8">
-                <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-                <div className="flex flex-wrap gap-4 text-gray-600">
+                <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">{post.title}</h1>
+                <div className="flex flex-wrap gap-4 text-gray-400">
                     <span className="flex items-center gap-1">
-                        <IoCalendarOutline />
+                        <IoCalendarOutline className="text-blue-400" />
                         {formatDate(post.date)}
                     </span>
                     <span className="flex items-center gap-1">
-                        <IoPersonOutline />
+                        <IoPersonOutline className="text-blue-400" />
                         {post.author}
                     </span>
                     <span className="flex items-center gap-1">
-                        <IoFolderOutline />
+                        <IoFolderOutline className="text-blue-400" />
                         {post.category}
                     </span>
                     {post.readingTime && (
                         <span className="flex items-center gap-1">
-                            <IoTimeOutline />
+                            <IoTimeOutline className="text-blue-400" />
                             {post.readingTime}
                         </span>
                     )}
@@ -110,7 +110,7 @@ export default function BlogPost({ post }: BlogPostProps) {
             </header>
 
             {post.image && (
-                <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden">
+                <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden border border-zinc-800">
                     <Image
                         src={getDisplayUrl(post.image)}
                         alt={post.title}
@@ -123,13 +123,13 @@ export default function BlogPost({ post }: BlogPostProps) {
 
             {post.content && (
                 <div 
-                    className="prose prose-lg max-w-none mb-8"
+                    className="prose prose-lg max-w-none mb-8 prose-invert prose-headings:bg-gradient-to-r prose-headings:from-blue-400 prose-headings:to-blue-600 prose-headings:bg-clip-text prose-headings:text-transparent prose-a:text-blue-400 hover:prose-a:text-blue-300"
                     dangerouslySetInnerHTML={{ __html: post.content }}
                 />
             )}
 
             {post.image2 && (
-                <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden">
+                <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden border border-zinc-800">
                     <Image
                         src={getDisplayUrl(post.image2)}
                         alt={`${post.title} - additional image 1`}
@@ -141,13 +141,13 @@ export default function BlogPost({ post }: BlogPostProps) {
 
             {post.content2 && (
                 <div 
-                    className="prose prose-lg max-w-none mb-8"
+                    className="prose prose-lg max-w-none mb-8 prose-invert prose-headings:bg-gradient-to-r prose-headings:from-blue-400 prose-headings:to-blue-600 prose-headings:bg-clip-text prose-headings:text-transparent prose-a:text-blue-400 hover:prose-a:text-blue-300"
                     dangerouslySetInnerHTML={{ __html: post.content2 }}
                 />
             )}
 
             {post.image3 && (
-                <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden">
+                <div className="relative w-full h-[400px] mb-8 rounded-xl overflow-hidden border border-zinc-800">
                     <Image
                         src={getDisplayUrl(post.image3)}
                         alt={`${post.title} - additional image 2`}
@@ -159,20 +159,20 @@ export default function BlogPost({ post }: BlogPostProps) {
 
             {post.content3 && (
                 <div 
-                    className="prose prose-lg max-w-none mb-8"
+                    className="prose prose-lg max-w-none mb-8 prose-invert prose-headings:bg-gradient-to-r prose-headings:from-blue-400 prose-headings:to-blue-600 prose-headings:bg-clip-text prose-headings:text-transparent prose-a:text-blue-400 hover:prose-a:text-blue-300"
                     dangerouslySetInnerHTML={{ __html: post.content3 }}
                 />
             )}
 
             {post.content4 && (
                 <div 
-                    className="prose prose-lg max-w-none mb-8"
+                    className="prose prose-lg max-w-none mb-8 prose-invert prose-headings:bg-gradient-to-r prose-headings:from-blue-400 prose-headings:to-blue-600 prose-headings:bg-clip-text prose-headings:text-transparent prose-a:text-blue-400 hover:prose-a:text-blue-300"
                     dangerouslySetInnerHTML={{ __html: post.content4 }}
                 />
             )}
 
             {post.youtubeUrl && (
-                <div className="aspect-video mb-8">
+                <div className="aspect-video mb-8 rounded-xl overflow-hidden border border-zinc-800">
                     <iframe
                         width="100%"
                         height="100%"
@@ -185,27 +185,27 @@ export default function BlogPost({ post }: BlogPostProps) {
                 </div>
             )}
 
-            <div className="mt-8 border-t pt-4">
+            <div className="mt-8 border-t border-zinc-800 pt-4">
                 <div className="flex items-center gap-4">
-                    <span className="flex items-center gap-2">
-                        <IoShareSocialOutline />
+                    <span className="flex items-center gap-2 text-gray-400">
+                        <IoShareSocialOutline className="text-blue-400" />
                         Share:
                     </span>
                     <button
                         onClick={() => handleShare('twitter')}
-                        className="text-blue-400 hover:text-blue-600"
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                         <IoLogoTwitter size={24} />
                     </button>
                     <button
                         onClick={() => handleShare('linkedin')}
-                        className="text-blue-700 hover:text-blue-900"
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                         <IoLogoLinkedin size={24} />
                     </button>
                     <button
                         onClick={() => handleShare('facebook')}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                         <IoLogoFacebook size={24} />
                     </button>
@@ -213,4 +213,4 @@ export default function BlogPost({ post }: BlogPostProps) {
             </div>
         </motion.article>
     );
-} 
+}

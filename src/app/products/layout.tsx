@@ -7,12 +7,12 @@ export default function ShopLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black">
       <NestedNavbar />
       <Breadcrumbs />
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8 text-gray-200">
         {children}
       </main>
     </div>
   );
-} 
+}

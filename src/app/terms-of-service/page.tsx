@@ -7,24 +7,24 @@ export const metadata: Metadata = {
 
 export default function TermsAndConditions() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-12">
+        <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-12">
           Terms and Conditions
         </h1>
 
-        <div className="space-y-8 bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+        <div className="space-y-8 bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-zinc-800">
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Introduction</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Introduction</h2>
+            <p className="text-gray-300 leading-relaxed">
               Welcome to Lovosis Technologies. By accessing and using our website and services, you accept and agree 
               to be bound by the terms and conditions outlined below. Please read these terms carefully before using our services.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Use of Services</h2>
-            <ul className="list-disc list-inside text-gray-600 space-y-2">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Use of Services</h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2">
               <li>Services must be used in accordance with applicable laws and regulations</li>
               <li>Users must not engage in any unauthorized or illegal activities</li>
               <li>Access to services may be restricted or terminated for violations</li>
@@ -34,8 +34,8 @@ export default function TermsAndConditions() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Intellectual Property</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Intellectual Property</h2>
+            <p className="text-gray-300 leading-relaxed">
               All content, including but not limited to logos, designs, text, graphics, and software, is the property 
               of Lovosis Technologies and is protected by intellectual property laws. Users may not reproduce, distribute, 
               or create derivative works without explicit permission.
@@ -43,8 +43,8 @@ export default function TermsAndConditions() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Product and Service Terms</h2>
-            <ul className="list-disc list-inside text-gray-600 space-y-2">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Product and Service Terms</h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2">
               <li>Product specifications are subject to change without notice</li>
               <li>Pricing may be modified at our discretion</li>
               <li>Warranty terms vary by product category</li>
@@ -54,16 +54,16 @@ export default function TermsAndConditions() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Payment and Billing</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Payment and Billing</h2>
+            <p className="text-gray-300 leading-relaxed">
               Payment terms are specified at the time of purchase. We accept various payment methods and all 
               transactions are secured. Refunds and cancellations are subject to our refund policy.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Limitation of Liability</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Limitation of Liability</h2>
+            <p className="text-gray-300 leading-relaxed">
               Lovosis Technologies shall not be liable for any indirect, incidental, special, consequential, or 
               punitive damages arising from the use of our services or products. Our liability is limited to the 
               amount paid for the specific product or service.
@@ -71,30 +71,30 @@ export default function TermsAndConditions() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Contact Information</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-blue-400 mb-4">Contact Information</h2>
+            <p className="text-gray-300 leading-relaxed">
               For questions about these terms, please contact us at:{' '} <br/>
-              <a href="mailto:info@lovosis.in" className="text-blue-600 hover:text-blue-800">
+              <a href="mailto:info@lovosis.in" className="text-blue-400 hover:text-blue-300">
                 info@lovosis.in
               </a>
               <br/>
-              <a href="mailto:lovosist@gmail.com" className="text-blue-600 hover:text-blue-800">
+              <a href="mailto:lovosist@gmail.com" className="text-blue-400 hover:text-blue-300">
                 lovosist@gmail.com
               </a>
             </p>
-            <p className="text-gray-600 leading-relaxed mt-2"> 
-              <a href="tel:+917012970281" className="text-blue-600 hover:text-blue-800">
+            <p className="text-gray-300 leading-relaxed mt-2"> 
+              <a href="tel:+917012970281" className="text-blue-400 hover:text-blue-300">
                 +91 7012970281
               </a>
               <br/>
-              <a href="tel:+919747745544" className="text-blue-600 hover:text-blue-800">
+              <a href="tel:+919747745544" className="text-blue-400 hover:text-blue-300">
                 +91 9747745544
               </a>
             </p>
           </section>
 
-          <section className="pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
+          <section className="pt-4 border-t border-zinc-700">
+            <p className="text-sm text-gray-400">
               Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
           </section>

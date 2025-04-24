@@ -27,20 +27,20 @@ export default async function SubcategoryPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 bg-gray-50">
+    <div className="max-w-7xl mx-auto px-4 py-12 bg-black">
       <div className="mb-12 text-center">
         <h1 className="text-4xl font-extrabold mb-6">
           Explore{" "}
-          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent">
             {subcategory.name}
           </span>
         </h1>
-        <p className="text-gray-700 max-w-2xl mx-auto">
-          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-lg font-medium">
+        <p className="text-gray-300 max-w-2xl mx-auto">
+          <span className="bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent text-lg font-medium">
             {subcategory.description}
           </span>
           <br />
-          <span className="text-base mt-4 block text-gray-600">
+          <span className="text-base mt-4 block text-gray-400">
             Discover our premium selection of products crafted just for you.
           </span>
         </p>
@@ -53,7 +53,7 @@ export default async function SubcategoryPage({
             href={`/products/${params.navbarcategory}/${params.category}/${params.subcategory}/${product.slug}`}
             className="group"
           >
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-100">
+            <div className="bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-800">
               <div className="relative h-56 w-full">
                 <Image
                   src={product.images[0]}
@@ -63,10 +63,10 @@ export default async function SubcategoryPage({
                 />
               </div>
               <div className="p-6">
-                <h2 className="text-xl font-bold group-hover:text-blue-600 transition-colors duration-300">
+                <h2 className="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors duration-300">
                   {product.name}
                 </h2>
-                <p className="text-gray-600 mt-3 line-clamp-2">
+                <p className="text-gray-400 mt-3 line-clamp-2">
                   {product.description}
                 </p>
               </div>
@@ -76,4 +76,4 @@ export default async function SubcategoryPage({
       </div>
     </div>
   );
-} 
+}

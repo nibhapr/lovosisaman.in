@@ -146,20 +146,27 @@ const Navbar = () => {
 
 
   return (
-    <nav className="bg-slate-900 text-white sticky top-0 z-50 backdrop-blur-sm border-b border-slate-800">
+    <nav className="bg-black text-white sticky top-0 z-50 backdrop-blur-sm border-b border-zinc-900 shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           {/* Logo/Brand */}
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="text-3xl font-bold text-white flex items-center gap-2 hover:text-indigo-400 transition-all duration-300">
-              <Image
-                src={logo.src}
-                alt="Lovosis Logo"
-                width={40}
-                height={40}
-                className="object-contain"
-              />
-              <span className="bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">lovosis</span>
+            <Link 
+              href="/" 
+              className="text-3xl font-bold flex items-center gap-3 group"
+            >
+              <div className="relative overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-105">
+                <Image
+                  src={logo.src}
+                  alt="Lovosis Logo"
+                  width={60}
+                  height={45}
+                  className="object-contain"
+                />
+              </div>
+              {/* <span className="bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent font-extrabold">
+                lovosis
+              </span> */}
             </Link>
           </div>
 
@@ -169,7 +176,7 @@ const Navbar = () => {
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
-                className="px-3 py-2 text-gray-300 hover:text-white rounded hover:bg-slate-800 transition-all duration-200 mx-1"
+                className="px-4 py-2 text-gray-500 hover:text-blue-400 rounded-lg hover:bg-black/60 transition-all duration-300 mx-1 font-medium"
               >
                 {item}
               </Link>
@@ -180,7 +187,7 @@ const Navbar = () => {
               <button
                 id="mega-menu-button"
                 onClick={toggleMegaMenu}
-                className="px-3 py-2 text-gray-300 hover:text-white rounded hover:bg-slate-800 transition-all duration-200 flex items-center gap-1"
+                className="px-4 py-2 text-gray-500 hover:text-blue-400 rounded-lg hover:bg-black/60 transition-all duration-300 flex items-center gap-2 font-medium group"
               >
                 Products
                 <svg
@@ -198,26 +205,27 @@ const Navbar = () => {
               {isMegaMenuOpen && (
                 <div
                   id="mega-menu"
-                  className="absolute -left-96 mt-2 w-[900px] bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-2xl border border-slate-700/30 p-6 grid grid-cols-3 gap-6 transition-all duration-300 ease-in-out z-50"
+                  className="absolute -left-96 mt-2 w-[900px] bg-black/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-900 p-6 grid grid-cols-3 gap-6 transition-all duration-300 ease-in-out z-50"
                 >
                   {loading ? (
                     <div className="col-span-3 text-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-400 mx-auto"></div>
-                      <p className="mt-2 text-gray-400">Loading products...</p>
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                      <p className="mt-2 text-gray-500">Loading products...</p>
                     </div>
                   ) : navbarCategories.length > 0 ? (
                     <>
                       {/* NavbarCategory Column */}
-                      <div className="space-y-3 border-r border-slate-700/30 pr-6">
-                        <h3 className="text-xs text-indigo-400 uppercase tracking-wider mb-6 font-semibold pl-2">Product Groups</h3>
+                      <div className="space-y-3 border-r border-zinc-900 pr-6">
+                        <h3 className="text-xs bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent uppercase tracking-wider mb-6 font-semibold pl-2">Product Groups</h3>
+                        
                         <div className="space-y-1">
                           {navbarCategories.map((navbarCategory) => (
                             <div
                               key={navbarCategory.id}
-                              className={`font-medium text-gray-300 hover:text-white flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                              className={`font-medium text-gray-400 hover:text-white flex items-center justify-between p-3 rounded-lg ${
                                 expandedNavbarCategory === navbarCategory.id
-                                  ? 'bg-gradient-to-r from-slate-700/90 to-slate-700/50 text-white shadow-lg'
-                                  : 'hover:bg-slate-700/40 hover:shadow-md'
+                                  ? 'bg-zinc-900'
+                                  : 'hover:bg-zinc-900'
                               }`}
                             >
                               <Link
@@ -229,9 +237,6 @@ const Navbar = () => {
                                   setExpandedCategory(null);
                                 }}
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                                </svg>
                                 {navbarCategory.name}
                               </Link>
                               <button
@@ -240,9 +245,7 @@ const Navbar = () => {
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
-                                  className={`h-4 w-4 transition-transform duration-300 ${
-                                    expandedNavbarCategory === navbarCategory.id ? 'rotate-180 text-indigo-400' : 'text-gray-500'
-                                  }`}
+                                  className="h-4 w-4 text-white"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -255,22 +258,21 @@ const Navbar = () => {
                         </div>
                       </div>
 
-                      {/* Category Column */}
-                      <div className={`space-y-3 border-r border-slate-700/30 pr-6 transition-all duration-300 ${expandedNavbarCategory ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                        }`}>
+                      {/* Category and SubCategory columns remain similar with updated colors */}
+                      <div className="space-y-3 border-r border-zinc-800 pr-6">
                         {expandedNavbarCategory && (
                           <>
-                            <h3 className="text-xs text-indigo-400 uppercase tracking-wider mb-6 font-semibold pl-2">Categories</h3>
+                            <h3 className="text-xs text-blue-400 uppercase tracking-wider mb-6 font-semibold pl-2">Categories</h3>
                             <div className="space-y-1">
                               {navbarCategories
                                 .find(nc => nc.id === expandedNavbarCategory)
                                 ?.categories.map((category) => (
                                   <div
                                     key={category.id}
-                                    className={`font-medium text-gray-300 hover:text-white flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                                    className={`font-medium text-white flex items-center justify-between p-3 rounded-lg ${
                                       expandedCategory === category.id
-                                        ? 'bg-gradient-to-r from-slate-700/90 to-slate-700/50 text-white shadow-lg'
-                                        : 'hover:bg-slate-700/40 hover:shadow-md'
+                                        ? 'bg-zinc-900'
+                                        : 'hover:bg-zinc-900'
                                     }`}
                                   >
                                     <Link 
@@ -282,9 +284,6 @@ const Navbar = () => {
                                         setExpandedCategory(null);
                                       }}
                                     >
-                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                      </svg>
                                       {category.name}
                                     </Link>
                                     <button
@@ -293,9 +292,7 @@ const Navbar = () => {
                                     >
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className={`h-4 w-4 transition-transform duration-300 ${
-                                          expandedCategory === category.id ? 'rotate-180 text-purple-400' : 'text-gray-500'
-                                        }`}
+                                        className="h-4 w-4 text-white"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -311,11 +308,10 @@ const Navbar = () => {
                       </div>
 
                       {/* SubCategory Column */}
-                      <div className={`space-y-3 transition-all duration-300 ${expandedCategory ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                        }`}>
+                      <div className="space-y-3">
                         {expandedCategory && expandedNavbarCategory && (
                           <>
-                            <h3 className="text-xs text-indigo-400 uppercase tracking-wider mb-6 font-semibold pl-2">Sub Categories</h3>
+                            <h3 className="text-xs text-blue-400 uppercase tracking-wider mb-6 font-semibold pl-2">Sub Categories</h3>
                             <div className="space-y-1">
                               {navbarCategories
                                 .find(nc => nc.id === expandedNavbarCategory)
@@ -325,16 +321,13 @@ const Navbar = () => {
                                   <Link
                                     key={subCategory.id}
                                     href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.categories.find(c => c.id === expandedCategory)?.slug}/${subCategory.slug}`}
-                                    className={`text-gray-300 hover:text-white flex items-center gap-2 p-3 rounded-lg hover:bg-slate-700/40 transition-all duration-200 hover:shadow-md group`}
+                                    className="text-white flex items-center gap-2 p-3 rounded-lg hover:bg-zinc-900"
                                     onClick={() => {
                                       setIsMegaMenuOpen(false);
                                       setExpandedNavbarCategory(null);
                                       setExpandedCategory(null);
                                     }}
                                   >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 group-hover:text-indigo-400 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
                                     {subCategory.name}
                                   </Link>
                                 ))}
@@ -344,11 +337,8 @@ const Navbar = () => {
                       </div>
                     </>
                   ) : (
-                    <div className="col-span-3 text-center py-8 bg-gradient-to-b from-slate-700/30 to-slate-700/10 rounded-xl">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                      <p className="text-gray-400">No categories available</p>
+                    <div className="col-span-3 text-center py-8 bg-black/80 rounded-xl">
+                      <p className="text-gray-500">No categories available</p>
                     </div>
                   )}
                 </div>
@@ -359,7 +349,7 @@ const Navbar = () => {
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
-                className="px-3 py-2 text-gray-300 hover:text-white rounded hover:bg-slate-800 transition-all duration-200 mx-1"
+                className="px-4 py-2 text-gray-500 hover:text-blue-400 rounded-lg hover:bg-black/60 transition-all duration-300 mx-1 font-medium"
               >
                 {item}
               </Link>
@@ -367,7 +357,7 @@ const Navbar = () => {
 
             <Link
               href="/contact"
-              className="ml-2 px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-md hover:from-indigo-700 hover:to-purple-700 transition-all duration-300"
+              className="ml-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-medium rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
             >
               Contact
             </Link>
@@ -377,7 +367,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded text-gray-400 hover:text-white hover:bg-slate-800 focus:outline-none transition duration-200"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-black/60 focus:outline-none transition-all duration-300"
               aria-label="Toggle menu"
             >
               <svg
@@ -411,12 +401,12 @@ const Navbar = () => {
           className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
             overflow-hidden`}
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 border-t border-slate-700 mt-1">
+          <div className="px-2 pt-2 pb-3 space-y-1 border-t border-zinc-900 mt-1">
             {['About', 'Services', 'Products'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
-                className="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-slate-800 transition duration-200 font-medium"
+                className="block px-3 py-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-black/60 font-medium transition-all duration-300"
                 onClick={() => setIsOpen(false)}
               >
                 {item}
@@ -427,20 +417,12 @@ const Navbar = () => {
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
-                className="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-slate-800 transition duration-200 font-medium"
+                className="block px-3 py-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-black/60 font-medium transition-all duration-300"
                 onClick={() => setIsOpen(false)}
               >
                 {item}
               </Link>
             ))}
-
-            <Link
-              href="/contact"
-              className="block px-3 py-2 mt-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-md hover:from-indigo-700 hover:to-purple-700 transition duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Contact
-            </Link>
           </div>
         </div>
       </div>

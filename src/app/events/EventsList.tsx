@@ -27,14 +27,19 @@ export default function EventsList() {
     }
   };
 
-  if (loading) return <div>Loading events...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-gray-300">Loading events...</div>;
+  if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {events.map((event) => (
-        <EventCard key={event._id} event={event} />
-      ))}
+    <div className="min-h-screen bg-black p-8">
+      <h1 className="text-4xl font-bold mb-12 text-center bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+        Upcoming Events
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {events.map((event) => (
+          <EventCard key={event._id} event={event} />
+        ))}
+      </div>
     </div>
   );
-} 
+}
