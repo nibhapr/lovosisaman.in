@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import type { Category, NavbarCategory } from '@/types/shop';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
@@ -19,6 +19,8 @@ export default function CategoryManager() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
 
   const generateSlug = (name: string) => {
     return name.toLowerCase()
@@ -83,6 +85,7 @@ export default function CategoryManager() {
         const data = await response.json();
         console.log('Categories data:', data); // Add this line
         setCategories(data);
+        setFilteredCategories(data);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -103,7 +106,7 @@ export default function CategoryManager() {
 
   const handleEdit = (category: Category) => {
     console.log('Editing category:', category); // Add this for debugging
-    
+
     // Check if description and image exist in the API response
     if (!category.description || !category.image) {
       // Fetch the complete category data if needed
@@ -127,7 +130,7 @@ export default function CategoryManager() {
       if (response.ok) {
         const data = await response.json();
         console.log('Fetched category details:', data);
-        
+
         setFormData({
           navbarCategoryId: data.navbarCategoryId || '',
           name: data.name,
@@ -168,6 +171,21 @@ export default function CategoryManager() {
   useEffect(() => {
     console.log('Current form data:', formData);
   }, [formData]);
+
+  // Filter categories based on search term
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredCategories(categories);
+    } else {
+      const filtered = categories.filter(
+        category =>
+          category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          category.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      setFilteredCategories(filtered);
+    }
+  }, [searchTerm, categories]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -263,8 +281,23 @@ export default function CategoryManager() {
         className="bg-white rounded-xl shadow-lg p-6"
       >
         <h2 className="text-2xl font-semibold mb-6">Categories</h2>
+
+        {/* Search Box */}
+        <div className="mb-4 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <IoSearchOutline className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search categories..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
         <div className="space-y-4">
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <div key={category._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-4">
                 {category.image && (
@@ -308,8 +341,10 @@ export default function CategoryManager() {
               </div>
             </div>
           ))}
-          {categories.length === 0 && (
-            <p className="text-gray-500 text-center py-4">No categories found</p>
+          {filteredCategories.length === 0 && (
+            <p className="text-gray-500 text-center py-4">
+              {categories.length === 0 ? 'No categories found' : 'No matching categories found'}
+            </p>
           )}
         </div>
       </motion.div>

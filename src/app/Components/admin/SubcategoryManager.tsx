@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import type { Category, Subcategory, NavbarCategory } from '@/types/shop';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
@@ -21,6 +21,8 @@ export default function SubcategoryManager() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory | null>(null);
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredSubcategories, setFilteredSubcategories] = useState<Subcategory[]>([]);
 
   const generateSlug = (name: string) => {
     return name.toLowerCase()
@@ -123,16 +125,35 @@ export default function SubcategoryManager() {
 
   const handleEdit = (subcategory: Subcategory) => {
     const category = categories.find(cat => cat._id === subcategory.categoryId);
-    setFormData({
-      name: subcategory.name,
-      description: subcategory.description || '',
-      image: subcategory.image || '',
-      categoryId: subcategory.categoryId,
-      navbarCategoryId: category?.navbarCategoryId || ''
-    });
+    
+    if (category && category.navbarCategoryId) {
+      // First set the navbar category and filter the categories
+      const navbarCategoryId = category.navbarCategoryId;
+      const filtered = categories.filter(cat => cat.navbarCategoryId === navbarCategoryId);
+      setFilteredCategories(filtered);
+      
+      // Then set the form data with both IDs
+      setFormData({
+        name: subcategory.name,
+        description: subcategory.description || '',
+        image: subcategory.image || '',
+        categoryId: subcategory.categoryId,
+        navbarCategoryId: navbarCategoryId
+      });
+    } else {
+      // Fallback if category or navbarCategoryId is not found
+      setFormData({
+        name: subcategory.name,
+        description: subcategory.description || '',
+        image: subcategory.image || '',
+        categoryId: subcategory.categoryId,
+        navbarCategoryId: ''
+      });
+      setFilteredCategories([]);
+    }
+    
     setIsEditing(true);
     setSelectedSubcategory(subcategory);
-    handleNavbarCategoryChange(category?.navbarCategoryId || '');
   };
 
   const handleDelete = async (id: string) => {
@@ -156,6 +177,31 @@ export default function SubcategoryManager() {
     fetchCategories();
     fetchSubcategories();
   }, []);
+
+  // Filter subcategories based on search term
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredSubcategories(subcategories);
+    } else {
+      const filtered = subcategories.filter(subcategory => {
+        const category = categories.find(cat => cat._id === subcategory.categoryId);
+        const navbarCategory = category ? navbarCategories.find(nc => nc._id === category.navbarCategoryId) : null;
+        
+        return (
+          subcategory.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (subcategory.description && subcategory.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (category && category.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (navbarCategory && navbarCategory.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      });
+      setFilteredSubcategories(filtered);
+    }
+  }, [searchTerm, subcategories, categories, navbarCategories]);
+
+  // Update filtered subcategories when subcategories change
+  useEffect(() => {
+    setFilteredSubcategories(subcategories);
+  }, [subcategories]);
 
   const getCategoryName = (categoryId: string) => {
     const category = categories.find(cat => cat._id === categoryId);
@@ -277,8 +323,23 @@ export default function SubcategoryManager() {
         className="bg-white rounded-xl shadow-lg p-6"
       >
         <h2 className="text-2xl font-semibold mb-6">Subcategories</h2>
+        
+        {/* Search Box */}
+        <div className="mb-4 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <IoSearchOutline className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search subcategories..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        
         <div className="space-y-4">
-          {subcategories.map((subcategory) => {
+          {filteredSubcategories.map((subcategory) => {
             const category = categories.find(cat => cat._id === subcategory.categoryId);
             return (
               <div
@@ -322,11 +383,13 @@ export default function SubcategoryManager() {
               </div>
             );
           })}
-          {subcategories.length === 0 && (
-            <p className="text-gray-500 text-center py-4">No subcategories found</p>
+          {filteredSubcategories.length === 0 && (
+            <p className="text-gray-500 text-center py-4">
+              {searchTerm ? 'No subcategories found matching your search' : 'No subcategories found'}
+            </p>
           )}
         </div>
       </motion.div>
     </div>
   );
-} 
+}

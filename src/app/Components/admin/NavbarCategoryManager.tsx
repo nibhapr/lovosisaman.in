@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
@@ -23,6 +23,8 @@ export default function NavbarCategoryManager() {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<NavbarCategory | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredCategories, setFilteredCategories] = useState<NavbarCategory[]>([]);
 
   const generateSlug = (name: string) => {
     return name.toLowerCase()
@@ -35,10 +37,26 @@ export default function NavbarCategoryManager() {
       const response = await fetch('/api/navbarcategories');
       const data = await response.json();
       setCategories(data);
+      setFilteredCategories(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
+
+  // Filter categories based on search term
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredCategories(categories);
+    } else {
+      const filtered = categories.filter(
+        category =>
+          category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          category.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      setFilteredCategories(filtered);
+    }
+  }, [searchTerm, categories]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +98,7 @@ export default function NavbarCategoryManager() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
-    
+
     try {
       const response = await fetch(`/api/navbarcategories/${id}`, {
         method: 'DELETE',
@@ -174,8 +192,23 @@ export default function NavbarCategoryManager() {
         className="bg-white rounded-xl shadow-lg p-6"
       >
         <h2 className="text-2xl font-semibold mb-6">Navbar Categories</h2>
+
+        {/* Search Box */}
+        <div className="mb-4 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <IoSearchOutline className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search categories..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
         <div className="space-y-4">
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <div
               key={category._id}
               className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
@@ -213,11 +246,13 @@ export default function NavbarCategoryManager() {
               </div>
             </div>
           ))}
-          {categories.length === 0 && (
-            <p className="text-gray-500 text-center py-4">No categories found</p>
+          {filteredCategories.length === 0 && (
+            <p className="text-gray-500 text-center py-4">
+              {searchTerm ? 'No matching categories found' : 'No categories found'}
+            </p>
           )}
         </div>
       </motion.div>
     </div>
   );
-} 
+}

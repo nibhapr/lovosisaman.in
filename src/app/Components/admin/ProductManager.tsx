@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { IoAddOutline, IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
+import { IoAddOutline, IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import type { NavbarCategory, Category, Subcategory, Product } from '@/types/shop';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
@@ -24,6 +24,7 @@ export default function ProductManager() {
     const [isEditing, setIsEditing] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isLoadingPdf, setIsLoadingPdf] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const generateSlug = (name: string) => {
         return name.toLowerCase()
@@ -61,7 +62,7 @@ export default function ProductManager() {
             // FIXED: Accept all non-empty image URLs without validation
             // This is the key fix for the "Invalid image URL format" error
             const validImages = formData.images.filter(img => img && img.trim() !== '');
-            
+
             // Ensure we have at least one image
             if (validImages.length === 0) {
                 alert('Please add at least one product image');
@@ -272,6 +273,11 @@ export default function ProductManager() {
             alert('Failed to upload catalog image');
         }
     };
+
+    // Filter products based on search term
+    const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -486,75 +492,96 @@ export default function ProductManager() {
                 className="bg-white rounded-xl shadow-lg p-6"
             >
                 <h2 className="text-2xl font-semibold mb-6">Products</h2>
-                <div className="space-y-4">
-                    {products.map((product) => (
-                        <div
-                            key={product._id}
-                            className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                        >
-                            <div className="flex items-center space-x-4">
-                                <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                                    <Image
-                                        src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'}
-                                        alt={product.name}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </div>
-                                <div>
-                                    <h3 className="font-medium">{product.name}</h3>
-                                    <p className="text-sm text-gray-500">
-                                        Navbar Category: {typeof product.navbarCategoryId === 'string'
-                                            ? navbarCategories.find(nc => nc._id === product.navbarCategoryId)?.name || 'Unknown Navbar Category'
-                                            : product.navbarCategoryId.name} |
-                                        Category: {product.categoryId ? (categories.find(c =>
-                                            String(c._id) === String(product.categoryId)
-                                        )?.name || 'Unknown Category') : 'No Category'} |
-                                        {product.subcategoryId ? `Subcategory: ${subcategories.find(s =>
-                                            String(s._id) === String(product.subcategoryId)
-                                        )?.name || 'Unknown Subcategory'} |` : ''}
-                                        {product.catalogImage && (
-                                            <button
-                                                onClick={() => product.catalogImage && window.open(product.catalogImage, '_blank')}
-                                                className="text-blue-600 hover:text-blue-700 underline ml-1"
-                                            >
-                                                View Catalog
-                                            </button>
-                                        )}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex space-x-2">
-                                <button
-                                    onClick={() => {
-                                        setIsEditing(true);
-                                        setSelectedProduct({
-                                            ...product,
-                                            _id: product._id
-                                        });
-                                        setFormData({
-                                            navbarCategoryId: typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId?._id || '',
-                                            name: product.name,
-                                            images: product.images && product.images.length > 0 ? product.images : [''],
-                                            categoryId: product.categoryId || '',
-                                            subcategoryId: product.subcategoryId || '',
-                                            catalogImage: product.catalogImage || null,
-                                            catalogImages: product.catalogImages || [''],
-                                        });
-                                    }}
-                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                >
-                                    <IoCreateOutline className="w-5 h-5" />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(product._id as string)}
-                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                >
-                                    <IoTrashOutline className="w-5 h-5" />
-                                </button>
-                            </div>
+
+                {/* Search Box */}
+                <div className="mb-4 relative">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                        />
+                        <div className="absolute left-3 top-2.5 text-gray-400">
+                            <IoSearchOutline className="w-5 h-5" />
                         </div>
-                    ))}
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    {filteredProducts.length === 0 ? (
+                        <p className="text-gray-500 text-center py-4">No products found</p>
+                    ) : (
+                        filteredProducts.map((product) => (
+                            <div
+                                key={product._id}
+                                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                            >
+                                <div className="flex items-center space-x-4">
+                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                                        <Image
+                                            src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'}
+                                            alt={product.name}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium">{product.name}</h3>
+                                        <p className="text-sm text-gray-500">
+                                            Navbar Category: {typeof product.navbarCategoryId === 'string'
+                                                ? navbarCategories.find(nc => nc._id === product.navbarCategoryId)?.name || 'Unknown Navbar Category'
+                                                : product.navbarCategoryId.name} |
+                                            Category: {product.categoryId ? (categories.find(c =>
+                                                String(c._id) === String(product.categoryId)
+                                            )?.name || 'Unknown Category') : 'No Category'} |
+                                            {product.subcategoryId ? `Subcategory: ${subcategories.find(s =>
+                                                String(s._id) === String(product.subcategoryId)
+                                            )?.name || 'Unknown Subcategory'} |` : ''}
+                                            {product.catalogImage && (
+                                                <button
+                                                    onClick={() => product.catalogImage && window.open(product.catalogImage, '_blank')}
+                                                    className="text-blue-600 hover:text-blue-700 underline ml-1"
+                                                >
+                                                    View Catalog
+                                                </button>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex space-x-2">
+                                    <button
+                                        onClick={() => {
+                                            setIsEditing(true);
+                                            setSelectedProduct({
+                                                ...product,
+                                                _id: product._id
+                                            });
+                                            setFormData({
+                                                navbarCategoryId: typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId?._id || '',
+                                                name: product.name,
+                                                images: product.images && product.images.length > 0 ? product.images : [''],
+                                                categoryId: product.categoryId || '',
+                                                subcategoryId: product.subcategoryId || '',
+                                                catalogImage: product.catalogImage || null,
+                                                catalogImages: product.catalogImages || [''],
+                                            });
+                                        }}
+                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                    >
+                                        <IoCreateOutline className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(product._id as string)}
+                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                    >
+                                        <IoTrashOutline className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </motion.div>
         </div>
