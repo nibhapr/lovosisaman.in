@@ -11,14 +11,14 @@ export async function GET(
   try {
     await connectDB();
     const product = await Product.findById(params.id).populate('navbarCategoryId');
-    
+
     if (!product) {
       return NextResponse.json(
         { error: 'Product not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(product);
   } catch (error) {
     return NextResponse.json(
@@ -35,6 +35,7 @@ export async function PUT(
   try {
     await connectDB();
     const data = await request.json();
+    console.log('Update request data:', data); // Add logging to see incoming data
 
     // Validate navbarCategoryId if it's being updated
     if (data.navbarCategoryId && !mongoose.Types.ObjectId.isValid(data.navbarCategoryId)) {
@@ -52,8 +53,10 @@ export async function PUT(
       );
     }
 
-    // Optional validation for subcategoryId if it's being updated
-    if (data.subcategoryId && !mongoose.Types.ObjectId.isValid(data.subcategoryId)) {
+    // FIX: Remove empty subcategoryId to prevent MongoDB casting error
+    if (data.subcategoryId === '') {
+      data.subcategoryId = undefined;  // Set to undefined so MongoDB will ignore it
+    } else if (data.subcategoryId && !mongoose.Types.ObjectId.isValid(data.subcategoryId)) {
       return NextResponse.json(
         { error: 'Invalid subcategoryId' },
         { status: 400 }
@@ -62,9 +65,11 @@ export async function PUT(
 
     // Validate catalogImage URL if provided
     if (data.catalogImage && typeof data.catalogImage === 'string') {
-      try {
-        new URL(data.catalogImage);
-      } catch (error) {
+      // Add a check to see if it's already a valid URL or starts with expected prefix
+      if (!data.catalogImage.startsWith('http://') &&
+        !data.catalogImage.startsWith('https://') &&
+        !data.catalogImage.startsWith('/api/')) {
+        console.log('Invalid image URL format:', data.catalogImage);
         return NextResponse.json(
           { error: 'Invalid image URL format' },
           { status: 400 }
@@ -77,7 +82,10 @@ export async function PUT(
       data.catalogImage = null;
     }
 
-    const product = await Product.findByIdAndUpdate(params.id, data, { new: true });
+    // Fix for NextJS sync dynamic APIs warning
+    const id = params.id;
+    const product = await Product.findByIdAndUpdate(id, data, { new: true });
+
     if (!product) {
       return NextResponse.json(
         { error: 'Product not found' },
@@ -100,20 +108,20 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
-    
+
     // First find the product to get its catalog image
     const product = await Product.findById(params.id);
-    
+
     if (!product) {
       return NextResponse.json(
         { error: 'Product not found' },
         { status: 404 }
       );
     }
-    
+
     // Delete the product
     await Product.findByIdAndDelete(params.id);
-    
+
     // If the product has a catalog image stored in MongoDB, delete it too
     if (product.catalogImage && product.catalogImage.startsWith('/api/files/')) {
       const fileId = product.catalogImage.split('/').pop();
@@ -121,7 +129,7 @@ export async function DELETE(
         await File.findByIdAndDelete(fileId);
       }
     }
-    
+
     return NextResponse.json({ message: 'Product and associated files deleted successfully' });
   } catch (error) {
     console.error('Error deleting product:', error);

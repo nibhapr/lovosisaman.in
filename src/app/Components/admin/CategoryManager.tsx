@@ -78,8 +78,10 @@ export default function CategoryManager() {
   const fetchCategories = async () => {
     try {
       const response = await fetch('/api/categories');
+      console.log('Categories response:', response); // Add this line
       if (response.ok) {
         const data = await response.json();
+        console.log('Categories data:', data); // Add this line
         setCategories(data);
       }
     } catch (error) {
@@ -100,14 +102,45 @@ export default function CategoryManager() {
   };
 
   const handleEdit = (category: Category) => {
-    setFormData({
-      navbarCategoryId: category.navbarCategoryId || '',
-      name: category.name,
-      description: category.description || '',
-      image: category.image || '',
-    });
-    setIsEditing(true);
-    setSelectedCategory(category);
+    console.log('Editing category:', category); // Add this for debugging
+    
+    // Check if description and image exist in the API response
+    if (!category.description || !category.image) {
+      // Fetch the complete category data if needed
+      fetchCategoryDetails(category._id!);
+    } else {
+      setFormData({
+        navbarCategoryId: category.navbarCategoryId || '',
+        name: category.name,
+        description: category.description || '',
+        image: category.image || '',
+      });
+      setIsEditing(true);
+      setSelectedCategory(category);
+    }
+  };
+
+  // Add this function to fetch complete category details if needed
+  const fetchCategoryDetails = async (categoryId: string) => {
+    try {
+      const response = await fetch(`/api/categories/${categoryId}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Fetched category details:', data);
+        
+        setFormData({
+          navbarCategoryId: data.navbarCategoryId || '',
+          name: data.name,
+          description: data.description || '',
+          image: data.image || '',
+        });
+        setIsEditing(true);
+        setSelectedCategory(data);
+      }
+    } catch (error) {
+      console.error('Error fetching category details:', error);
+      setError('Failed to fetch category details');
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -130,6 +163,11 @@ export default function CategoryManager() {
     fetchCategories();
     fetchNavbarCategories();
   }, []);
+
+  // Add this to check form data when it changes
+  useEffect(() => {
+    console.log('Current form data:', formData);
+  }, [formData]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -186,7 +224,7 @@ export default function CategoryManager() {
 
           <div>
             <ImageUpload
-              key={formData.image}
+              key={isEditing ? `edit-${selectedCategory?._id}` : 'add-new'}
               value={formData.image}
               onChange={(url: string) => setFormData({ ...formData, image: url })}
               label="Category Image"
@@ -227,10 +265,7 @@ export default function CategoryManager() {
         <h2 className="text-2xl font-semibold mb-6">Categories</h2>
         <div className="space-y-4">
           {categories.map((category) => (
-            <div
-              key={category._id}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-            >
+            <div key={category._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-4">
                 {category.image && (
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden">
@@ -240,12 +275,21 @@ export default function CategoryManager() {
                       fill
                       sizes="48px"
                       className="object-cover"
+                      onError={(e) => {
+                        console.error('Image failed to load:', category.image);
+                        e.currentTarget.style.display = 'none';
+                      }}
                     />
                   </div>
                 )}
                 <div>
-                  <h3 className="font-medium">{category.name} {category.navbarCategoryId}</h3>
+                  <h3 className="font-medium">{category.name}</h3>
                   <p className="text-sm text-gray-500">{category.slug}</p>
+                  {category.description && (
+                    <p className="text-xs text-gray-400 truncate max-w-[200px]">
+                      {category.description || 'No description available'}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -271,4 +315,4 @@ export default function CategoryManager() {
       </motion.div>
     </div>
   );
-} 
+}

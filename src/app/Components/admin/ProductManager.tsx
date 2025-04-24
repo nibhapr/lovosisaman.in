@@ -58,13 +58,26 @@ export default function ProductManager() {
 
             console.log('Submitting form data:', formData);
 
+            // FIXED: Accept all non-empty image URLs without validation
+            // This is the key fix for the "Invalid image URL format" error
+            const validImages = formData.images.filter(img => img && img.trim() !== '');
+            
+            // Ensure we have at least one image
+            if (validImages.length === 0) {
+                alert('Please add at least one product image');
+                return;
+            }
+
+            // Create product data with validated images
             const productData = {
                 ...formData,
                 slug: generateSlug(formData.name),
-                images: formData.images.filter(img => img.trim() !== ''),
-                catalogImage: formData.catalogImage,
-                categoryId: formData.categoryId || undefined,
-                subcategoryId: formData.subcategoryId || undefined
+                images: validImages,
+                // Make sure catalogImage is either a valid string or null, never undefined or empty string
+                catalogImage: formData.catalogImage && formData.catalogImage.trim() !== '' ? formData.catalogImage : null,
+                // Only include category and subcategory if they have values
+                ...(formData.categoryId && formData.categoryId.trim() !== '' ? { categoryId: formData.categoryId } : {}),
+                ...(formData.subcategoryId && formData.subcategoryId.trim() !== '' ? { subcategoryId: formData.subcategoryId } : {})
             };
 
             console.log('Processed product data:', productData);
@@ -482,7 +495,7 @@ export default function ProductManager() {
                             <div className="flex items-center space-x-4">
                                 <div className="relative w-12 h-12 rounded-lg overflow-hidden">
                                     <Image
-                                        src={product.images[0]}
+                                        src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'}
                                         alt={product.name}
                                         fill
                                         className="object-cover"
@@ -522,7 +535,7 @@ export default function ProductManager() {
                                         setFormData({
                                             navbarCategoryId: typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId?._id || '',
                                             name: product.name,
-                                            images: product.images,
+                                            images: product.images && product.images.length > 0 ? product.images : [''],
                                             categoryId: product.categoryId || '',
                                             subcategoryId: product.subcategoryId || '',
                                             catalogImage: product.catalogImage || null,

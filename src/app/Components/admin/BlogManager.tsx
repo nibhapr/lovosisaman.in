@@ -7,7 +7,7 @@ import ImageUpload from '@/app/Components/shared/ImageUpload';
 
 const BLOG_CATEGORIES = [
     'Technology',
-    'Innovation', 
+    'Innovation',
     'Education',
     'Manufacturing',
     'Digital Services'
@@ -70,14 +70,17 @@ export default function BlogManager() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+        setIsSubmitting(true);
+
         if (!formData.title || !formData.content) {
             setError('Title and content are required');
+            setIsSubmitting(false);
             return;
         }
 
         if (!formData.image) {
             setError('Main image is required');
+            setIsSubmitting(false);
             return;
         }
 
@@ -115,10 +118,13 @@ export default function BlogManager() {
         } catch (error) {
             console.error('Error saving post:', error);
             setError(error instanceof Error ? error.message : 'Failed to save post');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleEdit = (post: BlogPost) => {
+        console.log('Editing post:', post); // Add this for debugging
         setSelectedPost(post);
         setFormData({
             title: post.title,
@@ -146,7 +152,8 @@ export default function BlogManager() {
         }
 
         try {
-            const response = await fetch(`/api/blogs/${slug}`, {
+            setIsDeleting(true);
+            const response = await fetch(`/api/blog/${slug}`, {
                 method: 'DELETE'
             });
 
@@ -158,6 +165,8 @@ export default function BlogManager() {
         } catch (error) {
             console.error('Error deleting post:', error);
             setError(error instanceof Error ? error.message : 'Failed to delete post');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -186,7 +195,7 @@ export default function BlogManager() {
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Blog Manager</h1>
-            
+
             <form onSubmit={handleSubmit} className="mb-8 space-y-4">
                 {/* Form fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -195,17 +204,17 @@ export default function BlogManager() {
                         <input
                             type="text"
                             value={formData.title}
-                            onChange={(e) => setFormData({...formData, title: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             className="w-full p-2 border rounded"
                             required
                         />
                     </div>
-                    
+
                     <div>
                         <label className="block mb-2">Category</label>
                         <select
                             value={formData.category}
-                            onChange={(e) => setFormData({...formData, category: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                             className="w-full p-2 border rounded"
                             required
                         >
@@ -222,7 +231,7 @@ export default function BlogManager() {
                     <input
                         type="text"
                         value={formData.author}
-                        onChange={(e) => setFormData({...formData, author: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                         className="w-full p-2 border rounded"
                         required
                     />
@@ -233,21 +242,21 @@ export default function BlogManager() {
                     <div>
                         <ImageUpload
                             value={formData.image || ''}
-                            onChange={(url) => setFormData({...formData, image: url})}
+                            onChange={(url) => setFormData({ ...formData, image: url })}
                             label="Main Image"
                         />
                     </div>
                     <div>
                         <ImageUpload
                             value={formData.image2 || ''}
-                            onChange={(url) => setFormData({...formData, image2: url})}
+                            onChange={(url) => setFormData({ ...formData, image2: url })}
                             label="Second Image"
                         />
                     </div>
                     <div>
                         <ImageUpload
                             value={formData.image3 || ''}
-                            onChange={(url) => setFormData({...formData, image3: url})}
+                            onChange={(url) => setFormData({ ...formData, image3: url })}
                             label="Third Image"
                         />
                     </div>
@@ -259,20 +268,20 @@ export default function BlogManager() {
                         <label className="block mb-2">Main Content</label>
                         <textarea
                             value={formData.content}
-                            onChange={(e) => setFormData({...formData, content: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                             className="w-full p-2 border rounded"
                             rows={6}
                             required
                         />
                     </div>
-                    
+
                     {/* Additional Content Fields */}
                     {['content2', 'content3', 'content4'].map((field, index) => (
                         <div key={field}>
                             <label className="block mb-2">Additional Content {index + 1}</label>
                             <textarea
                                 value={formData[field as keyof typeof formData] as string}
-                                onChange={(e) => setFormData({...formData, [field]: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
                                 className="w-full p-2 border rounded"
                                 rows={4}
                             />
