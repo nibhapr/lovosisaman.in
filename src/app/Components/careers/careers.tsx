@@ -243,14 +243,14 @@ export default function Careers() {
         : jobPositions.filter((job: JobPosition) => job.department === selectedDepartment);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
             {/* Hero Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+                    <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent mb-6">
                         Join Our Team
                     </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                         Build your career with us and be part of our mission to transform the digital landscape
                     </p>
                 </div>
@@ -264,10 +264,11 @@ export default function Careers() {
                             <button
                                 key={dept}
                                 onClick={() => setSelectedDepartment(dept)}
-                                className={`px-6 py-2 rounded-full transition-all duration-300 ${selectedDepartment === dept
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white text-gray-600 hover:bg-blue-50'
-                                    }`}
+                                className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                                    selectedDepartment === dept
+                                        ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white'
+                                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                }`}
                             >
                                 {dept}
                             </button>
@@ -283,35 +284,40 @@ export default function Careers() {
                         {filteredJobs.map((job, index) => (
                             <div
                                 key={job.title}
-                                className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+                                className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700"
                             >
                                 <div className="flex items-center gap-4 mb-6">
-                                    <div className="p-3 bg-blue-100 rounded-xl">
+                                    <div className="p-3 bg-gray-700 rounded-xl">
                                         {job.icon()}
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
-                                        <p className="text-gray-600">{job.department} • {job.type}</p>
+                                        <h3 className="text-xl font-semibold text-gray-100">{job.title}</h3>
+                                        <p className="text-gray-400">{job.department} • {job.type}</p>
                                     </div>
                                 </div>
 
-                                <p className="text-gray-700 mb-6">{job.description}</p>
+                                <p className="text-gray-300 mb-6">{job.description}</p>
 
                                 <div className="mb-6">
-                                    <h4 className="font-semibold text-gray-900 mb-2">Requirements:</h4>
+                                    <h4 className="font-semibold text-gray-100 mb-2 bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+                                        Requirements:
+                                    </h4>
                                     <ul className="space-y-2">
                                         {job.requirements.map((req, i) => (
-                                            <li key={i} className="flex items-center gap-2 text-gray-600">
-                                                <span className="w-2 h-2 bg-blue-600 rounded-full" />
+                                            <li key={i} className="flex items-center gap-2 text-gray-300">
+                                                <span className="w-2 h-2 bg-blue-400 rounded-full" />
                                                 {req}
                                             </li>
                                         ))}
-                                    </ul> <br />
-                                    <h4 className="font-semibold text-gray-900 mb-2">Responsibilities:</h4>
+                                    </ul>
+                                    <br />
+                                    <h4 className="font-semibold text-gray-100 mb-2 bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+                                        Responsibilities:
+                                    </h4>
                                     <ul className="space-y-2">
                                         {job.responsibilities.map((resp, i) => (
-                                            <li key={i} className="flex items-center gap-2 text-gray-600">
-                                                <span className="w-2 h-2 bg-blue-600 rounded-full" />
+                                            <li key={i} className="flex items-center gap-2 text-gray-300">
+                                                <span className="w-2 h-2 bg-blue-400 rounded-full" />
                                                 {resp}
                                             </li>
                                         ))}
@@ -320,7 +326,7 @@ export default function Careers() {
 
                                 <a
                                     href={`mailto:info@lovosis.in?subject=Job Application for ${job.title}`}
-                                    className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all duration-300"
+                                    className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:opacity-90"
                                 >
                                     Apply Now
                                 </a>
