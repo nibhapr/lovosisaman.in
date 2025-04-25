@@ -4,6 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoCheckmarkCircleOutline, IoBarChartOutline } from 'react-icons/io5';
+import img1 from "../../../public/images/home/1.jpg";
+import img2 from "../../../public/images/home/2.jpg";
+import img3 from "../../../public/images/home/2.jpg";
+import img4 from "../../../public/images/home/4.jpg";
 
 // Updated features array with more detailed descriptions
 const features = [
@@ -36,22 +40,22 @@ const features = [
 // Combined slider data array
 const sliderData = [
   {
-    url: "/images/home/1.jpg",
+    url: img1.src,
     alt: "Educational Equipment",
     description: "State-of-the-art educational equipment for modern learning environments. Empowering students with hands-on experience."
   },
   {
-    url: "/images/home/2.jpg",
+    url: img2.src,
     alt: "Testing & Measuring Equipment",
     description: "Precision testing and measuring equipment for accurate results. Industry-standard tools for professional applications."
   },
   {
-    url: "/images/home/3.jpg",
+    url: img3.src,
     alt: "Software Solutions",
     description: "Innovative software solutions to streamline your operations. Custom development for your unique needs."
   },
   {
-    url: "/images/home/4.jpg",
+    url: img4.src,
     alt: "Digital Marketing & SEO",
     description: "Comprehensive digital marketing strategies and SEO services to boost your online presence and drive business growth."
   }
