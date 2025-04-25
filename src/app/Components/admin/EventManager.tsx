@@ -204,27 +204,27 @@ export default function EventManager() {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
             {/* Form Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl shadow-lg p-6"
+                className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
             >
-                <h2 className="text-2xl font-semibold mb-6">
+                <h2 className="text-2xl font-semibold mb-6 text-white bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg">
                     {isEditing ? 'Edit Event' : 'Add New Event'}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                             Title
                         </label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 rounded-lg bg-gray-700 border-gray-600 text-gray-100 focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -389,7 +389,7 @@ export default function EventManager() {
                     <div className="flex space-x-4">
                         <button
                             type="submit"
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="px-6 py-2 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:from-blue-800 hover:to-blue-600 transition-colors"
                         >
                             {isEditing ? 'Update' : 'Add'} Event
                         </button>
@@ -397,7 +397,7 @@ export default function EventManager() {
                             <button
                                 type="button"
                                 onClick={resetForm}
-                                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                                className="px-6 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
                             >
                                 Cancel
                             </button>
@@ -410,14 +410,14 @@ export default function EventManager() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl shadow-lg p-6"
+                className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
             >
-                <h2 className="text-2xl font-semibold mb-6">Events</h2>
+                <h2 className="text-2xl font-semibold mb-6 text-white bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg">Events</h2>
                 <div className="space-y-4">
                     {events.map((event) => (
                         <div
                             key={event.slug}
-                            className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                            className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors"
                         >
                             <div className="flex items-center space-x-4">
                                 <div className="relative w-16 h-16 rounded-lg overflow-hidden">
@@ -429,21 +429,22 @@ export default function EventManager() {
                                             className="object-cover"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-gray-200" />
+                                        <div className="w-full h-full bg-gray-600" />
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className="font-medium">{event.title}</h3>
-                                    <p className="text-sm text-gray-500">
+                                    <h3 className="font-medium text-gray-100">{event.title}</h3>
+                                    <p className="text-sm text-gray-400">
                                         {new Date(event.date).toLocaleDateString()} at {event.time}
                                     </p>
-                                    <span className="text-sm px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+                                    <span className="text-sm px-2 py-1 rounded-full bg-blue-900/50 text-blue-200">
                                         {event.category}
                                     </span>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
-                                        event.status === 'ongoing' ? 'bg-green-100 text-green-800' :
-                                            'bg-gray-100 text-gray-800'
-                                        }`}>
+                                    <span className={`text-xs px-2 py-1 rounded-full ml-2 ${
+                                        event.status === 'upcoming' ? 'bg-blue-900/50 text-blue-200' :
+                                        event.status === 'ongoing' ? 'bg-green-900/50 text-green-200' :
+                                        'bg-gray-600 text-gray-300'
+                                    }`}>
                                         {event.status}
                                     </span>
                                 </div>

@@ -80,21 +80,21 @@ export default function ContactManager() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-gray-300">Loading...</div>;
+  if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-6"
+      className="p-6 bg-gray-900"
     >
-      <h2 className="text-2xl font-bold mb-6">Contact Submissions</h2>
+      <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white shadow-lg">Contact Submissions</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Contact List */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Recent Contacts</h3>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
+          <h3 className="text-lg font-semibold mb-4 bg-gradient-to-r from-blue-900 to-blue-700 p-2 rounded text-white">Recent Contacts</h3>
           <div className="space-y-4">
             {contacts.map((contact) => (
               <div
@@ -102,20 +102,20 @@ export default function ContactManager() {
                 onClick={() => setSelectedContact(contact)}
                 className={`p-4 rounded-lg border cursor-pointer transition-all ${
                   selectedContact?._id === contact._id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300'
+                    ? 'border-blue-500 bg-gray-700'
+                    : 'border-gray-700 hover:border-blue-500 bg-gray-800'
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-medium">{contact.name}</h4>
-                    <p className="text-sm text-gray-600">{contact.subject}</p>
+                    <h4 className="font-medium text-gray-100">{contact.name}</h4>
+                    <p className="text-sm text-gray-400">{contact.subject}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className={`px-2 py-1 rounded-full text-xs ${
-                      contact.status === 'completed' ? 'bg-green-100 text-green-800' :
-                      contact.status === 'inProgress' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
+                      contact.status === 'completed' ? 'bg-green-900/50 text-green-200' :
+                      contact.status === 'inProgress' ? 'bg-yellow-900/50 text-yellow-200' :
+                      'bg-gray-700 text-gray-300'
                     }`}>
                       {contact.status}
                     </span>
@@ -124,7 +124,7 @@ export default function ContactManager() {
                         e.stopPropagation();
                         handleDelete(contact._id);
                       }}
-                      className="p-1 text-red-600 hover:text-red-800 transition-colors"
+                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
                     >
                       <IoTrashOutline className="w-5 h-5" />
                     </button>
@@ -137,35 +137,35 @@ export default function ContactManager() {
 
         {/* Contact Details */}
         {selectedContact && (
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold mb-4">Contact Details</h3>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
+            <h3 className="text-lg font-semibold mb-4 bg-gradient-to-r from-blue-900 to-blue-700 p-2 rounded text-white">Contact Details</h3>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-600">Name</label>
-                <p className="mt-1">{selectedContact.name}</p>
+                <label className="text-sm font-medium text-gray-300">Name</label>
+                <p className="mt-1 text-gray-100">{selectedContact.name}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Email</label>
-                <p className="mt-1">{selectedContact.email}</p>
+                <label className="text-sm font-medium text-gray-300">Email</label>
+                <p className="mt-1 text-gray-100">{selectedContact.email}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Phone</label>
-                <p className="mt-1">{selectedContact.phone}</p>
+                <label className="text-sm font-medium text-gray-300">Phone</label>
+                <p className="mt-1 text-gray-100">{selectedContact.phone}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Subject</label>
-                <p className="mt-1">{selectedContact.subject}</p>
+                <label className="text-sm font-medium text-gray-300">Subject</label>
+                <p className="mt-1 text-gray-100">{selectedContact.subject}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Message</label>
-                <p className="mt-1 whitespace-pre-wrap">{selectedContact.message}</p>
+                <label className="text-sm font-medium text-gray-300">Message</label>
+                <p className="mt-1 whitespace-pre-wrap text-gray-100">{selectedContact.message}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Status</label>
+                <label className="text-sm font-medium text-gray-300">Status</label>
                 <select
                   value={selectedContact.status}
                   onChange={(e) => updateContactStatus(selectedContact._id, e.target.value as 'pending' | 'inProgress' | 'completed')}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 >
                   <option value="pending">Pending</option>
                   <option value="inProgress">In Progress</option>
@@ -178,4 +178,4 @@ export default function ContactManager() {
       </div>
     </motion.div>
   );
-} 
+}

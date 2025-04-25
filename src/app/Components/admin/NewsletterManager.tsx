@@ -73,19 +73,19 @@ export default function NewsletterManager() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-gray-300">Loading...</div>;
+  if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-6"
+      className="p-6 bg-gray-900"
     >
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Newsletter Subscribers</h2>
-          <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Newsletter Subscribers</h2>
+          <div className="bg-blue-900/50 text-blue-200 px-4 py-2 rounded-lg">
             Total: {subscribers.length}
           </div>
         </div>
@@ -93,38 +93,38 @@ export default function NewsletterManager() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <tr className="bg-gray-700">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-gray-800 divide-y divide-gray-700">
               {subscribers.map((subscriber) => (
-                <tr key={subscriber._id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={subscriber._id} className="hover:bg-gray-700 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-300">
                     <div className="flex items-center">
                       <IoMailOutline className="text-gray-400 mr-2" />
                       {subscriber.email}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-300">
                     {new Date(subscriber.subscriptionDate).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <select
                       value={subscriber.status}
                       onChange={(e) => updateSubscriberStatus(subscriber._id, e.target.value as 'active' | 'inactive')}
-                      className="ml-2 text-sm border rounded px-2 py-1"
+                      className="ml-2 text-sm bg-gray-700 border-gray-600 text-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="active">Active</option>
                       <option value="inactive">Inactive</option>
@@ -133,7 +133,7 @@ export default function NewsletterManager() {
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <button
                       onClick={() => handleDelete(subscriber._id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-400 hover:text-red-300 transition-colors"
                     >
                       <IoTrashOutline size={20} />
                     </button>
@@ -146,4 +146,4 @@ export default function NewsletterManager() {
       </div>
     </motion.div>
   );
-} 
+}

@@ -279,21 +279,25 @@ export default function ProductManager() {
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    function handleEdit(product: Product): void {
+        throw new Error('Function not implemented.');
+    }
+
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
             {/* Form Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl shadow-lg p-6"
+                className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
             >
-                <h2 className="text-2xl font-semibold mb-6">
+                <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
                     {isEditing ? 'Edit Product' : 'Add New Product'}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                             Navbar Category
                         </label>
                         <select
@@ -306,7 +310,7 @@ export default function ProductManager() {
                                     subcategoryId: '',
                                 });
                             }}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500"
                             required
                         >
                             <option value="">Select a navbar category</option>
@@ -319,7 +323,7 @@ export default function ProductManager() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                             Category
                         </label>
                         <select
@@ -331,7 +335,7 @@ export default function ProductManager() {
                                     subcategoryId: '',
                                 });
                             }}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500"
                             disabled={!formData.navbarCategoryId}
                         >
                             <option value="">Select a category (optional)</option>
@@ -344,13 +348,13 @@ export default function ProductManager() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                             Subcategory
                         </label>
                         <select
                             value={formData.subcategoryId}
                             onChange={(e) => setFormData({ ...formData, subcategoryId: e.target.value })}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500"
                             disabled={!formData.categoryId}
                         >
                             <option value="">Select a subcategory (optional)</option>
@@ -363,20 +367,20 @@ export default function ProductManager() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                             Name
                         </label>
                         <input
                             type="text"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                             Product Images
                         </label>
                         <div className="space-y-4">
@@ -468,7 +472,7 @@ export default function ProductManager() {
                     <div className="flex space-x-4">
                         <button
                             type="submit"
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg hover:from-blue-700 hover:to-blue-500 transition-colors"
                         >
                             {isEditing ? 'Update' : 'Add'} Product
                         </button>
@@ -476,7 +480,7 @@ export default function ProductManager() {
                             <button
                                 type="button"
                                 onClick={resetForm}
-                                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                                className="px-6 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
                             >
                                 Cancel
                             </button>
@@ -489,92 +493,61 @@ export default function ProductManager() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl shadow-lg p-6"
+                className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
             >
-                <h2 className="text-2xl font-semibold mb-6">Products</h2>
+                <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
+                    Products
+                </h2>
 
                 {/* Search Box */}
                 <div className="mb-4 relative">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search products..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                        />
-                        <div className="absolute left-3 top-2.5 text-gray-400">
-                            <IoSearchOutline className="w-5 h-5" />
-                        </div>
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <IoSearchOutline className="h-5 w-5 text-gray-400" />
                     </div>
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500"
+                    />
                 </div>
 
                 <div className="space-y-4">
                     {filteredProducts.length === 0 ? (
-                        <p className="text-gray-500 text-center py-4">No products found</p>
+                        <p className="text-gray-400 text-center py-4">No products found</p>
                     ) : (
                         filteredProducts.map((product) => (
                             <div
                                 key={product._id}
-                                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                                className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600"
                             >
                                 <div className="flex items-center space-x-4">
-                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                                        <Image
-                                            src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'}
-                                            alt={product.name}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
+                                    {product.images && product.images[0] && (
+                                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                                            <Image
+                                                src={product.images[0]}
+                                                alt={product.name}
+                                                fill
+                                                sizes="48px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    )}
                                     <div>
-                                        <h3 className="font-medium">{product.name}</h3>
-                                        <p className="text-sm text-gray-500">
-                                            Navbar Category: {typeof product.navbarCategoryId === 'string'
-                                                ? navbarCategories.find(nc => nc._id === product.navbarCategoryId)?.name || 'Unknown Navbar Category'
-                                                : product.navbarCategoryId.name} |
-                                            Category: {product.categoryId ? (categories.find(c =>
-                                                String(c._id) === String(product.categoryId)
-                                            )?.name || 'Unknown Category') : 'No Category'} |
-                                            {product.subcategoryId ? `Subcategory: ${subcategories.find(s =>
-                                                String(s._id) === String(product.subcategoryId)
-                                            )?.name || 'Unknown Subcategory'} |` : ''}
-                                            {product.catalogImage && (
-                                                <button
-                                                    onClick={() => product.catalogImage && window.open(product.catalogImage, '_blank')}
-                                                    className="text-blue-600 hover:text-blue-700 underline ml-1"
-                                                >
-                                                    View Catalog
-                                                </button>
-                                            )}
-                                        </p>
+                                        <h3 className="font-medium text-gray-200">{product.name}</h3>
                                     </div>
                                 </div>
                                 <div className="flex space-x-2">
                                     <button
-                                        onClick={() => {
-                                            setIsEditing(true);
-                                            setSelectedProduct({
-                                                ...product,
-                                                _id: product._id
-                                            });
-                                            setFormData({
-                                                navbarCategoryId: typeof product.navbarCategoryId === 'string' ? product.navbarCategoryId : product.navbarCategoryId?._id || '',
-                                                name: product.name,
-                                                images: product.images && product.images.length > 0 ? product.images : [''],
-                                                categoryId: product.categoryId || '',
-                                                subcategoryId: product.subcategoryId || '',
-                                                catalogImage: product.catalogImage || null,
-                                                catalogImages: product.catalogImages || [''],
-                                            });
-                                        }}
-                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                        onClick={() => handleEdit(product)}
+                                        className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
                                     >
                                         <IoCreateOutline className="w-5 h-5" />
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(product._id as string)}
-                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        onClick={() => handleDelete(product._id)}
+                                        className="p-2 text-red-400 hover:text-red-300 transition-colors"
                                     >
                                         <IoTrashOutline className="w-5 h-5" />
                                     </button>

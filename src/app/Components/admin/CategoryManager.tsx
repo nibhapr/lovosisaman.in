@@ -188,23 +188,23 @@ export default function CategoryManager() {
   }, [searchTerm, categories]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
       {/* Form Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-lg p-6"
+        className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
-        <h2 className="text-2xl font-semibold mb-6">{isEditing ? 'Edit' : 'Add'} Category</h2>
+        <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">{isEditing ? 'Edit' : 'Add'} Category</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Navbar Category
             </label>
             <select
               value={formData.navbarCategoryId}
               onChange={(e) => setFormData({ ...formData, navbarCategoryId: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-100 focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Select Navbar Category</option>
@@ -216,26 +216,26 @@ export default function CategoryManager() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Name
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-100 focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-100 focus:ring-2 focus:ring-blue-500"
               rows={4}
             />
           </div>
@@ -260,7 +260,7 @@ export default function CategoryManager() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                className="px-6 py-2 bg-gray-600 text-gray-100 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 Cancel
               </button>
@@ -268,7 +268,7 @@ export default function CategoryManager() {
           </div>
         </form>
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <div className="bg-red-900/50 border border-red-700 text-red-100 px-4 py-3 rounded relative mb-4">
             {error}
           </div>
         )}
@@ -278,9 +278,9 @@ export default function CategoryManager() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-lg p-6"
+        className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
-        <h2 className="text-2xl font-semibold mb-6">Categories</h2>
+        <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Categories</h2>
 
         {/* Search Box */}
         <div className="mb-4 relative">
@@ -292,13 +292,13 @@ export default function CategoryManager() {
             placeholder="Search categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+            className="pl-10 w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-100 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div className="space-y-4">
           {filteredCategories.map((category) => (
-            <div key={category._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div key={category._id} className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors">
               <div className="flex items-center space-x-4">
                 {category.image && (
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden">
@@ -316,8 +316,8 @@ export default function CategoryManager() {
                   </div>
                 )}
                 <div>
-                  <h3 className="font-medium">{category.name}</h3>
-                  <p className="text-sm text-gray-500">{category.slug}</p>
+                  <h3 className="font-medium text-gray-100">{category.name}</h3>
+                  <p className="text-sm text-gray-400">{category.slug}</p>
                   {category.description && (
                     <p className="text-xs text-gray-400 truncate max-w-[200px]">
                       {category.description || 'No description available'}
@@ -328,13 +328,13 @@ export default function CategoryManager() {
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleEdit(category)}
-                  className="p-2 text-blue-600 hover:text-blue-800"
+                  className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
                 >
                   <IoCreateOutline className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => handleDelete(category._id!)}
-                  className="p-2 text-red-600 hover:text-red-800"
+                  className="p-2 text-red-400 hover:text-red-300 transition-colors"
                 >
                   <IoTrashOutline className="w-5 h-5" />
                 </button>
@@ -342,7 +342,7 @@ export default function CategoryManager() {
             </div>
           ))}
           {filteredCategories.length === 0 && (
-            <p className="text-gray-500 text-center py-4">
+            <p className="text-gray-400 text-center py-4">
               {categories.length === 0 ? 'No categories found' : 'No matching categories found'}
             </p>
           )}

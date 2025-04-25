@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoCheckmarkCircleOutline, IoBarChartOutline } from 'react-icons/io5';
+import { IoRocketOutline, IoLayersOutline, IoCodeSlashOutline, IoBarChartOutline } from 'react-icons/io5';
 import img1 from "../../../public/images/home/1.jpg";
 import img2 from "../../../public/images/home/2.jpg";
 import img3 from "../../../public/images/home/2.jpg";

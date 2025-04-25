@@ -117,7 +117,7 @@ export default function AdminProfileDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -127,14 +127,14 @@ export default function AdminProfileDashboard() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-7xl mx-auto p-6 space-y-8"
+      className="max-w-7xl mx-auto p-6 space-y-8 bg-black"
     >
       {/* Dashboard Welcome Section */}
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/20">
-        <h1 className="text-4xl font-bold text-gray-800">
+      <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-blue-900/20">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
           Welcome back, {profileData.username || 'Admin'}
         </h1>
-        <p className="text-gray-600 mt-3 text-lg">
+        <p className="text-gray-400 mt-3 text-lg">
           Here's what's happening with your website today.
         </p>
         {profileData.lastLoginAt && (
@@ -149,26 +149,26 @@ export default function AdminProfileDashboard() {
         {/* Left Column */}
         <div className="space-y-8">
           {/* Username Change Form */}
-          <form onSubmit={handleUsernameChange} className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <form onSubmit={handleUsernameChange} className="bg-zinc-900 rounded-2xl shadow-xl p-8 border border-blue-900/20">
             <div className="flex items-center space-x-4 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
                 <IoPersonOutline className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Change Username</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Change Username</h3>
             </div>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Current Username
                 </label>
-                <p className="px-4 py-3 rounded-xl bg-gray-50 text-gray-800">
+                <p className="px-4 py-3 rounded-xl bg-zinc-800 text-gray-300 border border-zinc-700">
                   {profileData.username}
                 </p>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   New Username
                 </label>
                 <div className="relative">
@@ -177,14 +177,14 @@ export default function AdminProfileDashboard() {
                     type="text"
                     value={usernameFormData.newUsername}
                     onChange={(e) => setUsernameFormData({ ...usernameFormData, newUsername: e.target.value })}
-                    className="w-full pl-10 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                    className="w-full pl-10 px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm text-gray-200"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Current Password
                 </label>
                 <div className="relative">
@@ -193,7 +193,7 @@ export default function AdminProfileDashboard() {
                     type="password"
                     value={usernameFormData.currentPassword}
                     onChange={(e) => setUsernameFormData({ ...usernameFormData, currentPassword: e.target.value })}
-                    className="w-full pl-10 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                    className="w-full pl-10 px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm text-gray-200"
                     required
                   />
                 </div>
@@ -201,7 +201,7 @@ export default function AdminProfileDashboard() {
 
               <button
                 type="submit"
-                className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md"
+                className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md"
               >
                 Update Username
               </button>
@@ -212,17 +212,17 @@ export default function AdminProfileDashboard() {
         {/* Right Column */}
         <div>
           {/* Password Change Form */}
-          <form onSubmit={handlePasswordChange} className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <form onSubmit={handlePasswordChange} className="bg-zinc-900 rounded-2xl shadow-xl p-8 border border-blue-900/20">
             <div className="flex items-center space-x-4 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
                 <IoKeyOutline className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Change Password</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Change Password</h3>
             </div>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Current Password
                 </label>
                 <div className="relative">
@@ -231,14 +231,14 @@ export default function AdminProfileDashboard() {
                     type="password"
                     value={passwordFormData.currentPassword}
                     onChange={(e) => setPasswordFormData({ ...passwordFormData, currentPassword: e.target.value })}
-                    className="w-full pl-10 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                    className="w-full pl-10 px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm text-gray-200"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   New Password
                 </label>
                 <div className="relative">
@@ -247,14 +247,14 @@ export default function AdminProfileDashboard() {
                     type="password"
                     value={passwordFormData.newPassword}
                     onChange={(e) => setPasswordFormData({ ...passwordFormData, newPassword: e.target.value })}
-                    className="w-full pl-10 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                    className="w-full pl-10 px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm text-gray-200"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Confirm New Password
                 </label>
                 <div className="relative">
@@ -263,7 +263,7 @@ export default function AdminProfileDashboard() {
                     type="password"
                     value={passwordFormData.confirmPassword}
                     onChange={(e) => setPasswordFormData({ ...passwordFormData, confirmPassword: e.target.value })}
-                    className="w-full pl-10 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                    className="w-full pl-10 px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm text-gray-200"
                     required
                   />
                 </div>
@@ -271,7 +271,7 @@ export default function AdminProfileDashboard() {
 
               <button
                 type="submit"
-                className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md"
+                className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md"
               >
                 Update Password
               </button>
@@ -281,4 +281,4 @@ export default function AdminProfileDashboard() {
       </div>
     </motion.div>
   );
-} 
+}

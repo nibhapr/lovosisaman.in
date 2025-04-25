@@ -193,29 +193,29 @@ export default function BlogManager() {
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Blog Manager</h1>
+        <div className="container mx-auto p-4 bg-gray-900 text-gray-100">
+            <h1 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg shadow-lg text-white">Blog Manager</h1>
 
             <form onSubmit={handleSubmit} className="mb-8 space-y-4">
                 {/* Form fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block mb-2">Title</label>
+                        <label className="block mb-2 text-gray-300">Title</label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-2">Category</label>
+                        <label className="block mb-2 text-gray-300">Category</label>
                         <select
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             required
                         >
                             <option value="">Select Category</option>
@@ -227,33 +227,33 @@ export default function BlogManager() {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Author</label>
+                    <label className="block mb-2 text-gray-300">Author</label>
                     <input
                         type="text"
                         value={formData.author}
                         onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         required
                     />
                 </div>
 
                 {/* Image Upload Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
+                    <div className="bg-gray-800 p-4 rounded-lg">
                         <ImageUpload
                             value={formData.image || ''}
                             onChange={(url) => setFormData({ ...formData, image: url })}
                             label="Main Image"
                         />
                     </div>
-                    <div>
+                    <div className="bg-gray-800 p-4 rounded-lg">
                         <ImageUpload
                             value={formData.image2 || ''}
                             onChange={(url) => setFormData({ ...formData, image2: url })}
                             label="Second Image"
                         />
                     </div>
-                    <div>
+                    <div className="bg-gray-800 p-4 rounded-lg">
                         <ImageUpload
                             value={formData.image3 || ''}
                             onChange={(url) => setFormData({ ...formData, image3: url })}
@@ -265,11 +265,11 @@ export default function BlogManager() {
                 {/* Content Fields */}
                 <div className="space-y-4">
                     <div>
-                        <label className="block mb-2">Main Content</label>
+                        <label className="block mb-2 text-gray-300">Main Content</label>
                         <textarea
                             value={formData.content}
                             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             rows={6}
                             required
                         />
@@ -278,11 +278,11 @@ export default function BlogManager() {
                     {/* Additional Content Fields */}
                     {['content2', 'content3', 'content4'].map((field, index) => (
                         <div key={field}>
-                            <label className="block mb-2">Additional Content {index + 1}</label>
+                            <label className="block mb-2 text-gray-300">Additional Content {index + 1}</label>
                             <textarea
                                 value={formData[field as keyof typeof formData] as string}
                                 onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
-                                className="w-full p-2 border rounded"
+                                className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                 rows={4}
                             />
                         </div>
@@ -294,14 +294,14 @@ export default function BlogManager() {
                     <button
                         type="button"
                         onClick={resetForm}
-                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                        className="px-4 py-2 bg-gray-700 text-gray-100 rounded hover:bg-gray-600 transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
                     >
                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Post' : 'Create Post')}
                     </button>
@@ -310,7 +310,7 @@ export default function BlogManager() {
 
             {/* Error Display */}
             {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div className="bg-red-900/50 border border-red-700 text-red-100 px-4 py-3 rounded mb-4">
                     {error}
                 </div>
             )}
@@ -318,25 +318,25 @@ export default function BlogManager() {
             {/* Posts List */}
             <div className="space-y-4">
                 {loading ? (
-                    <p>Loading...</p>
+                    <p className="text-gray-300">Loading...</p>
                 ) : (
                     posts.map(post => (
-                        <div key={post._id} className="border p-4 rounded">
+                        <div key={post._id} className="border border-gray-700 bg-gray-800 p-4 rounded hover:bg-gray-750 transition-colors">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="text-xl font-semibold">{post.title}</h3>
-                                    <p className="text-gray-600">{post.category}</p>
+                                    <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-900 to-blue-700 inline-block text-transparent bg-clip-text">{post.title}</h3>
+                                    <p className="text-gray-400">{post.category}</p>
                                 </div>
                                 <div className="flex space-x-2">
                                     <button
                                         onClick={() => handleEdit(post)}
-                                        className="text-blue-600 hover:text-blue-800"
+                                        className="text-blue-400 hover:text-blue-300 transition-colors"
                                     >
                                         <IoCreateOutline className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(post.slug)}
-                                        className="text-red-600 hover:text-red-800"
+                                        className="text-red-400 hover:text-red-300 transition-colors"
                                     >
                                         <IoTrashOutline className="w-5 h-5" />
                                     </button>

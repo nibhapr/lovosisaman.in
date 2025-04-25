@@ -60,13 +60,15 @@ export default function ReviewManager() {
     </div>
   );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-gray-200">Loading...</div>;
+  if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-900 min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Reviews Management</h2>
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+          Reviews Management
+        </h2>
         <div className="flex gap-2">
           {['all', 'blog', 'event', 'product'].map((type) => (
             <button
@@ -74,8 +76,8 @@ export default function ReviewManager() {
               onClick={() => setSelectedType(type as any)}
               className={`px-4 py-2 rounded-lg ${
                 selectedType === type
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 hover:bg-gray-200'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -90,31 +92,31 @@ export default function ReviewManager() {
             key={review._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-xl shadow-lg"
+            className="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700"
           >
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-semibold text-lg">{review.name}</h3>
-                <p className="text-gray-600">{review.email}</p>
-                <p className="text-gray-600">{review.phone}</p>
+                <h3 className="font-semibold text-lg text-gray-200">{review.name}</h3>
+                <p className="text-gray-400">{review.email}</p>
+                <p className="text-gray-400">{review.phone}</p>
               </div>
               <div className="flex flex-col items-end">
-                <span className="px-3 py-1 rounded-full text-sm capitalize bg-gray-100">
+                <span className="px-3 py-1 rounded-full text-sm capitalize bg-gray-700 text-gray-300">
                   {review.itemType}
                 </span>
                 <StarRating rating={review.rating} />
               </div>
             </div>
             
-            <p className="mt-4 text-gray-700">{review.comment}</p>
+            <p className="mt-4 text-gray-300">{review.comment}</p>
             
             <div className="mt-4 flex justify-between items-center">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-400">
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
               <button
                 onClick={() => handleDeleteReview(review._id)}
-                className="text-red-600 hover:text-red-800 transition-colors"
+                className="text-red-400 hover:text-red-300 transition-colors"
               >
                 Delete
               </button>
@@ -124,4 +126,4 @@ export default function ReviewManager() {
       </div>
     </div>
   );
-} 
+}

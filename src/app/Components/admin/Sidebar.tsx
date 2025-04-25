@@ -66,7 +66,7 @@ export default function Sidebar({ isCollapsed, onCollapse }: SidebarProps) {
       className={`
         ${isCollapsed ? 'w-20' : 'w-72'} 
         h-screen 
-        bg-gradient-to-b from-gray-900 to-gray-800
+        bg-gradient-to-b from-gray-950 to-gray-900
         text-white
         transition-all duration-300 ease-in-out 
         flex flex-col 
@@ -77,13 +77,13 @@ export default function Sidebar({ isCollapsed, onCollapse }: SidebarProps) {
       `}
     >
       <div>
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
-          <h1 className={`font-bold text-xl ${isCollapsed ? 'hidden' : 'block'}`}>
+        <div className="flex items-center justify-between p-6 border-b border-gray-800">
+          <h1 className={`font-bold text-xl bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent ${isCollapsed ? 'hidden' : 'block'}`}>
             Lovosis Admin
           </h1>
           <button
             onClick={() => onCollapse(!isCollapsed)}
-            className="p-2 rounded-lg hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"
           >
             {isCollapsed ? <HiOutlineBars3 size={24} /> : <HiOutlineXMark size={24} />}
           </button>
@@ -99,8 +99,8 @@ export default function Sidebar({ isCollapsed, onCollapse }: SidebarProps) {
                     flex items-center gap-4 p-3 rounded-xl
                     transition-all duration-200
                     ${pathname === item.path
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                      : 'hover:bg-gray-700/50 text-gray-300 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg shadow-blue-500/20'
+                      : 'hover:bg-gray-800/50 text-gray-400 hover:text-white'
                     }
                   `}
                 >
@@ -115,13 +115,13 @@ export default function Sidebar({ isCollapsed, onCollapse }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-gray-800">
         <button
           onClick={handleLogout}
           className={`
             flex items-center gap-4 p-3 rounded-xl w-full
             text-red-400 hover:text-red-300
-            hover:bg-red-500/10
+            hover:bg-gray-800/50
             transition-all duration-200
           `}
         >
