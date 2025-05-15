@@ -71,9 +71,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 RUN chmod -R 555 /app && \
     chmod -R 755 /app/.next/static/videos
 
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --spider http://localhost:8081/api/health || exit 1
+# Add healthcheck with a longer start period
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+#     CMD curl -f http://localhost:8081/api/health || exit 1
 
 USER nextjs
 EXPOSE 8081

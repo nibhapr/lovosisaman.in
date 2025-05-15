@@ -39,27 +39,27 @@ export default async function NavbarCategoryPage({
   const uncategorizedProducts = await getProducts(navbarCategory._id.toString());
 
   return (
-    <div className="container mx-auto px-4 py-12 bg-black min-h-screen">
+    <div className="container mx-auto px-4 py-12 bg-white min-h-screen">
       <div className="mb-8">
-        <nav className="flex space-x-2 text-sm text-gray-400">
-          <Link href="/products" className="hover:text-blue-400 hover:underline">
+        <nav className="flex space-x-2 text-sm text-gray-600">
+          <Link href="/products" className="hover:text-blue-600 hover:underline">
             Products
           </Link>
-          <span className="text-gray-600">/</span>
-          <span className="text-gray-300">{navbarCategory.name}</span>
+          <span className="text-gray-400">/</span>
+          <span className="text-black">{navbarCategory.name}</span>
         </nav>
       </div>
 
-      <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+      <h1 className="text-3xl font-bold mb-8 text-black">
         {navbarCategory.name}
       </h1>
       {navbarCategory.description && (
-        <p className="text-gray-300 mb-8">{navbarCategory.description}</p>
+        <p className="text-gray-800 mb-8">{navbarCategory.description}</p>
       )}
 
       {categories.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-semibold mb-6 text-black">
             Categories
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -69,20 +69,20 @@ export default async function NavbarCategoryPage({
                 href={`/products/${params.navbarcategory}/${category.slug}`}
                 className="group"
               >
-                <div className="bg-gray-900 rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1 border border-gray-800">
+                <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1 border border-gray-200">
                   <div className="relative h-48 w-full">
                     <Image
                       src={category.image || '/images/placeholder.jpg'}
                       alt={category.name}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                   <div className="p-6">
-                    <h2 className="text-xl font-semibold mb-2 text-gray-100">{category.name}</h2>
+                    <h2 className="text-xl font-semibold mb-2 text-black">{category.name}</h2>
                     {category.description && (
-                      <p className="text-gray-400 line-clamp-2">{category.description}</p>
+                      <p className="text-gray-600">{category.description}</p>
                     )}
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export default async function NavbarCategoryPage({
 
       {uncategorizedProducts.length > 0 && (
         <div>
-          <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-semibold mb-6 text-black">
             Other Products
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -104,20 +104,20 @@ export default async function NavbarCategoryPage({
                 href={`/products/${params.navbarcategory}/_/_/${product.slug}`}
                 className="group"
               >
-                <div className="bg-gray-900 rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1 border border-gray-800">
+                <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1 border border-gray-200">
                   <div className="relative h-48 w-full">
                     <Image
                       src={product.images?.[0] || '/images/placeholder.jpg'}
                       alt={product.name}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                   <div className="p-6">
-                    <h2 className="text-xl font-semibold mb-2 text-gray-100">{product.name}</h2>
+                    <h2 className="text-xl font-semibold mb-2 text-black">{product.name}</h2>
                     {product.description && (
-                      <p className="text-gray-400 line-clamp-2">{product.description}</p>
+                      <p className="text-gray-600">{product.description}</p>
                     )}
                   </div>
                 </div>

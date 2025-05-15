@@ -27,20 +27,20 @@ export default async function SubcategoryPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 bg-black">
+    <div className="max-w-7xl mx-auto px-4 py-12 bg-white">
       <div className="mb-12 text-center">
-        <h1 className="text-4xl font-extrabold mb-6">
+        <h1 className="text-4xl font-extrabold mb-6 text-black">
           Explore{" "}
-          <span className="bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent">
+          <span className="text-blue-600">
             {subcategory.name}
           </span>
         </h1>
-        <p className="text-gray-300 max-w-2xl mx-auto">
-          <span className="bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent text-lg font-medium">
+        <p className="text-black max-w-2xl mx-auto">
+          <span className="text-lg font-medium text-blue-600">
             {subcategory.description}
           </span>
           <br />
-          <span className="text-base mt-4 block text-gray-400">
+          <span className="text-base mt-4 block text-gray-600">
             Discover our premium selection of products crafted just for you.
           </span>
         </p>
@@ -53,20 +53,21 @@ export default async function SubcategoryPage({
             href={`/products/${params.navbarcategory}/${params.category}/${params.subcategory}/${product.slug}`}
             className="group"
           >
-            <div className="bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-800">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-200">
               <div className="relative h-56 w-full">
                 <Image
                   src={product.images[0]}
                   alt={product.name}
                   fill
-                  className="object-cover group-hover:opacity-90 transition-opacity duration-300"
+                  className="object-contain group-hover:opacity-90 transition-opacity duration-300"
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors duration-300">
+                <h2 className="text-xl font-bold text-black group-hover:text-blue-600 transition-colors duration-300">
                   {product.name}
                 </h2>
-                <p className="text-gray-400 mt-3 line-clamp-2">
+                <p className="text-gray-600 mt-3">
                   {product.description}
                 </p>
               </div>

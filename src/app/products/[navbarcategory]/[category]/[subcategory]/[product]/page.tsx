@@ -41,16 +41,14 @@ export default function ProductPage({
         console.log('Product data:', data);
         setProduct(data);
 
-        // Handle single catalogImage path
         if (data.catalogImage) {
           console.log('Setting catalog image:', data.catalogImage);
-          setCatalogImages([data.catalogImage]); // Convert single path to array
+          setCatalogImages([data.catalogImage]);
         } else {
           console.warn('No catalog image found');
           setCatalogImages([]);
         }
 
-        // Fetch category and subcategory data
         if (data.categoryId) {
           const categoryRes = await fetch(`/api/categories/${data.categoryId}`);
           if (categoryRes.ok) {
@@ -91,8 +89,8 @@ export default function ProductPage({
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-gray-600">Loading product information...</div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-pulse text-black">Loading product information...</div>
       </div>
     );
   }
@@ -129,10 +127,7 @@ export default function ProductPage({
       const data = await response.json();
       console.log('API Response:', data);
 
-      // Show success message
       alert('Request submitted successfully!');
-
-      // Close form after successful submission
       setIsContactFormOpen(false);
     } catch (error) {
       console.error('Error:', error);
@@ -140,7 +135,6 @@ export default function ProductPage({
     }
   };
 
-  // Render breadcrumbs navigation
   const renderBreadcrumbs = () => (
     <div className="container mx-auto px-4 py-3">
       <nav className="text-sm text-gray-500 flex items-center">
@@ -156,7 +150,7 @@ export default function ProductPage({
             <span className="mx-2">/</span>
           </>
         )}
-        <span className="text-gray-900 font-medium">{product?.name}</span>
+        <span className="text-black font-medium">{product?.name}</span>
       </nav>
     </div>
   );
@@ -176,12 +170,11 @@ export default function ProductPage({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-zinc-900 flex flex-col items-center text-white">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-900/30 to-blue-800/30 w-full border-b border-zinc-800">
+    <div className="min-h-screen bg-white flex flex-col items-center text-black">
+      <div className="w-full border-b border-gray-200">
         {renderBreadcrumbs()}
         <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4 animate-fade-in">
+          <h1 className="text-2xl md:text-3xl font-bold text-black mb-4 animate-fade-in">
             {product.name}
           </h1>
           <div className="w-16 h-1 bg-blue-600 rounded-full mx-auto"></div>
@@ -190,11 +183,9 @@ export default function ProductPage({
 
       <div className="w-full max-w-5xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          {/* Left Side */}
           <div className="space-y-6 mx-auto w-full max-w-md">
-            {/* Main Product Image */}
             <div className="group">
-              <div className="aspect-square relative rounded-lg overflow-hidden border border-zinc-800 shadow-xl h-[450px] bg-zinc-900">
+              <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200 shadow-sm h-[450px] bg-white">
                 <Image
                   src={product.images[currentImageIndex]}
                   alt={product.name}
@@ -205,7 +196,6 @@ export default function ProductPage({
               </div>
             </div>
 
-            {/* Image Gallery */}
             {product.images.length > 1 && (
               <div className="grid grid-cols-5 gap-2">
                 {product.images.map((image, index) => (
@@ -213,7 +203,7 @@ export default function ProductPage({
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`relative aspect-square rounded-md overflow-hidden
-                      ${currentImageIndex === index ? 'ring-2 ring-blue-600' : 'ring-1 ring-zinc-700'}`}
+                      ${currentImageIndex === index ? 'ring-2 ring-blue-600' : 'ring-1 ring-gray-300'}`}
                   >
                     <Image
                       src={image}
@@ -226,20 +216,18 @@ export default function ProductPage({
               </div>
             )}
 
-            {/* Catalog Request Button */}
             <button
               onClick={() => setIsContactFormOpen(true)}
-              className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all flex items-center justify-center gap-2 text-sm"
+              className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center justify-center gap-2 text-sm"
             >
               <IoDownloadOutline className="w-4 h-4" />
               Request Product Catalog
             </button>
 
-            {/* Reviews Section */}
-            <div className="bg-zinc-900/50 rounded-lg shadow-xl p-4 border border-zinc-800">
+            <div className="bg-gray-50 rounded-lg shadow-sm p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-black flex items-center gap-2">
                     <span className="w-1 h-5 bg-yellow-400 rounded-full"></span>
                     Customer Reviews
                   </h2>
@@ -252,10 +240,10 @@ export default function ProductPage({
                 </button>
               </div>
 
-              <div className="bg-zinc-800/50 p-4 rounded-lg mb-4">
+              <div className="bg-gray-100 p-4 rounded-lg mb-4">
                 <div className="flex items-center gap-4">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white">
+                    <div className="text-3xl font-bold text-black">
                       {averageRating.toFixed(1)}
                     </div>
                     <div className="flex items-center gap-0.5">

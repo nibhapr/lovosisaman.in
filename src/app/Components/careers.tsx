@@ -27,9 +27,9 @@ const jobPositions: JobPosition[] = [
         location: "Bengaluru, Karnataka",
         icon: () => (
             <div className="flex items-center">
-                <SiNextdotjs className="w-6 h-6 text-blue-600 mr-2" />
-                <SiReact className="w-6 h-6 text-blue-600 mr-2" />
-                <SiAstro className="w-6 h-6 text-green-600" />
+                <SiNextdotjs className="w-6 h-6 text-black mr-2" />
+                <SiReact className="w-6 h-6 text-black mr-2" />
+                <SiAstro className="w-6 h-6 text-black" />
             </div>
         ),
         description: "We're looking for a talented Frontend Developer to create exceptional user experiences using modern web technologies.",
@@ -65,9 +65,9 @@ const jobPositions: JobPosition[] = [
         location: "Bengaluru, Karnataka",
         icon: () => (
             <div className="flex items-center">
-                <SiDjango className="w-6 h-6 text-green-600 mr-2" />
-                <FaNodeJs className="w-6 h-6 text-blue-600 mr-2" />
-                <FaLaravel className="w-6 h-6 text-blue-600" />
+                <SiDjango className="w-6 h-6 text-black mr-2" />
+                <FaNodeJs className="w-6 h-6 text-black mr-2" />
+                <FaLaravel className="w-6 h-6 text-black" />
             </div>
         ),
         description: "Join our backend team to build robust and scalable server-side solutions using cutting-edge web frameworks.",
@@ -103,8 +103,8 @@ const jobPositions: JobPosition[] = [
         location: "Bengaluru, Karnataka",
         icon: () => (
             <div className="flex items-center">
-                <SiShopify className="w-6 h-6 text-green-600 mr-2" />
-                <SiWordpress className="w-6 h-6 text-blue-600" />
+                <SiShopify className="w-6 h-6 text-black mr-2" />
+                <SiWordpress className="w-6 h-6 text-black" />
             </div>
         ),
         description: "We're seeking an expert developer to create sophisticated e-commerce and content management solutions using Shopify and WordPress platforms.",
@@ -141,7 +141,7 @@ const jobPositions: JobPosition[] = [
         department: "Marketing",
         type: "Full-time",
         location: "Bengaluru, Karnataka",
-        icon: () => <SiGoogleanalytics />,
+        icon: () => <SiGoogleanalytics className="w-6 h-6 text-black" />,
         description: "Drive our organic growth through effective SEO strategies.",
         requirements: [
             "3+ years of SEO experience with a strong grasp of strategies that boost organic traffic.",
@@ -172,7 +172,7 @@ const jobPositions: JobPosition[] = [
         department: "Marketing",
         type: "Full-time",
         location: "Bengaluru, Karnataka",
-        icon: () => <SiGooglemarketingplatform />,
+        icon: () => <SiGooglemarketingplatform className="w-6 h-6 text-black" />,
         description: "Lead our digital marketing initiatives to drive growth and engagement.",
         requirements: [
             "3+ years of digital marketing experience",
@@ -204,7 +204,7 @@ const jobPositions: JobPosition[] = [
         department: "Marketing",
         type: "Full-time",
         location: "Bengaluru, Karnataka",
-        icon: () => <IoMegaphoneOutline />,
+        icon: () => <IoMegaphoneOutline className="w-6 h-6 text-black" />,
         description: "Lead our social media initiatives to enhance brand presence and engagement.",
         requirements: [
             "3+ years of experience in social media management",
@@ -243,14 +243,14 @@ export default function Careers() {
         : jobPositions.filter((job: JobPosition) => job.department === selectedDepartment);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div className="min-h-screen bg-white">
             {/* Hero Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent mb-6">
+                    <h1 className="text-4xl md:text-6xl font-bold text-black mb-6">
                         Join Our Team
                     </h1>
-                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                    <p className="text-xl text-black max-w-3xl mx-auto">
                         Build your career with us and be part of our mission to transform the digital landscape
                     </p>
                 </div>
@@ -266,8 +266,8 @@ export default function Careers() {
                                 onClick={() => setSelectedDepartment(dept)}
                                 className={`px-6 py-2 rounded-full transition-all duration-300 ${
                                     selectedDepartment === dept
-                                        ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white'
-                                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                        ? 'bg-gradient-to-r from-black to-black text-white'
+                                        : 'bg-gray-200 text-black hover:bg-gray-300'
                                 }`}
                             >
                                 {dept}
@@ -284,40 +284,40 @@ export default function Careers() {
                         {filteredJobs.map((job, index) => (
                             <div
                                 key={job.title}
-                                className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700"
+                                className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-300"
                             >
                                 <div className="flex items-center gap-4 mb-6">
-                                    <div className="p-3 bg-gray-700 rounded-xl">
+                                    <div className="p-3 bg-gray-100 rounded-xl">
                                         {job.icon()}
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-semibold text-gray-100">{job.title}</h3>
-                                        <p className="text-gray-400">{job.department} • {job.type}</p>
+                                        <h3 className="text-xl font-semibold text-black">{job.title}</h3>
+                                        <p className="text-gray-700">{job.department} • {job.type}</p>
                                     </div>
                                 </div>
 
-                                <p className="text-gray-300 mb-6">{job.description}</p>
+                                <p className="text-black mb-6">{job.description}</p>
 
                                 <div className="mb-6">
-                                    <h4 className="font-semibold text-gray-100 mb-2 bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+                                    <h4 className="font-semibold text-black mb-2">
                                         Requirements:
                                     </h4>
                                     <ul className="space-y-2">
                                         {job.requirements.map((req, i) => (
-                                            <li key={i} className="flex items-center gap-2 text-gray-300">
-                                                <span className="w-2 h-2 bg-blue-400 rounded-full" />
+                                            <li key={i} className="flex items-center gap-2 text-black">
+                                                <span className="w-2 h-2 bg-black rounded-full" />
                                                 {req}
                                             </li>
                                         ))}
                                     </ul>
                                     <br />
-                                    <h4 className="font-semibold text-gray-100 mb-2 bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+                                    <h4 className="font-semibold text-black mb-2">
                                         Responsibilities:
                                     </h4>
                                     <ul className="space-y-2">
                                         {job.responsibilities.map((resp, i) => (
-                                            <li key={i} className="flex items-center gap-2 text-gray-300">
-                                                <span className="w-2 h-2 bg-blue-400 rounded-full" />
+                                            <li key={i} className="flex items-center gap-2 text-black">
+                                                <span className="w-2 h-2 bg-black rounded-full" />
                                                 {resp}
                                             </li>
                                         ))}
@@ -326,7 +326,7 @@ export default function Careers() {
 
                                 <a
                                     href={`mailto:info@lovosis.in?subject=Job Application for ${job.title}`}
-                                    className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:opacity-90"
+                                    className="inline-block px-6 py-3 bg-black text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:opacity-90"
                                 >
                                     Apply Now
                                 </a>

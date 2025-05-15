@@ -79,7 +79,7 @@ const services = [
 
 export default function ElectronicsManufacturing() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -87,7 +87,7 @@ export default function ElectronicsManufacturing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-6"
+            className="text-4xl md:text-6xl font-bold text-black mb-6"
           >
             Electronics Manufacturing Services
           </motion.h1>
@@ -95,7 +95,7 @@ export default function ElectronicsManufacturing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl text-black max-w-3xl mx-auto leading-relaxed"
           >
             Cutting-edge electronics manufacturing solutions with precision engineering and quality assurance
           </motion.p>
@@ -103,9 +103,9 @@ export default function ElectronicsManufacturing() {
       </section>
 
       {/* Detailed Services Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-zinc-900/50">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">Our Manufacturing Services</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-black">Our Manufacturing Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <motion.div
@@ -113,17 +113,17 @@ export default function ElectronicsManufacturing() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-zinc-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-zinc-700"
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
               >
                 <div className="flex items-center mb-4">
-                  <service.icon size={24} className="text-blue-400 mr-3 flex-shrink-0" />
-                  <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                  <service.icon size={24} className="text-black mr-3 flex-shrink-0" />
+                  <h3 className="text-xl font-semibold text-black">{service.title}</h3>
                 </div>
-                <p className="text-gray-400 mb-6">{service.description}</p>
+                <p className="text-black mb-6">{service.description}</p>
                 <ul className="space-y-3">
                   {service.benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-center text-gray-300">
-                      <IoCheckmarkCircleOutline className="w-5 h-5 text-blue-400 mr-2" />
+                    <li key={i} className="flex items-center text-black">
+                      <IoCheckmarkCircleOutline className="w-5 h-5 text-black mr-2" />
                       {benefit}
                     </li>
                   ))}
@@ -137,17 +137,17 @@ export default function ElectronicsManufacturing() {
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
+          <h2 className="text-3xl font-bold text-black mb-6">
             Ready to Start Your Manufacturing Project?
           </h2>
-          <p className="text-xl text-gray-400 mb-8">
+          <p className="text-xl text-black mb-8">
             Contact us today to discuss your electronics manufacturing needs
           </p>
           <Link href="/contact">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+              className="px-8 py-4 bg-black text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
             >
               Get in Touch
             </motion.button>

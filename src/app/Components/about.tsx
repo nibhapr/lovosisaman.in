@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from 'framer-motion';
 import { IoCodeSlashOutline, IoBarChartOutline, IoLayersOutline, IoRocketOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -13,55 +12,40 @@ const About = () => {
       icon: IoLayersOutline,
       title: "Educational Equipment",
       description: "Premium laboratory equipment for engineering colleges and technical schools, featuring digital oscilloscopes and electronic workbenches.",
-      color: "from-blue-700 to-purple-700"
+      color: "from-black to-black"
     },
     {
       icon: IoBarChartOutline,
       title: "Testing & Measurement Equipment",
       description: "Professional-grade testing and measurement instruments for precise analysis, including oscilloscopes, multimeters, and signal generators.",
-      color: "from-purple-700 to-pink-700"
+      color: "from-black to-black"
     },
     {
       icon: IoCodeSlashOutline,
       title: "Web Design & Development",
       description: "Custom website creation, e-commerce solutions, and mobile-responsive designs that convert visitors into customers.",
-      color: "from-pink-700 to-red-700"
+      color: "from-black to-black"
     },
     {
       icon: IoRocketOutline,
       title: "Digital Marketing & SEO",
       description: "Comprehensive digital marketing strategies, including social media management, SEO optimization, and targeted advertising campaigns.",
-      color: "from-red-700 to-orange-700"
+      color: "from-black to-black"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900/5 via-gray-800/5 to-gray-700/5">
+      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8 leading-tight"
-          >
+          <h1 className="text-5xl md:text-7xl font-bold text-black mb-8 leading-tight animate-fadeIn">
             Discover Lovosis Technology Private Limited
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
-          >
+          </h1>
+          <p className="text-2xl text-black max-w-4xl mx-auto leading-relaxed animate-fadeIn">
             Revolutionizing education and business through cutting-edge technology solutions and precision engineering
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-12 mx-auto max-w-4xl"
-          >
+          </p>
+          <div className="mt-12 mx-auto max-w-4xl animate-fadeIn">
             <video
               autoPlay
               muted
@@ -72,271 +56,194 @@ const About = () => {
               <source src="/videos/about/hero.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Mission & Vision Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/80 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
           {/* Mission */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-gray-800/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-700"
-          >
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8">
+          <div className="bg-white rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-black hover:scale-105">
+            <h2 className="text-4xl font-bold text-black mb-8">
               Our Mission
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed">
+            <p className="text-black text-lg leading-relaxed">
               To empower educational institutions and businesses with state-of-the-art technology solutions that drive innovation, enhance learning experiences, and accelerate digital transformation.
             </p>
-          </motion.div>
+          </div>
 
           {/* Vision */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-gray-800/90 backdrop-blur rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-700"
-          >
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8">
+          <div className="bg-white rounded-3xl p-12 shadow-xl hover:shadow-2xl transition-all duration-300 border border-black hover:scale-105">
+            <h2 className="text-4xl font-bold text-black mb-8">
               Our Vision
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed">
+            <p className="text-black text-lg leading-relaxed">
               To become the premier provider of innovative educational equipment and digital solutions, revolutionizing the way institutions teach and businesses operate in the digital era.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-3xl md:text-4xl font-bold text-white mb-6"
-            >
+            <h2 className="text-3xl md:text-4xl font-bold text-black mb-6 animate-fadeIn">
               Our Core Services
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-gray-300 text-lg max-w-3xl mx-auto"
-            >
+            </h2>
+            <p className="text-black text-lg max-w-3xl mx-auto animate-fadeIn">
               We synergize innovation with expertise to deliver outstanding results across diverse domains
-            </motion.p>
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {services.map((service, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
-                className={`p-8 bg-gray-800/90 backdrop-blur rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border ${
-                  hoveredService === index
-                    ? `border-transparent bg-gradient-to-br ${service.color}`
-                    : 'border-gray-700'
-                }`}
+                className={`p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform border hover:scale-105 ${hoveredService === index
+                  ? `border-transparent bg-gradient-to-br ${service.color}`
+                  : 'border-black'
+                  }`}
               >
-                <service.icon className={`w-12 h-12 mb-4 transition-colors ${hoveredService === index ? 'text-white' : 'text-blue-400'
+                <service.icon className={`w-12 h-12 mb-4 transition-colors ${hoveredService === index ? 'text-white' : 'text-black'
                   }`} />
-                <h3 className={`text-xl font-semibold mb-3 transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-100'
+                <h3 className={`text-xl font-semibold mb-3 transition-colors ${hoveredService === index ? 'text-white' : 'text-black'
                   }`}>
                   {service.title}
                 </h3>
-                <p className={`text-base transition-colors ${hoveredService === index ? 'text-white' : 'text-gray-300'
+                <p className={`text-base transition-colors ${hoveredService === index ? 'text-white' : 'text-black'
                   }`}>
                   {service.description}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Educational Equipment Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/80 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-bold text-white mb-6"
-            >
+            <h2 className="text-4xl md:text-5xl font-bold text-black mb-6 animate-fadeIn">
               Educational Equipment Solutions
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-white text-xl max-w-3xl mx-auto"
-            >
+            </h2>
+            <p className="text-black text-xl max-w-3xl mx-auto animate-fadeIn">
               High-quality equipment tailored for engineering colleges, polytechnics, and technical schools
-            </motion.p>
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
-            >
+            <div className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden hover:scale-105 transition-all duration-300">
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
                   src="/images/about/equipment/oscilloscope.jpg"
                   alt="Digital Oscilloscope"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Digital Oscilloscopes</h3>
-              <p className="text-gray-700 text-lg">
+              <h3 className="text-2xl font-semibold mb-4 text-black">Digital Oscilloscopes</h3>
+              <p className="text-black text-lg">
                 High-precision tools for visualizing waveforms and examining electrical circuits in real-time
               </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
-            >
+            </div>
+            <div className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden hover:scale-105 transition-all duration-300">
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
                   src="/images/about/equipment/electronic-workbench.jpg"
                   alt="Engineering Workbench"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Engineering Workbenches</h3>
-              <p className="text-gray-700 text-lg">
+              <h3 className="text-2xl font-semibold mb-4 text-black">Engineering Workbenches</h3>
+              <p className="text-black text-lg">
                 State-of-the-art workbenches equipped with latest tools for electronic and electrical experiments, featuring built-in safety features and efficient testing capabilities
               </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
-            >
+            </div>
+            <div className="p-8 bg-white rounded-3xl shadow-xl overflow-hidden hover:scale-105 transition-all duration-300">
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
                   src="/images/about/equipment/education-kit.jpg"
                   alt="Education and Training Kit"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Education & Training Kits</h3>
-              <p className="text-gray-700 text-lg">
+              <h3 className="text-2xl font-semibold mb-4 text-black">Education & Training Kits</h3>
+              <p className="text-black text-lg">
                 Comprehensive educational kits designed for hands-on learning in electronics and electrical engineering, featuring practical experiments and detailed training materials
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Digital Solutions Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-bold text-white mb-6"
-            >
+            <h2 className="text-4xl md:text-5xl font-bold text-black mb-6 animate-fadeIn">
               Comprehensive Digital Solutions
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-white text-xl max-w-3xl mx-auto"
-            >
+            </h2>
+            <p className="text-black text-xl max-w-3xl mx-auto animate-fadeIn">
               Helping businesses thrive in the digital world with tailored solutions
-            </motion.p>
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
-            >
+            <div className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden hover:scale-105 transition-all duration-300">
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
                   src="/images/about/digital/web-design.jpg"
                   alt="Web Design"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
               <h3 className="text-2xl font-semibold mb-4 text-gray-900">Web Design</h3>
               <p className="text-gray-700 text-lg">
                 Custom, responsive websites that convert visitors into customers
               </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
-            >
+            </div>
+            <div className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden hover:scale-105 transition-all duration-300">
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
                   src="/images/about/digital/digital-marketing.jpg"
                   alt="Digital Marketing"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
               <h3 className="text-2xl font-semibold mb-4 text-gray-900">Digital Marketing</h3>
               <p className="text-gray-700 text-lg">
                 Comprehensive strategies to boost visibility and conversions
               </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden"
-            >
+            </div>
+            <div className="p-8 bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden hover:scale-105 transition-all duration-300">
               <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
                 <Image
                   src="/images/about/digital/seo.jpg"
                   alt="SEO Services"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
               <h3 className="text-2xl font-semibold mb-4 text-gray-900">SEO Services</h3>
               <p className="text-gray-700 text-lg">
                 Proven techniques to improve search rankings and drive organic traffic
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -344,14 +251,9 @@ const About = () => {
       {/* FAQ Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-12"
-          >
+          <h2 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent mb-12 animate-fadeIn">
             Frequently Asked Questions
-          </motion.h2>
+          </h2>
           <div className="grid gap-4 max-w-4xl mx-auto">
             {[
               // Equipment & Services
@@ -404,16 +306,11 @@ const About = () => {
                 answer: "You can reach us through email at info@lovosis.in or lovosist@gmail.com, call us at +91 7012970281 or +91 9747745544, or visit our office in Bengaluru, Karnataka."
               }
             ].map((faq, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group"
               >
-                <motion.div
-                  initial={false}
-                  animate={{ height: "auto" }}
+                <div
                   className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500"
                   onClick={() => {
                     const element = document.getElementById(`faq-answer-${index}`);
@@ -455,8 +352,8 @@ const About = () => {
                       {faq.answer}
                     </p>
                   </div>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             ))}
           </div>
         </div>

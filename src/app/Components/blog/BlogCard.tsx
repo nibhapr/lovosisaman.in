@@ -51,7 +51,7 @@ export default function BlogCard({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-zinc-900 rounded-xl shadow-lg overflow-hidden border border-zinc-800 hover:shadow-xl transition-all duration-300"
+      className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300"
     >
       {image && (
         <div className="relative h-48 w-full">
@@ -59,27 +59,27 @@ export default function BlogCard({
             src={getDisplayUrl(image)}
             alt={title}
             fill
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       )}
 
       <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-700 transition-all duration-300">
+        <h3 className="text-xl font-semibold mb-2 text-black hover:text-gray-700 transition-all duration-300">
           {title}
         </h3>
-        <p className="text-gray-400 mb-4">{excerpt}</p>
+        <p className="text-gray-600 mb-4">{excerpt}</p>
         
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center space-x-4">
-            <span className="text-gray-400">{formatDate(date)}</span>
-            <span className="text-gray-400">{author}</span>
-            <span className="text-gray-400">{category}</span>
+            <span className="text-gray-600">{formatDate(date)}</span>
+            <span className="text-gray-600">{author}</span>
+            <span className="text-gray-600">{category}</span>
           </div>
           
           <Link 
             href={`/blogs/${slug}`}
-            className="text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-blue-600 hover:text-blue-500 transition-colors"
           >
             Read More →
           </Link>

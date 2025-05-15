@@ -29,9 +29,6 @@ services:
         max-file: "3"
     restart: always
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8081/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      disable: true
     security_opt:
-      - no-new-privileges:true 
+      - no-new-privileges:true

@@ -46,26 +46,26 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-zinc-900 rounded-xl p-6 max-w-md w-full border border-zinc-800 shadow-2xl">
-        <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-6 max-w-md w-full border border-gray-300 shadow-2xl">
+        <h2 className="text-2xl font-bold mb-4 text-black">
           Register for {event.title}
         </h2>
         
         {status === 'success' ? (
           <div className="text-center py-8">
-            <div className="mb-4 text-green-400">
+            <div className="mb-4 text-black">
               <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="text-xl font-medium text-white">Registration Successful!</p>
-            <p className="text-gray-400 mt-2">Thank you for registering.</p>
+            <p className="text-xl font-medium text-black">Registration Successful!</p>
+            <p className="text-gray-600 mt-2">Thank you for registering.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
               <input
@@ -74,13 +74,13 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
+                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-black placeholder-gray-400"
                 required
                 disabled={status === 'loading'}
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
@@ -89,13 +89,13 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
+                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-black placeholder-gray-400"
                 required
                 disabled={status === 'loading'}
               />
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                 Phone
               </label>
               <input
@@ -104,7 +104,7 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
+                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-black placeholder-gray-400"
                 required
                 disabled={status === 'loading'}
               />
@@ -112,7 +112,7 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
             <div className="flex space-x-3 pt-2">
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-md text-white bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 flex-1 transition-all duration-300 ${
+                className={`px-4 py-2 rounded-md text-white bg-gray-800 hover:bg-gray-700 flex-1 transition-all duration-300 ${
                   status === 'loading' ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
                 disabled={status === 'loading'}
@@ -122,7 +122,7 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-md border border-zinc-700 text-gray-300 hover:bg-zinc-800 transition-colors"
+                className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors"
                 disabled={status === 'loading'}
               >
                 Cancel
@@ -130,7 +130,7 @@ export default function RegistrationModal({ event, onClose }: RegistrationModalP
             </div>
             
             {status === 'error' && (
-              <p className="text-red-400 text-sm text-center">
+              <p className="text-red-600 text-sm text-center">
                 Registration failed. Please try again.
               </p>
             )}

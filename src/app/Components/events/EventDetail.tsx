@@ -19,8 +19,8 @@ export default function EventDetail({ event }: EventDetailProps) {
   ].filter(Boolean) as string[];
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-black text-white">
-      <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+    <div className="max-w-4xl mx-auto p-6 bg-white text-black">
+      <h1 className="text-3xl font-bold mb-6">
         {event.title}
       </h1>
       
@@ -41,17 +41,17 @@ export default function EventDetail({ event }: EventDetailProps) {
 
       {/* Event Details */}
       <div className="space-y-4">
-        <p className="text-gray-300">{event.description}</p>
-        {event.content && <p className="text-gray-200">{event.content}</p>}
-        {event.content2 && <p className="text-gray-200">{event.content2}</p>}
-        {event.content3 && <p className="text-gray-200">{event.content3}</p>}
+        <p>{event.description}</p>
+        {event.content && <p>{event.content}</p>}
+        {event.content2 && <p>{event.content2}</p>}
+        {event.content3 && <p>{event.content3}</p>}
         
-        <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
-          <p className="text-gray-300"><strong className="text-blue-400">Date:</strong> {event.date}</p>
-          <p className="text-gray-300"><strong className="text-blue-400">Time:</strong> {event.time}</p>
-          <p className="text-gray-300"><strong className="text-blue-400">Location:</strong> {event.location}</p>
-          <p className="text-gray-300"><strong className="text-blue-400">Category:</strong> {event.category}</p>
-          <p className="text-gray-300"><strong className="text-blue-400">Status:</strong> {event.status}</p>
+        <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+          <p><strong>Date:</strong> {event.date}</p>
+          <p><strong>Time:</strong> {event.time}</p>
+          <p><strong>Location:</strong> {event.location}</p>
+          <p><strong>Category:</strong> {event.category}</p>
+          <p><strong>Status:</strong> {event.status}</p>
         </div>
       </div>
 
@@ -59,7 +59,7 @@ export default function EventDetail({ event }: EventDetailProps) {
       {event.status !== 'completed' && (
         <button
           onClick={() => setShowRegistrationModal(true)}
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg hover:opacity-90 transition-opacity mt-6"
+          className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors mt-6"
         >
           Register for Event
         </button>

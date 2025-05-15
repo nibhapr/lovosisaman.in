@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '../../../public/lovosis logo.png';
+import logo from '../../../public/lovosis-logo.png';
 
-// Update the interfaces
+// Interfaces remain the same
 interface Product {
   id: string;
   name: string;
@@ -35,16 +35,11 @@ interface NavbarCategory {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [navbarCategories, setNavbarCategories] = useState<NavbarCategory[]>([]);
-  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // Add new state for tracking expanded items
   const [expandedNavbarCategory, setExpandedNavbarCategory] = useState<string | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [expandedSubCategory, setExpandedSubCategory] = useState<string | null>(null);
-
-  // Add state for mega menu
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,7 +72,7 @@ const Navbar = () => {
                   id: subcategory._id || '',
                   name: subcategory.name || '',
                   slug: subcategory.slug || '',
-                  products: [] // Add products if needed
+                  products: []
                 }))
             }))
         }));
@@ -85,13 +80,18 @@ const Navbar = () => {
         setNavbarCategories(formattedData);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setNavbarCategories([]); // Set empty array on error
+        setNavbarCategories([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
+
+    // Set active section based on current path
+    const path = window.location.pathname;
+    const section = path.split('/')[1];
+    setActiveSection(section || 'home');
   }, []);
 
   // Handle click outside to close mega menu
@@ -106,7 +106,6 @@ const Navbar = () => {
           setIsMegaMenuOpen(false);
           setExpandedNavbarCategory(null);
           setExpandedCategory(null);
-          setExpandedSubCategory(null);
         }
       }
     };
@@ -116,78 +115,202 @@ const Navbar = () => {
   }, []);
 
   const toggleMenu = () => {
+    console.log("Toggling menu. Current state:", isOpen);
     setIsOpen(!isOpen);
   };
 
-  // Toggle mega menu
   const toggleMegaMenu = () => {
     setIsMegaMenuOpen(!isMegaMenuOpen);
     if (!isMegaMenuOpen) {
-      // Reset expanded states when opening
       setExpandedNavbarCategory(null);
       setExpandedCategory(null);
-      setExpandedSubCategory(null);
     }
   };
 
-  // Add click handlers
   const handleNavbarCategoryClick = (navbarCategoryId: string) => {
     setExpandedNavbarCategory(expandedNavbarCategory === navbarCategoryId ? null : navbarCategoryId);
-    // Reset category expansion when changing navbar category
     setExpandedCategory(null);
-    setExpandedSubCategory(null);
   };
 
   const handleCategoryClick = (categoryId: string) => {
     setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
-    // Reset subcategory expansion when changing category
-    setExpandedSubCategory(null);
   };
 
-
   return (
-    <nav className="bg-black text-white sticky top-0 z-50 backdrop-blur-sm border-b border-zinc-900 shadow-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
-          {/* Logo/Brand */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link 
-              href="/" 
-              className="text-3xl font-bold flex items-center gap-3 group"
-            >
-              <div className="relative overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-105">
-                <Image
-                  src={logo.src}
-                  alt="Lovosis Logo"
-                  width={60}
-                  height={45}
-                  className="object-contain"
-                />
-              </div>
-              {/* <span className="bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent font-extrabold">
-                lovosis
-              </span> */}
+    <nav className="bg-white text-black sticky top-0 z-50 shadow-lg">
+      {/* Top bar with logo and certifications */}
+      <div className="bg-white py-2 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center">
+              <Image
+                src={logo.src}
+                alt="Lovosis Logo"
+                width={200}
+                height={40}
+                className="object-contain"
+              />
             </Link>
           </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-1">
-            {['About', 'Services'].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="px-4 py-2 text-gray-500 hover:text-blue-400 rounded-lg hover:bg-black/60 transition-all duration-300 mx-1 font-medium"
-              >
-                {item}
-              </Link>
-            ))}
+          {/* Certification Badges */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Google 360° */}
+            <Link href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="group relative">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center text-white text-sm font-bold transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer">
+                360°
+              </div>
+            </Link>
+
+            {/* ISO 9001 */}
+            <div className="group relative">
+              <Image
+                src="/iso-9001-badge.png"
+                alt="ISO"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+
+            {/* CE */}
+            <div className="group relative">
+              <Image
+                src="/ce-badge.png"
+                alt="CE"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+
+            {/* Additional 4 badges */}
+            <div className="group relative">
+              <Image
+                src="/badge4.png"
+                alt="CE"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+
+            <div className="group relative">
+              <Image
+                src="/badge5.png"
+                alt="ISO"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+
+            <div className="group relative">
+              <Image
+                src="/badge6.png"
+                alt="ISO"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+
+            <div className="group relative">
+              <Image
+                src="/badge7.png"
+                alt="ISO"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+
+            <div className="group relative">
+              <Image
+                src="/badge8.png"
+                alt="ISO"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center space-x-4">
+            <div className="group relative">
+              <Image
+                src="/worlddidac-badge.png"
+                alt="Worlddidac"
+                width={40}
+                height={40}
+                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+              />
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="hidden md:flex flex-col items-end">
+            <div className="flex items-center space-x-2 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <a href="tel:+917012970281" className="text-sm hover:underline">+91 7012970281</a>
+            </div>
+            <div className="flex items-center space-x-2 text-gray-700 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <a href="mailto:info@lovosis.com" className="text-sm hover:underline">info@lovosis.com</a>
+            </div>
+            <div className="flex items-center space-x-2 text-gray-700 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <a href="tel:+919747745544" className="text-sm hover:underline">+91 9747745544</a>
+            </div>
+            <div className="flex items-center space-x-2 text-gray-700 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <a href="mailto:lovosist@gmail.com" className="text-sm hover:underline">lovosist@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Main Menu Items */}
+          <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
+            <Link
+              href="/"
+              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'home' ? 'bg-white text-black' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
+            >
+              Home
+            </Link>
+
+            <Link
+              href="/about"
+              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'about' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
+            >
+              About
+            </Link>
+
+            <Link
+              href="/services"
+              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'services' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
+            >
+              Services
+            </Link>
 
             {/* Products Mega Menu Button */}
-            <div className="relative mx-1">
+            <div className="relative">
               <button
                 id="mega-menu-button"
                 onClick={toggleMegaMenu}
-                className="px-4 py-2 text-gray-500 hover:text-blue-400 rounded-lg hover:bg-black/60 transition-all duration-300 flex items-center gap-2 font-medium group"
+                className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide flex items-center gap-2 ${activeSection === 'products' ? 'bg-white text-black' : 'bg-white text-black'} transition-all duration-300`}
               >
                 Products
                 <svg
@@ -195,179 +318,194 @@ const Navbar = () => {
                   className={`h-4 w-4 transition-transform ${isMegaMenuOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  stroke="black"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
-              {/* Mega Menu */}
+              {/* Mega Menu Redesigned */}
               {isMegaMenuOpen && (
                 <div
                   id="mega-menu"
-                  className="absolute -left-96 mt-2 w-[900px] bg-black/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-900 p-6 grid grid-cols-3 gap-6 transition-all duration-300 ease-in-out z-50"
+                  className="absolute left-1/2 transform -translate-x-1/2 mt-4 w-[900px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden transition-all duration-300 ease-in-out z-50"
                 >
-                  {loading ? (
-                    <div className="col-span-3 text-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
-                      <p className="mt-2 text-gray-500">Loading products...</p>
-                    </div>
-                  ) : navbarCategories.length > 0 ? (
-                    <>
-                      {/* NavbarCategory Column */}
-                      <div className="space-y-3 border-r border-zinc-900 pr-6">
-                        <h3 className="text-xs bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent uppercase tracking-wider mb-6 font-semibold pl-2">Product Groups</h3>
-                        
-                        <div className="space-y-1">
+                  <div className="flex">
+                    {/* Left sidebar */}
+                    <div className="w-64 bg-white p-6 border-r border-gray-200">
+                      <h3 className="text-black text-lg font-semibold mb-6">Product Groups</h3>
+
+                      {loading ? (
+                        <div className="flex items-center justify-center h-40">
+                          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
+                        </div>
+                      ) : navbarCategories.length > 0 ? (
+                        <div className="space-y-2">
                           {navbarCategories.map((navbarCategory) => (
                             <div
                               key={navbarCategory.id}
-                              className={`font-medium text-gray-400 hover:text-white flex items-center justify-between p-3 rounded-lg ${
-                                expandedNavbarCategory === navbarCategory.id
-                                  ? 'bg-zinc-900'
-                                  : 'hover:bg-zinc-900'
-                              }`}
+                              className={`flex items-center justify-between p-3 rounded-lg cursor-pointer ${expandedNavbarCategory === navbarCategory.id
+                                ? 'bg-gray-100 text-black'
+                                : 'text-black hover:bg-gray-100'
+                                } transition-all duration-200`}
+                              onClick={() => handleNavbarCategoryClick(navbarCategory.id)}
                             >
-                              <Link
-                                href={`/products/${navbarCategory.slug}`}
-                                className="flex items-center gap-2 flex-grow"
-                                onClick={() => {
-                                  setIsMegaMenuOpen(false);
-                                  setExpandedNavbarCategory(null);
-                                  setExpandedCategory(null);
-                                }}
+                              <span className="text-sm font-medium">{navbarCategory.name}</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={`h-4 w-4 transition-transform ${expandedNavbarCategory === navbarCategory.id ? 'rotate-90' : ''
+                                  }`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="black"
                               >
-                                {navbarCategory.name}
-                              </Link>
-                              <button
-                                onClick={() => handleNavbarCategoryClick(navbarCategory.id)}
-                                className="p-1"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-4 w-4 text-white"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                              </button>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
                             </div>
                           ))}
                         </div>
-                      </div>
+                      ) : (
+                        <div className="text-gray-500 text-center py-8">
+                          No categories available
+                        </div>
+                      )}
+                    </div>
 
-                      {/* Category and SubCategory columns remain similar with updated colors */}
-                      <div className="space-y-3 border-r border-zinc-800 pr-6">
-                        {expandedNavbarCategory && (
-                          <>
-                            <h3 className="text-xs text-blue-400 uppercase tracking-wider mb-6 font-semibold pl-2">Categories</h3>
-                            <div className="space-y-1">
+                    {/* Right content area */}
+                    <div className="flex-1 p-6">
+                      {expandedNavbarCategory ? (
+                        <div className="grid grid-cols-2 gap-6">
+                          {/* Categories */}
+                          <div>
+                            <h3 className="text-black text-sm font-semibold uppercase tracking-wider mb-4">Categories</h3>
+                            <div className="grid grid-cols-1 gap-2">
                               {navbarCategories
                                 .find(nc => nc.id === expandedNavbarCategory)
                                 ?.categories.map((category) => (
                                   <div
                                     key={category.id}
-                                    className={`font-medium text-white flex items-center justify-between p-3 rounded-lg ${
-                                      expandedCategory === category.id
-                                        ? 'bg-zinc-900'
-                                        : 'hover:bg-zinc-900'
-                                    }`}
+                                    className={`p-3 rounded-lg cursor-pointer ${expandedCategory === category.id
+                                      ? 'bg-gray-100 text-black'
+                                      : 'text-black hover:bg-gray-100'
+                                      } transition-all duration-200`}
+                                    onClick={() => handleCategoryClick(category.id)}
                                   >
-                                    <Link 
-                                      href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${category.slug}`}
-                                      className="flex items-center gap-2 flex-grow"
-                                      onClick={() => {
-                                        setIsMegaMenuOpen(false);
-                                        setExpandedNavbarCategory(null);
-                                        setExpandedCategory(null);
-                                      }}
-                                    >
-                                      {category.name}
-                                    </Link>
-                                    <button
-                                      onClick={() => handleCategoryClick(category.id)}
-                                      className="p-1"
-                                    >
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-sm font-medium">{category.name}</span>
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 text-white"
+                                        className={`h-4 w-4 transition-transform ${expandedCategory === category.id ? 'rotate-90' : ''
+                                          }`}
                                         fill="none"
                                         viewBox="0 0 24 24"
-                                        stroke="currentColor"
+                                        stroke="black"
                                       >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                       </svg>
-                                    </button>
+                                    </div>
                                   </div>
                                 ))}
                             </div>
-                          </>
-                        )}
-                      </div>
+                          </div>
 
-                      {/* SubCategory Column */}
-                      <div className="space-y-3">
-                        {expandedCategory && expandedNavbarCategory && (
-                          <>
-                            <h3 className="text-xs text-blue-400 uppercase tracking-wider mb-6 font-semibold pl-2">Sub Categories</h3>
-                            <div className="space-y-1">
-                              {navbarCategories
-                                .find(nc => nc.id === expandedNavbarCategory)
-                                ?.categories
-                                .find(c => c.id === expandedCategory)
-                                ?.subCategories.map((subCategory) => (
-                                  <Link
-                                    key={subCategory.id}
-                                    href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.categories.find(c => c.id === expandedCategory)?.slug}/${subCategory.slug}`}
-                                    className="text-white flex items-center gap-2 p-3 rounded-lg hover:bg-zinc-900"
-                                    onClick={() => {
-                                      setIsMegaMenuOpen(false);
-                                      setExpandedNavbarCategory(null);
-                                      setExpandedCategory(null);
-                                    }}
-                                  >
-                                    {subCategory.name}
-                                  </Link>
-                                ))}
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="col-span-3 text-center py-8 bg-black/80 rounded-xl">
-                      <p className="text-gray-500">No categories available</p>
+                          {/* Subcategories */}
+                          <div>
+                            {expandedCategory && (
+                              <>
+                                <h3 className="text-black text-sm font-semibold uppercase tracking-wider mb-4">Sub Categories</h3>
+                                <div className="grid grid-cols-1 gap-2">
+                                  {navbarCategories
+                                    .find(nc => nc.id === expandedNavbarCategory)
+                                    ?.categories
+                                    .find(c => c.id === expandedCategory)
+                                    ?.subCategories.map((subCategory) => (
+                                      <Link
+                                        key={subCategory.id}
+                                        href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug
+                                          }/${navbarCategories
+                                            .find(nc => nc.id === expandedNavbarCategory)
+                                            ?.categories.find(c => c.id === expandedCategory)?.slug
+                                          }/${subCategory.slug}`}
+                                        className="p-3 rounded-lg text-black hover:bg-gray-100 transition-all duration-200"
+                                        onClick={() => {
+                                          setIsMegaMenuOpen(false);
+                                          setExpandedNavbarCategory(null);
+                                          setExpandedCategory(null);
+                                        }}
+                                      >
+                                        <span className="text-sm">{subCategory.name}</span>
+                                      </Link>
+                                    ))}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="h-64 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="text-5xl text-gray-300 mb-4">🔍</div>
+                            <h3 className="text-black text-lg font-medium mb-2">Explore Our Products</h3>
+                            <p className="text-gray-500 text-sm max-w-md">
+                              Select a product group from the left to browse our extensive catalog of educational equipment.
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="bg-gray-100 p-4 flex justify-between items-center border-t border-gray-200">
+                    <Link
+                      href="/products"
+                      className="text-xs font-medium text-black hover:text-gray-700 transition-colors duration-200"
+                      onClick={() => setIsMegaMenuOpen(false)}
+                    >
+                      View All Products →
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
 
-            {['Blogs', 'Events', 'Gallery'].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="px-4 py-2 text-gray-500 hover:text-blue-400 rounded-lg hover:bg-black/60 transition-all duration-300 mx-1 font-medium"
-              >
-                {item}
-              </Link>
-            ))}
+            <Link
+              href="/blogs"
+              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'blogs' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
+            >
+              Blogs
+            </Link>
 
             <Link
-              href="/contact"
-              className="ml-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-medium rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+              href="/events"
+              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'events' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
             >
-              Contact
+              Events
+            </Link>
+
+            <Link
+              href="/gallery"
+              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'gallery' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
+            >
+              Gallery
+            </Link>
+          </div>
+
+          {/* Contact Button */}
+          <div className="hidden md:block">
+            <Link
+              href="/contact"
+              className="px-6 py-2.5 bg-black text-white font-medium rounded-full shadow-lg hover:shadow-gray-800/20 transform transition-all duration-300 hover:scale-105"
+            >
+              Contact Us
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center z-50">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-black/60 focus:outline-none transition-all duration-300"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-black hover:bg-gray-100 focus:outline-none transition-all duration-300"
               aria-label="Toggle menu"
             >
               <svg
@@ -395,34 +533,107 @@ const Navbar = () => {
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
-            overflow-hidden`}
-        >
-          <div className="px-2 pt-2 pb-3 space-y-1 border-t border-zinc-900 mt-1">
-            {['About', 'Services', 'Products'].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="block px-3 py-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-black/60 font-medium transition-all duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                {item}
-              </Link>
-            ))}
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden transition-all duration-300 ease-in-out z-40 ${isOpen
+          ? 'max-h-screen opacity-100 visible'
+          : 'max-h-0 opacity-0 invisible'
+          } overflow-hidden bg-white`}
+      >
+        <div className="px-5 py-4 space-y-3 divide-y divide-gray-100">
+          <Link
+            href="/"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Home
+          </Link>
 
-            {['Blogs', 'Events', 'Gallery'].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="block px-3 py-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-black/60 font-medium transition-all duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                {item}
-              </Link>
-            ))}
+          <Link
+            href="/about"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            About
+          </Link>
+
+          <Link
+            href="/services"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Services
+          </Link>
+
+          <Link
+            href="/products"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Products
+          </Link>
+
+          <Link
+            href="/blogs"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Blogs
+          </Link>
+
+          <Link
+            href="/events"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Events
+          </Link>
+
+          <Link
+            href="/gallery"
+            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Gallery
+          </Link>
+
+          <Link
+            href="/contact"
+            className="block py-3 px-4 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Contact
+          </Link>
+
+          {/* Mobile contact info */}
+          <div className="py-4 space-y-2">
+            <div className="flex items-center space-x-3 text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <a href="tel:+917012970281" className="text-sm hover:underline">+91 7012970281</a>
+            </div>
+
+            <div className="flex items-center space-x-3 text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <a href="mailto:info@lovosis.com" className="text-sm hover:underline">info@lovosis.com</a>
+            </div>
+            <div className="flex items-center space-x-3 text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <a href="tel:+919747745544" className="text-sm hover:underline">+91 9747745544</a>
+            </div>
+            <div className="flex items-center space-x-3 text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <a href="mailto:lovosist@gmail.com" className="text-sm hover:underline">lovosist@gmail.com</a>
+            </div>
           </div>
         </div>
       </div>

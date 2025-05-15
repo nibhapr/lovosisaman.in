@@ -20,8 +20,8 @@ export default async function ShopPage() {
   const categories = await getCategories();
 
   return (
-    <div className="container mx-auto px-4 py-12 bg-black min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Product Categories</h1>
+    <div className="container mx-auto px-4 py-12 bg-white min-h-screen">
+      <h1 className="text-3xl font-bold mb-8 text-center text-black">Product Categories</h1>
 
       {/* Desktop View */}
       <div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -31,14 +31,14 @@ export default async function ShopPage() {
           );
 
           return (
-            <div key={navbarCategory._id.toString()} className="mb-12 bg-gray-900 rounded-xl p-6 border border-gray-800 hover:border-blue-500/30 transition-all duration-300">
+            <div key={navbarCategory._id.toString()} className="mb-12 bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-500 transition-all duration-300">
               <Link href={`/products/${navbarCategory.slug}`} className="block">
-                <h2 className="text-xl font-semibold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent hover:from-blue-300 hover:to-blue-500 transition-all duration-300">
+                <h2 className="text-xl font-semibold mb-4 text-black hover:text-blue-600 transition-all duration-300">
                   {navbarCategory.name}
                 </h2>
 
                 {navbarCategory.image && (
-                  <div className="relative h-32 w-full mb-4 rounded-lg overflow-hidden">
+                  <div className="relative h-32 w-full mb-4 rounded-lg">
                     <Image
                       src={navbarCategory.image.startsWith('/api/files/')
                         ? `https://${process.env.NEXT_PUBLIC_DOMAIN}${navbarCategory.image}`
@@ -46,13 +46,14 @@ export default async function ShopPage() {
                       alt={navbarCategory.name}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                      className="object-contain rounded-lg hover:scale-105 transition-transform duration-300"
+                      style={{ objectFit: 'contain' }}
                     />
                   </div>
                 )}
 
                 {navbarCategory.description && (
-                  <p className="text-gray-400 mb-4">{navbarCategory.description}</p>
+                  <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
                 )}
               </Link>
               
@@ -64,7 +65,7 @@ export default async function ShopPage() {
                       <li key={category._id.toString()}>
                         <Link 
                           href={`/products/${navbarCategory.slug}/${category.slug}`}
-                          className="text-gray-400 hover:text-blue-400 hover:underline text-sm transition-colors duration-200"
+                          className="text-gray-600 hover:text-blue-600 hover:underline text-sm transition-colors duration-200"
                         >
                           {category.name}
                         </Link>
@@ -86,14 +87,14 @@ export default async function ShopPage() {
           );
 
           return (
-            <div key={navbarCategory._id.toString()} className="mb-6 bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <div key={navbarCategory._id.toString()} className="mb-6 bg-white rounded-xl p-6 border border-gray-200">
               <Link href={`/products/${navbarCategory.slug}`} className="block">
-                <h2 className="text-xl font-semibold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                <h2 className="text-xl font-semibold mb-4 text-black">
                   {navbarCategory.name}
                 </h2>
 
                 {navbarCategory.image && (
-                  <div className="relative h-40 w-full mb-4 rounded-lg overflow-hidden">
+                  <div className="relative h-40 w-full mb-4 rounded-lg">
                     <Image
                       src={navbarCategory.image.startsWith('/api/files/')
                         ? `https://${process.env.NEXT_PUBLIC_DOMAIN}${navbarCategory.image}`
@@ -101,13 +102,14 @@ export default async function ShopPage() {
                       alt={navbarCategory.name}
                       fill
                       sizes="100vw"
-                      className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                      className="object-contain rounded-lg hover:scale-105 transition-transform duration-300"
+                      style={{ objectFit: 'contain' }}
                     />
                   </div>
                 )}
 
                 {navbarCategory.description && (
-                  <p className="text-gray-400 mb-4">{navbarCategory.description}</p>
+                  <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
                 )}
               </Link>
               
@@ -119,7 +121,7 @@ export default async function ShopPage() {
                       <li key={category._id.toString()}>
                         <Link 
                           href={`/products/${navbarCategory.slug}/${category.slug}`}
-                          className="text-gray-400 hover:text-blue-400 hover:underline text-sm transition-colors duration-200"
+                          className="text-gray-600 hover:text-blue-600 hover:underline text-sm transition-colors duration-200"
                         >
                           {category.name}
                         </Link>
