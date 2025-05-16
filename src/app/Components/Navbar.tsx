@@ -2,8 +2,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '../../../public/lovosis-logo.png';
-
+import logo from '../../../public/navbarlogo/lovosis-logo.png';
+import iso from '../../../public/navbarlogo/iso.png';
+import ce from '../../../public/navbarlogo/ce.png';
+import worlddidac from '../../../public/navbarlogo/wda.png';
+import si from '../../../public/navbarlogo/SI.png';
+import sk from '../../../public/navbarlogo/sk.png';
+import zed from '../../../public/navbarlogo/zed.png';
+import gmp from '../../../public/navbarlogo/gmp.png';
 // Interfaces remain the same
 interface Product {
   id: string;
@@ -166,7 +172,7 @@ const Navbar = () => {
             {/* ISO 9001 */}
             <div className="group relative">
               <Image
-                src="/iso-9001-badge.png"
+                src={iso.src}
                 alt="ISO"
                 width={40}
                 height={40}
@@ -177,7 +183,7 @@ const Navbar = () => {
             {/* CE */}
             <div className="group relative">
               <Image
-                src="/ce-badge.png"
+                src={ce.src}
                 alt="CE"
                 width={40}
                 height={40}
@@ -188,8 +194,8 @@ const Navbar = () => {
             {/* Additional 4 badges */}
             <div className="group relative">
               <Image
-                src="/badge4.png"
-                alt="CE"
+                src={si.src}
+                alt="SI"
                 width={40}
                 height={40}
                 className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
@@ -198,8 +204,8 @@ const Navbar = () => {
 
             <div className="group relative">
               <Image
-                src="/badge5.png"
-                alt="ISO"
+                src={sk.src}
+                alt="SK"
                 width={40}
                 height={40}
                 className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
@@ -208,8 +214,8 @@ const Navbar = () => {
 
             <div className="group relative">
               <Image
-                src="/badge6.png"
-                alt="ISO"
+                src={zed.src}
+                alt="ZED"
                 width={40}
                 height={40}
                 className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
@@ -218,18 +224,8 @@ const Navbar = () => {
 
             <div className="group relative">
               <Image
-                src="/badge7.png"
-                alt="ISO"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
-              />
-            </div>
-
-            <div className="group relative">
-              <Image
-                src="/badge8.png"
-                alt="ISO"
+                src={gmp.src}
+                alt="GMP"
                 width={40}
                 height={40}
                 className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
@@ -240,7 +236,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             <div className="group relative">
               <Image
-                src="/worlddidac-badge.png"
+                src={worlddidac.src}
                 alt="Worlddidac"
                 width={40}
                 height={40}

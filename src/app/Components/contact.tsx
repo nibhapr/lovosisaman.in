@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { MdOutlineEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
 import { BsTelephoneFill } from "react-icons/bs";
-import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaGoogle, FaInstagram, FaLinkedinIn, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
+import { SiGmail } from "react-icons/si";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -67,28 +67,28 @@ export default function Contact() {
           <p className="text-black text-lg max-w-2xl mx-auto">
             Have questions or want to collaborate? We&apos;d love to hear from you.
           </p>
-          {/* Social Media Icons */}
-          <div className="flex justify-center gap-4 mt-6">
-            <SocialIcon href="https://www.facebook.com/Lovosis" icon={<FaFacebookF />} type="facebook" />
-            <SocialIcon href="https://www.instagram.com/lovosis" icon={<FaInstagram />} type="instagram" />
-            <SocialIcon href="https://www.threads.net/@lovosis" icon={<FaThreads />} type="threads" />
-            <SocialIcon href="https://www.linkedin.com/company/lovosis" icon={<FaLinkedinIn />} type="linkedin" />
-          </div>
         </div>
 
         {/* Contact Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <ContactCard
-            icon={<MdOutlineEmail className="w-full h-full" />}
-            title="Email Us"
-            content={`<a href="mailto:info@lovosis.in" class="hover:text-black">info@lovosis.in</a><br/><a href="mailto:lovosist@gmail.com" class="hover:text-black">lovosist@gmail.com</a>`}
+            icon={<IoLocationSharp className="w-full h-full" />}
+            title="Visit Us"
+            content={`<a href="https://www.google.com/maps?q=4-72/2,+Swathi+Building,+3rd+Floor,+Opp.+Singapura+Garden,+1st+Main+Lakshmipura+Road,+Abbigere,+Bengaluru,+Karnataka+560090" target="_blank" class="hover:text-black">4-72/2, Swathi Building,<br/>3rd Floor, Opp. Singapura Garden,<br/>1st Main Lakshmipura Road,<br/>Abbigere, Bengaluru,<br/>Karnataka 560090</a>`}
             bgColor="bg-gray-100"
             textColor="text-black"
           />
           <ContactCard
-            icon={<IoLocationSharp className="w-full h-full" />}
-            title="Visit Us"
-            content="4-72/2, Swathi Building,<br/>3rd Floor, Opp. Singapura Garden,<br/>1st Main Lakshmipura Road,<br/>Abbigere, Bengaluru,<br/>Karnataka 560090"
+            icon={<FaGoogle className="w-full h-full" />}
+            title="View on Google Maps"
+            content={`<a href="https://www.google.com/maps/place/Lovosis+Technology+Private+Limited/@12.9768,77.5178,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae3d8a1d9f5b5f:0x1f8e3b3b3b3b3b3b!8m2!3d12.9768!4d77.5178!16s%2Fg%2F11b8f8f8f8?entry=ttu" class="hover:text-black">View 3D Location</a>`}
+            bgColor="bg-gray-100"
+            textColor="text-black"
+          />
+          <ContactCard
+            icon={<SiGmail className="w-full h-full" />}
+            title="Email Us"
+            content={`<a href="mailto:info@lovosis.in" class="hover:text-black">info@lovosis.in</a><br/><a href="mailto:lovosist@gmail.com" class="hover:text-black">lovosist@gmail.com</a>`}
             bgColor="bg-gray-100"
             textColor="text-black"
           />
@@ -98,6 +98,41 @@ export default function Contact() {
             content={`<a href="tel:+917012970281" class="hover:text-black">+91 7012970281</a><br/><a href="tel:+919747745544" class="hover:text-black">+91 9747745544</a>`}
             bgColor="bg-gray-100"
             textColor="text-black"
+          />
+          <ContactCard
+            icon={<FaWhatsapp className="w-full h-full" />}
+            title="WhatsApp Us"
+            content={`<a href="https://wa.me/917012970281" class="hover:text-black">+91 7012970281</a><br/><a href="https://wa.me/919747745544" class="hover:text-black">+91 9747745544</a>`}
+            bgColor="bg-gray-100"
+            textColor="text-black"
+          />
+          <ContactCard
+            icon={<FaInstagram className="w-full h-full" />}
+            title="Follow on Instagram"
+            content={`<a href="https://www.instagram.com/lovosis_technology_private_ltd" class="hover:text-black">Lovosis Technology Private Limited</a>`}
+            bgColor="bg-gray-100"
+            textColor="text-black"
+          />
+          <ContactCard
+            icon={<FaThreads className="w-full h-full" />}
+            title="Follow on Threads"
+            content={`<a href="https://www.threads.net/@lovosis_technology_private_ltd" class="hover:text-black">Lovosis Technology Private Limited</a>`}
+            bgColor="bg-gray-100"
+            textColor="text-black"
+          />
+          <ContactCard
+            icon={<FaLinkedinIn className="w-full h-full" />}
+            title="Connect on LinkedIn"
+            content={`<a href="https://in.linkedin.com/company/lovosis-technology-private-limited" class="hover:text-black">Lovosis Technology Private Limited</a>`}
+            bgColor="bg-gray-100"
+            textColor="text-black"
+          />
+          <ContactCard
+            icon={<FaYoutube className="w-full h-full" />}
+            title="Subscribe on YouTube"
+            content={`<a href="https://www.youtube.com/@LovosisTechnology" class="hover:text-black">Lovosis Technology Private Limited</a>`}
+            bgColor="bg-gray-100"
+            textColor="text-black"  
           />
         </div>
 
@@ -280,26 +315,3 @@ const FormTextArea = ({
     />
   </div>
 );
-
-// Update SocialIcon component styles
-const SocialIcon = ({ href, icon, type }: { href: string; icon: React.ReactNode; type: 'facebook' | 'instagram' | 'threads' | 'linkedin' }) => {
-  const hoverColors = {
-    facebook: 'group-hover:text-[#1877f2]',
-    instagram: 'group-hover:text-[#e4405f]',
-    threads: 'group-hover:text-[#ffffff]',
-    linkedin: 'group-hover:text-[#0077b5]'
-  };
-
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center shadow-md text-black group border border-zinc-700"
-    >
-      <span className={`text-lg ${hoverColors[type]}`}>
-        {icon}
-      </span>
-    </a>
-  );
-};

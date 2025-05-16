@@ -92,16 +92,13 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               {/* Social Media Links */}
-              <a href="#" className="text-gray-500 hover:text-black transition-colors duration-300">
-                <FontAwesomeIcon icon={faFacebook} className="h-8 w-8" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors duration-300">
+              <a href="https://www.instagram.com/lovosis_technology_private_ltd" className="text-gray-500 hover:text-black transition-colors duration-300">
                 <FontAwesomeIcon icon={faInstagram} className="h-8 w-8" />
               </a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors duration-300">
+              <a href="https://www.threads.net/@lovosis_technology_private_ltd" className="text-gray-500 hover:text-black transition-colors duration-300">
                 <FontAwesomeIcon icon={faThreads} className="h-8 w-8" />
               </a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors duration-300">
+              <a href="https://www.linkedin.com/company/lovosis-technology-private-limited" className="text-gray-500 hover:text-black transition-colors duration-300">
                 <FontAwesomeIcon icon={faLinkedin} className="h-8 w-8" />
               </a>
             </div>
