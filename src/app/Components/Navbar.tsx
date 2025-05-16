@@ -4,10 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../../public/navbarlogo/lovosis-logo.png';
 import iso from '../../../public/navbarlogo/iso.png';
-import ce from '../../../public/navbarlogo/ce.png';
+import ce from '../../../public/navbarlogo/CE.png';
 import worlddidac from '../../../public/navbarlogo/wda.png';
 import si from '../../../public/navbarlogo/SI.png';
-import sk from '../../../public/navbarlogo/sk.png';
+import sk from '../../../public/navbarlogo/SK.png';
 import zed from '../../../public/navbarlogo/zed.png';
 import gmp from '../../../public/navbarlogo/gmp.png';
 // Interfaces remain the same
