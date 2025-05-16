@@ -5,7 +5,7 @@ import Image from 'next/image';
 import logo from '../../../public/navbarlogo/lovosis-logo.png';
 import iso from '../../../public/navbarlogo/iso.png';
 import ce from '../../../public/navbarlogo/CE.png';
-import worlddidac from '../../../public/navbarlogo/wda.png';
+// import worlddidac from '../../../public/navbarlogo/wda.png';
 import si from '../../../public/navbarlogo/SI.png';
 import sk from '../../../public/navbarlogo/SK.png';
 import zed from '../../../public/navbarlogo/zed.png';
@@ -233,7 +233,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          {/* <div className="hidden md:flex items-center space-x-4">
             <div className="group relative">
               <Image
                 src={worlddidac.src}
@@ -243,7 +243,7 @@ const Navbar = () => {
                 className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Contact Info */}
           <div className="hidden md:flex flex-col items-end">
