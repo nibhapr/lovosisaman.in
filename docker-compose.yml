@@ -11,24 +11,6 @@ services:
       - NEXTAUTH_URL=https://lovosis.in
       - MONGODB_URI=${MONGODB_URI}
       - JWT_SECRET=${JWT_SECRET}
-      - SKIP_BUILD_STATIC_GENERATION=true
     volumes:
       - ./.next/static/videos:/app/.next/static/videos:rw
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
     restart: always
-    healthcheck:
-      disable: true
-    security_opt:
-      - no-new-privileges:true
