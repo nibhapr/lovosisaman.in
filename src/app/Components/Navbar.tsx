@@ -238,8 +238,8 @@ const Navbar = () => {
               <Image
                 src={worlddidac.src}
                 alt="Worlddidac"
-                width={40}
-                height={40}
+                width={100}
+                height={100}
                 className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
               />
             </div>
