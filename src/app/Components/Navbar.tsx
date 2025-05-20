@@ -340,17 +340,24 @@ const Navbar = () => {
                           {navbarCategories.map((navbarCategory) => (
                             <div
                               key={navbarCategory.id}
-                              className={`flex items-center justify-between p-3 rounded-lg cursor-pointer ${expandedNavbarCategory === navbarCategory.id
+                              className={`flex items-center justify-between p-3 rounded-lg ${expandedNavbarCategory === navbarCategory.id
                                 ? 'bg-gray-100 text-black'
                                 : 'text-black hover:bg-gray-100'
                                 } transition-all duration-200`}
-                              onClick={() => handleNavbarCategoryClick(navbarCategory.id)}
                             >
-                              <span className="text-sm font-medium">{navbarCategory.name}</span>
+                              <Link
+                                href={`/products/${navbarCategory.slug}`}
+                                className="text-sm font-medium cursor-pointer flex-1"
+                              >
+                                {navbarCategory.name}
+                              </Link>
                               <svg
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleNavbarCategoryClick(navbarCategory.id);
+                                }}
                                 xmlns="http://www.w3.org/2000/svg"
-                                className={`h-4 w-4 transition-transform ${expandedNavbarCategory === navbarCategory.id ? 'rotate-90' : ''
-                                  }`}
+                                className={`h-4 w-4 cursor-pointer transition-transform ${expandedNavbarCategory === navbarCategory.id ? 'rotate-90' : ''}`}
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="black"
@@ -380,18 +387,25 @@ const Navbar = () => {
                                 ?.categories.map((category) => (
                                   <div
                                     key={category.id}
-                                    className={`p-3 rounded-lg cursor-pointer ${expandedCategory === category.id
+                                    className={`p-3 rounded-lg ${expandedCategory === category.id
                                       ? 'bg-gray-100 text-black'
                                       : 'text-black hover:bg-gray-100'
                                       } transition-all duration-200`}
-                                    onClick={() => handleCategoryClick(category.id)}
                                   >
                                     <div className="flex items-center justify-between">
-                                      <span className="text-sm font-medium">{category.name}</span>
+                                      <Link 
+                                        href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${category.slug}`}
+                                        className="text-sm font-medium cursor-pointer flex-1"
+                                      >
+                                        {category.name}
+                                      </Link>
                                       <svg
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleCategoryClick(category.id);
+                                        }}
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className={`h-4 w-4 transition-transform ${expandedCategory === category.id ? 'rotate-90' : ''
-                                          }`}
+                                        className={`h-4 w-4 cursor-pointer transition-transform ${expandedCategory === category.id ? 'rotate-90' : ''}`}
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="black"
@@ -415,22 +429,35 @@ const Navbar = () => {
                                     ?.categories
                                     .find(c => c.id === expandedCategory)
                                     ?.subCategories.map((subCategory) => (
-                                      <Link
+                                      <div
                                         key={subCategory.id}
-                                        href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug
-                                          }/${navbarCategories
-                                            .find(nc => nc.id === expandedNavbarCategory)
-                                            ?.categories.find(c => c.id === expandedCategory)?.slug
-                                          }/${subCategory.slug}`}
-                                        className="p-3 rounded-lg text-black hover:bg-gray-100 transition-all duration-200"
-                                        onClick={() => {
-                                          setIsMegaMenuOpen(false);
-                                          setExpandedNavbarCategory(null);
-                                          setExpandedCategory(null);
-                                        }}
+                                        className="p-3 rounded-lg text-black hover:bg-gray-100 transition-all duration-200 flex items-center justify-between"
                                       >
-                                        <span className="text-sm">{subCategory.name}</span>
-                                      </Link>
+                                        <Link
+                                          href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug
+                                            }/${navbarCategories
+                                              .find(nc => nc.id === expandedNavbarCategory)
+                                              ?.categories.find(c => c.id === expandedCategory)?.slug
+                                            }/${subCategory.slug}`}
+                                          className="flex-1"
+                                        >
+                                          <span className="text-sm">{subCategory.name}</span>
+                                        </Link>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          className="h-4 w-4 cursor-pointer"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="black"
+                                          onClick={() => {
+                                            setIsMegaMenuOpen(false);
+                                            setExpandedNavbarCategory(null);
+                                            setExpandedCategory(null);
+                                          }}
+                                        >
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                      </div>
                                     ))}
                                 </div>
                               </>
