@@ -219,6 +219,41 @@ export default function ProductManager() {
         fetchProducts();
     }, []);
 
+    useEffect(() => {
+        if (formData.navbarCategoryId) {
+            // Fetch categories for selected navbar category
+            const matchingCategories = categories.filter(cat => cat.navbarCategoryId === formData.navbarCategoryId);
+            if (matchingCategories.length > 0) {
+                // Keep existing category if it matches the navbar category
+                const currentCategoryValid = matchingCategories.some(cat => cat._id === formData.categoryId);
+                if (!currentCategoryValid) {
+                    setFormData(prev => ({
+                        ...prev,
+                        categoryId: '',
+                        subcategoryId: ''
+                    }));
+                }
+            }
+        }
+    }, [formData.navbarCategoryId, categories]);
+
+    useEffect(() => {
+        if (formData.categoryId) {
+            // Fetch subcategories for selected category
+            const matchingSubcategories = subcategories.filter(sub => sub.categoryId === formData.categoryId);
+            if (matchingSubcategories.length > 0) {
+                // Keep existing subcategory if it matches the category
+                const currentSubcategoryValid = matchingSubcategories.some(sub => sub._id === formData.subcategoryId);
+                if (!currentSubcategoryValid) {
+                    setFormData(prev => ({
+                        ...prev,
+                        subcategoryId: ''
+                    }));
+                }
+            }
+        }
+    }, [formData.categoryId, subcategories]);
+
     // Add new filtered categories state
     const filteredCategories = categories.filter(
         cat => cat.navbarCategoryId === formData.navbarCategoryId
@@ -275,12 +310,25 @@ export default function ProductManager() {
     };
 
     // Filter products based on search term
-    const filteredProducts = products.filter(product =>
+    const filteredProducts: Product[] = products.filter((product: Product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ); function handleEdit(product: Product): void {
+        setIsEditing(true);
+        setSelectedProduct(product);
 
-    function handleEdit(product: Product): void {
-        throw new Error('Function not implemented.');
+        // Find the associated category to get its navbarCategoryId
+        const category = categories.find(c => c._id === product.categoryId);
+        const navbarCategoryId = category?.navbarCategoryId || '';
+
+        setFormData({
+            name: product.name,
+            images: product.images || [''],
+            navbarCategoryId: navbarCategoryId,
+            categoryId: product.categoryId || '',
+            subcategoryId: product.subcategoryId || '',
+            catalogImage: product.catalogImage || null,
+            catalogImages: Array.isArray(product.catalogImages) ? product.catalogImages : [''],
+        });
     }
 
     return (
