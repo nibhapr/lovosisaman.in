@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { IoAddOutline, IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoAddOutline, IoTrashOutline, IoCreateOutline, IoSearchOutline, IoChevronDownOutline } from 'react-icons/io5';
 import type { NavbarCategory, Category, Subcategory, Product } from '@/types/shop';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
 
@@ -25,6 +25,7 @@ export default function ProductManager() {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isLoadingPdf, setIsLoadingPdf] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [showDuplicateOptions, setShowDuplicateOptions] = useState<string | null>(null);
 
     const generateSlug = (name: string) => {
         return name.toLowerCase()
@@ -309,16 +310,56 @@ export default function ProductManager() {
         }
     };
 
+    const findDuplicates = (product: Product) => {
+        const words = product.name.toLowerCase().split(/\s+/);
+        return products.filter(p => {
+            if (p._id === product._id) return false;
+            const otherWords = p.name.toLowerCase().split(/\s+/);
+            return words.some(word => otherWords.includes(word));
+        });
+    };
+
+    // Sort duplicates alphabetically
+    const findDuplicatesByImage = () => {
+        return products
+            .filter(p =>
+                products.some(other =>
+                    other._id !== p._id &&
+                    other.images.some(img => p.images.includes(img))
+                )
+            )
+            .sort((a, b) => a.name.localeCompare(b.name));
+    };
+
+    const findDuplicatesByName = () => {
+        return products
+            .filter(p =>
+                products.some(other =>
+                    other._id !== p._id &&
+                    other.name.toLowerCase() === p.name.toLowerCase()
+                )
+            )
+            .sort((a, b) => a.name.localeCompare(b.name));
+    };
+
     // Filter products based on search term
     const filteredProducts: Product[] = products.filter((product: Product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ); function handleEdit(product: Product): void {
+    );    function handleEdit(product: Product): void {
         setIsEditing(true);
         setSelectedProduct(product);
 
         // Find the associated category to get its navbarCategoryId
         const category = categories.find(c => c._id === product.categoryId);
         const navbarCategoryId = category?.navbarCategoryId || '';
+
+        // Process catalog images - ensure we have both catalogImage and catalogImages
+        let catalogImagesData = [''];
+        if (product.catalogImages && Array.isArray(product.catalogImages) && product.catalogImages.length > 0) {
+            catalogImagesData = product.catalogImages;
+        } else if (product.catalogImage) {
+            catalogImagesData = [product.catalogImage];
+        }
 
         setFormData({
             name: product.name,
@@ -327,7 +368,7 @@ export default function ProductManager() {
             categoryId: product.categoryId || '',
             subcategoryId: product.subcategoryId || '',
             catalogImage: product.catalogImage || null,
-            catalogImages: Array.isArray(product.catalogImages) ? product.catalogImages : [''],
+            catalogImages: catalogImagesData,
         });
     }
 
@@ -342,6 +383,98 @@ export default function ProductManager() {
                 <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
                     {isEditing ? 'Edit Product' : 'Add New Product'}
                 </h2>
+
+                {/* Duplicates Section */}
+                <div className="mb-6 space-y-4">
+                    {/* Name Duplicates */}
+                    <div className="bg-gray-700 rounded-lg p-4">
+                        <h3 className="text-xl font-semibold text-blue-400 mb-4">Product Name Duplicates</h3>
+                        <div className="space-y-2">
+                            {findDuplicatesByName().map(product => (
+                                <div key={product._id} className="relative">
+                                    <button
+                                        onClick={() => setShowDuplicateOptions(showDuplicateOptions === product._id ? null : product._id)}
+                                        className="w-full flex items-center justify-between p-2 bg-gray-600 rounded hover:bg-gray-500"
+                                    >
+                                        <span className="text-gray-200">{product.name}</span>
+                                        <IoChevronDownOutline className={`w-5 h-5 text-gray-300 transition-transform ${showDuplicateOptions === product._id ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    {showDuplicateOptions === product._id && (
+                                        <div className="absolute z-10 mt-1 w-full rounded-md shadow-lg bg-gray-700 ring-1 ring-black ring-opacity-5">
+                                            <div className="py-1">
+                                                <button
+                                                    onClick={() => handleEdit(product)}
+                                                    className="w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 flex items-center gap-2"
+                                                >
+                                                    <IoCreateOutline className="w-4 h-4" />
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(product._id)}
+                                                    className="w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-600 flex items-center gap-2"
+                                                >
+                                                    <IoTrashOutline className="w-4 h-4" />
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Image Duplicates */}
+                    <div className="bg-gray-700 rounded-lg p-4">
+                        <h3 className="text-xl font-semibold text-blue-400 mb-4">Product Image Duplicates</h3>
+                        <div className="space-y-2">
+                            {findDuplicatesByImage().map(product => (
+                                <div key={product._id} className="relative">
+                                    <button
+                                        onClick={() => setShowDuplicateOptions(showDuplicateOptions === product._id ? null : product._id)}
+                                        className="w-full flex items-center justify-between p-2 bg-gray-600 rounded hover:bg-gray-500"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            {product.images && product.images[0] && (
+                                                <div className="relative w-8 h-8 rounded overflow-hidden">
+                                                    <Image
+                                                        src={product.images[0]}
+                                                        alt={product.name}
+                                                        fill
+                                                        sizes="32px"
+                                                        className="object-cover"
+                                                    />
+                                                </div>
+                                            )}
+                                            <span className="text-gray-200">{product.name}</span>
+                                        </div>
+                                        <IoChevronDownOutline className={`w-5 h-5 text-gray-300 transition-transform ${showDuplicateOptions === product._id ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    {showDuplicateOptions === product._id && (
+                                        <div className="absolute z-10 mt-1 w-full rounded-md shadow-lg bg-gray-700 ring-1 ring-black ring-opacity-5">
+                                            <div className="py-1">
+                                                <button
+                                                    onClick={() => handleEdit(product)}
+                                                    className="w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 flex items-center gap-2"
+                                                >
+                                                    <IoCreateOutline className="w-4 h-4" />
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(product._id)}
+                                                    className="w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-600 flex items-center gap-2"
+                                                >
+                                                    <IoTrashOutline className="w-4 h-4" />
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -362,11 +495,13 @@ export default function ProductManager() {
                             required
                         >
                             <option value="">Select a navbar category</option>
-                            {navbarCategories.map((navbarCategory) => (
-                                <option key={navbarCategory._id} value={navbarCategory._id}>
-                                    {navbarCategory.name}
-                                </option>
-                            ))}
+                            {navbarCategories
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((navbarCategory) => (
+                                    <option key={navbarCategory._id} value={navbarCategory._id}>
+                                        {navbarCategory.name}
+                                    </option>
+                                ))}
                         </select>
                     </div>
 
@@ -387,11 +522,13 @@ export default function ProductManager() {
                             disabled={!formData.navbarCategoryId}
                         >
                             <option value="">Select a category (optional)</option>
-                            {filteredCategories.map((category) => (
-                                <option key={category._id} value={category._id}>
-                                    {category.name}
-                                </option>
-                            ))}
+                            {filteredCategories
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((category) => (
+                                    <option key={category._id} value={category._id}>
+                                        {category.name}
+                                    </option>
+                                ))}
                         </select>
                     </div>
 
@@ -406,11 +543,13 @@ export default function ProductManager() {
                             disabled={!formData.categoryId}
                         >
                             <option value="">Select a subcategory (optional)</option>
-                            {filteredSubcategories.map((subcategory) => (
-                                <option key={subcategory._id} value={subcategory._id}>
-                                    {subcategory.name}
-                                </option>
-                            ))}
+                            {filteredSubcategories
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((subcategory) => (
+                                    <option key={subcategory._id} value={subcategory._id}>
+                                        {subcategory.name}
+                                    </option>
+                                ))}
                         </select>
                     </div>
 
@@ -481,40 +620,56 @@ export default function ProductManager() {
                     </div>
 
                     <div>
-                        <div className="flex items-center space-x-4">
-                            <ImageUpload
-                                value={formData.catalogImage || ''}
-                                onChange={(url: string) => {
-                                    console.log('Catalog image URL received:', url);
-                                    setFormData(prevState => {
-                                        const newState = {
-                                            ...prevState,
-                                            catalogImage: url
-                                        };
-                                        console.log('Updated form data:', newState);
-                                        return newState;
-                                    });
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Catalog Images
+                        </label>
+                        <div className="space-y-4">
+                            {formData.catalogImages.map((image, index) => (
+                                <div key={`catalog-${index}`} className="flex items-center space-x-4">
+                                    <ImageUpload
+                                        value={image}
+                                        onChange={(url: string) => {
+                                            const newImages = [...formData.catalogImages];
+                                            newImages[index] = url;
+                                            setFormData(prevState => ({
+                                                ...prevState,
+                                                catalogImages: newImages
+                                            }));
+                                        }}
+                                        label={`Catalog Image ${index + 1}`}
+                                        index={index}
+                                    />
+                                    {formData.catalogImages.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newImages = formData.catalogImages.filter((_, i) => i !== index);
+                                                setFormData(prevState => ({
+                                                    ...prevState,
+                                                    catalogImages: newImages
+                                                }));
+                                            }}
+                                            className="text-red-600 hover:text-red-700"
+                                        >
+                                            <IoTrashOutline className="w-5 h-5" />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setFormData(prevState => ({
+                                        ...prevState,
+                                        catalogImages: [...prevState.catalogImages, '']
+                                    }));
                                 }}
-                                label="Catalog Image"
-                            />
+                                className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
+                            >
+                                <IoAddOutline className="w-5 h-5" />
+                                <span>Add Another Catalog Image</span>
+                            </button>
                         </div>
-                        {formData.catalogImage && (
-                            <div className="mt-2">
-                                <p className="text-sm text-gray-500">Catalog image uploaded successfully</p>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setFormData(prevState => ({
-                                            ...prevState,
-                                            catalogImage: null
-                                        }));
-                                    }}
-                                    className="text-red-600 hover:text-red-700 text-sm"
-                                >
-                                    Remove catalog image
-                                </button>
-                            </div>
-                        )}
                     </div>
 
                     <div className="flex space-x-4">
@@ -565,43 +720,81 @@ export default function ProductManager() {
                     {filteredProducts.length === 0 ? (
                         <p className="text-gray-400 text-center py-4">No products found</p>
                     ) : (
-                        filteredProducts.map((product) => (
-                            <div
-                                key={product._id}
-                                className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600"
-                            >
-                                <div className="flex items-center space-x-4">
-                                    {product.images && product.images[0] && (
-                                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                                            <Image
-                                                src={product.images[0]}
-                                                alt={product.name}
-                                                fill
-                                                sizes="48px"
-                                                className="object-cover"
-                                            />
+                        filteredProducts.map((product) => {
+                            const duplicates = findDuplicates(product);
+                            return (
+                                <div
+                                    key={product._id}
+                                    className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600"
+                                >
+                                    <div className="flex items-center space-x-4">
+                                        {product.images && product.images[0] && (
+                                            <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                                                <Image
+                                                    src={product.images[0]}
+                                                    alt={product.name}
+                                                    fill
+                                                    sizes="48px"
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <h3 className="font-medium text-gray-200">{product.name}</h3>
+                                            {duplicates.length > 0 && (
+                                                <div className="relative">
+                                                    <button
+                                                        onClick={() => setShowDuplicateOptions(showDuplicateOptions === product._id ? null : product._id)}
+                                                        className="text-sm text-yellow-400 hover:text-yellow-300"
+                                                    >
+                                                        {duplicates.length} duplicate{duplicates.length > 1 ? 's' : ''}
+                                                    </button>
+                                                    {showDuplicateOptions === product._id && (
+                                                        <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5">
+                                                            <div className="py-1">
+                                                                {duplicates.map(duplicate => (
+                                                                    <div key={duplicate._id} className="px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 flex justify-between items-center">
+                                                                        <span>{duplicate.name}</span>
+                                                                        <div className="flex space-x-2">
+                                                                            <button
+                                                                                onClick={() => handleEdit(duplicate)}
+                                                                                className="text-blue-400 hover:text-blue-300"
+                                                                            >
+                                                                                <IoCreateOutline className="w-4 h-4" />
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() => handleDelete(duplicate._id)}
+                                                                                className="text-red-400 hover:text-red-300"
+                                                                            >
+                                                                                <IoTrashOutline className="w-4 h-4" />
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                    <div>
-                                        <h3 className="font-medium text-gray-200">{product.name}</h3>
+                                    </div>
+                                    <div className="flex space-x-2">
+                                        <button
+                                            onClick={() => handleEdit(product)}
+                                            className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
+                                        >
+                                            <IoCreateOutline className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(product._id)}
+                                            className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                                        >
+                                            <IoTrashOutline className="w-5 h-5" />
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="flex space-x-2">
-                                    <button
-                                        onClick={() => handleEdit(product)}
-                                        className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
-                                    >
-                                        <IoCreateOutline className="w-5 h-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(product._id)}
-                                        className="p-2 text-red-400 hover:text-red-300 transition-colors"
-                                    >
-                                        <IoTrashOutline className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
             </motion.div>
