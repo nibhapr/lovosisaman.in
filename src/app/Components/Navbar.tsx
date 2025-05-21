@@ -46,6 +46,30 @@ const Navbar = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length === 0) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+    
+    setIsSearching(true);
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -277,6 +301,45 @@ const Navbar = () => {
 
       {/* Main Navigation */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Search Bar - Desktop */}
+        <div className="hidden md:flex justify-center py-2">
+          <div className="relative w-1/2">
+            <input
+              type="text"
+              placeholder="Search products, blogs, events..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            />
+            {isSearching ? (
+              <div className="absolute right-3 top-2.5">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black"></div>
+              </div>
+            ) : (
+              <svg className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            )}
+            {searchResults.length > 0 && searchQuery && (
+              <div className="absolute w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
+                {searchResults.map((result, index) => (
+                  <Link
+                    key={index}
+                    href={result.url}
+                    className="block px-4 py-2 hover:bg-gray-100 border-b last:border-b-0"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSearchResults([]);
+                    }}
+                  >
+                    <div className="font-medium text-black">{result.title}</div>
+                    <div className="text-sm text-gray-500">{result.type}</div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
         <div className="flex justify-between items-center h-16">
           {/* Main Menu Items */}
           <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
@@ -565,6 +628,46 @@ const Navbar = () => {
           : 'max-h-0 opacity-0 invisible'
           } overflow-hidden bg-white`}
       >
+        {/* Search Bar - Mobile */}
+        <div className="px-4 py-2">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search products, blogs, events..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            />
+            {isSearching ? (
+              <div className="absolute right-3 top-2.5">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black"></div>
+              </div>
+            ) : (
+              <svg className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            )}
+            {searchResults.length > 0 && searchQuery && (
+              <div className="absolute w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
+                {searchResults.map((result, index) => (
+                  <Link
+                    key={index}
+                    href={result.url}
+                    className="block px-4 py-2 hover:bg-gray-100 border-b last:border-b-0"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSearchResults([]);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <div className="font-medium text-black">{result.title}</div>
+                    <div className="text-sm text-gray-500">{result.type}</div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
         <div className="px-5 py-4 space-y-3 divide-y divide-gray-100">
           <Link
             href="/"
