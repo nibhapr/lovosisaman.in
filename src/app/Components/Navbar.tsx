@@ -827,18 +827,93 @@ const Navbar = () => {
                 </svg>
               </button>
 
-              {/* Product Categories */}
+              {/* Product Categories Nested Dropdown */}
               {expandedNavbarCategory && (
-                <div className="bg-gray-50 px-6 py-4">
-                  {navbarCategories.map((category) => (
-                    <Link
-                      key={category.id}
-                      href={`/products/${category.slug}`}
-                      className="block py-2 text-sm text-gray-600 hover:text-gray-900"
-                      onClick={handleLinkClick}
-                    >
-                      {category.name}
-                    </Link>
+                <div className="bg-gray-50">
+                  {navbarCategories.map((navCat) => (
+                    <div key={navCat.id} className="border-t border-gray-100 first:border-t-0">
+                      {/* Navbar Category Level */}
+                      <div className="flex items-center justify-between px-6 py-3 hover:bg-gray-100">
+                        <Link
+                          href={`/products/${navCat.slug}`}
+                          className="flex-1 text-sm font-medium text-gray-800"
+                          onClick={handleLinkClick}
+                        >
+                          {navCat.name}
+                        </Link>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavbarCategoryClick(navCat.id);
+                          }}
+                          className="p-1"
+                        >
+                          <svg
+                            className={`h-4 w-4 text-gray-400 transform transition-transform ${
+                              expandedNavbarCategory === navCat.id ? 'rotate-180' : ''
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      {/* Categories Level */}
+                      {expandedNavbarCategory === navCat.id && (
+                        <div className="pl-8 pr-4">
+                          {navCat.categories.map((cat) => (
+                            <div key={cat.id} className="border-t border-gray-100 first:border-t-0">
+                              <div className="flex items-center justify-between py-3 hover:bg-gray-100">
+                                <Link
+                                  href={`/products/${navCat.slug}/${cat.slug}`}
+                                  className="flex-1 text-sm text-gray-600"
+                                  onClick={handleLinkClick}
+                                >
+                                  {cat.name}
+                                </Link>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleCategoryClick(cat.id);
+                                  }}
+                                  className="p-1"
+                                >
+                                  <svg
+                                    className={`h-4 w-4 text-gray-400 transform transition-transform ${
+                                      expandedCategory === cat.id ? 'rotate-180' : ''
+                                    }`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                  </svg>
+                                </button>
+                              </div>
+
+                              {/* Subcategories Level */}
+                              {expandedCategory === cat.id && (
+                                <div className="pl-4 pb-3">
+                                  {cat.subCategories.map((subCat) => (
+                                    <Link
+                                      key={subCat.id}
+                                      href={`/products/${navCat.slug}/${cat.slug}/${subCat.slug}`}
+                                      className="block py-2 text-sm text-gray-500 hover:text-gray-900"
+                                      onClick={handleLinkClick}
+                                    >
+                                      {subCat.name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               )}
