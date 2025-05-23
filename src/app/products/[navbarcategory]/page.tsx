@@ -2,6 +2,7 @@ import { connectDB } from '@/lib/db';
 import NavbarCategory from '@/app/models/NavbarCategory';
 import Category from '@/app/models/Category';
 import Product from '@/app/models/Product';
+export const dynamic = 'force-dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,7 +18,7 @@ async function getCategories(navbarCategoryId: string) {
 
 async function getProducts(navbarCategoryId: string) {
   await connectDB();
-  return await Product.find({ 
+  return await Product.find({
     navbarCategoryId,
     categoryId: { $exists: false },
     subcategoryId: { $exists: false }
@@ -75,6 +76,7 @@ export default async function NavbarCategoryPage({
                       src={category.image || '/images/placeholder.jpg'}
                       alt={category.name}
                       fill
+                      unoptimized={true}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-contain"
                     />
@@ -110,6 +112,7 @@ export default async function NavbarCategoryPage({
                       src={product.images?.[0] || '/images/placeholder.jpg'}
                       alt={product.name}
                       fill
+                      unoptimized={true}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-contain"
                     />

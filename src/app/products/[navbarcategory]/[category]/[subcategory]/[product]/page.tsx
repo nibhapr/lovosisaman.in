@@ -22,6 +22,7 @@ export default function ProductPage({
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const [catalogImages, setCatalogImages] = useState<string[]>([]);
   const [currentCatalogIndex, setCurrentCatalogIndex] = useState(0);
+  const [isCatalogImageOpen, setIsCatalogImageOpen] = useState(false);
 
   const fetchReviews = async () => {
     if (product?._id) {
@@ -31,44 +32,103 @@ export default function ProductPage({
         setReviews(data);
       }
     }
-  };
-
-  useEffect(() => {
-    async function fetchProduct() {
-      const response = await fetch(`/api/products/preview?slug=${resolvedParams.product}`);
+  }; const fetchProduct = async () => {
+    try {
+      const response = await fetch(`/api/products/preview?slug=${resolvedParams.product}`, {
+        next: { revalidate: 0 },
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       if (response.ok) {
         const data = await response.json();
-        console.log('Product data:', data);
-        setProduct(data);
+        // Check if data has meaningful changes before updating state
+        const hasChanged = JSON.stringify(data) !== JSON.stringify(product);
 
-        if (data.catalogImage) {
-          console.log('Setting catalog image:', data.catalogImage);
-          setCatalogImages([data.catalogImage]);
-        } else {
-          console.warn('No catalog image found');
-          setCatalogImages([]);
-        }
+        if (hasChanged) {
+          console.log('Product data updated:', data);
+          setProduct(data);
 
-        if (data.categoryId) {
-          const categoryRes = await fetch(`/api/categories/${data.categoryId}`);
-          if (categoryRes.ok) {
-            const categoryData = await categoryRes.json();
-            setCategoryName(categoryData.name);
+          if (data.catalogImage) {
+            setCatalogImages([data.catalogImage]);
+          } else if (data.catalogImages && data.catalogImages.length > 0) {
+            setCatalogImages(data.catalogImages);
+          } else {
+            setCatalogImages([]);
           }
-        }
 
-        if (data.subcategoryId) {
-          const subcategoryRes = await fetch(`/api/subcategories/${data.subcategoryId}`);
-          if (subcategoryRes.ok) {
-            const subcategoryData = await subcategoryRes.json();
-            setSubcategoryName(subcategoryData.name);
+          // Fetch category and subcategory names
+          if (data.categoryId) {
+            const categoryRes = await fetch(`/api/categories/${data.categoryId}`, {
+              next: { revalidate: 0 },
+              headers: {
+                'Cache-Control': 'no-cache'
+              }
+            });
+            if (categoryRes.ok) {
+              const categoryData = await categoryRes.json();
+              setCategoryName(categoryData.name);
+            }
+          }
+
+          if (data.subcategoryId) {
+            const subcategoryRes = await fetch(`/api/subcategories/${data.subcategoryId}`, {
+              next: { revalidate: 0 },
+              headers: {
+                'Cache-Control': 'no-cache'
+              }
+            });
+            if (subcategoryRes.ok) {
+              const subcategoryData = await subcategoryRes.json();
+              setSubcategoryName(subcategoryData.name);
+            }
           }
         }
       } else {
         console.error('Failed to fetch product data:', response.status);
       }
+    } catch (error) {
+      console.error('Error fetching product:', error);
     }
+  };
+  useEffect(() => {
+    // Initial fetch
     fetchProduct();
+
+    // Set up WebSocket connection
+    const ws = new WebSocket(`${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/websocket`);
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'product_updated' && data.slug === resolvedParams.product) {
+        console.log('Received product update via WebSocket');
+        fetchProduct();
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      // Fallback to polling if WebSocket fails
+      const pollingInterval = setInterval(fetchProduct, 3000);
+      return () => clearInterval(pollingInterval);
+    };
+
+    // Set up visibility change listener for background updates
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchProduct();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      ws.close();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [resolvedParams.product]);
 
   useEffect(() => {
@@ -134,25 +194,23 @@ export default function ProductPage({
       alert('Failed to create catalog request: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
-
-  const renderBreadcrumbs = () => (
-    <div className="container mx-auto px-4 py-3">
-      <nav className="text-sm text-gray-500 flex items-center">
-        {categoryName && (
-          <>
-            <span className="hover:text-gray-700 transition-colors">{categoryName}</span>
-            <span className="mx-2">/</span>
-          </>
-        )}
-        {subcategoryName && (
-          <>
-            <span className="hover:text-gray-700 transition-colors">{subcategoryName}</span>
-            <span className="mx-2">/</span>
-          </>
-        )}
-        <span className="text-black font-medium">{product?.name}</span>
-      </nav>
-    </div>
+  const renderBreadcrumbs = () => (<div className="w-full px-3 py-2 sm:px-4 sm:py-3 md:py-4 overflow-x-auto">
+    <nav className="text-[11px] sm:text-sm md:text-base text-gray-500 flex items-center whitespace-nowrap min-w-0">
+      {categoryName && (
+        <>
+          <span className="hover:text-blue-600 transition-colors duration-200 cursor-pointer truncate max-w-[100px] sm:max-w-[150px] md:max-w-xs">{categoryName}</span>
+          <span className="mx-1.5 sm:mx-2 text-gray-400 flex-shrink-0">/</span>
+        </>
+      )}
+      {subcategoryName && (
+        <>
+          <span className="hover:text-blue-600 transition-colors duration-200 cursor-pointer truncate max-w-[100px] sm:max-w-[150px] md:max-w-xs">{subcategoryName}</span>
+          <span className="mx-1.5 sm:mx-2 text-gray-400 flex-shrink-0">/</span>
+        </>
+      )}
+      <span className="text-black font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-xs">{product?.name}</span>
+    </nav>
+  </div>
   );
 
   const renderStars = (rating: number) => (
@@ -170,46 +228,49 @@ export default function ProductPage({
   );
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center text-black">
-      <div className="w-full border-b border-gray-200">
-        {renderBreadcrumbs()}
-        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-black mb-4 animate-fade-in">
-            {product.name}
-          </h1>
-          <div className="w-16 h-1 bg-blue-600 rounded-full mx-auto"></div>
-        </div>
+    <div className="min-h-screen bg-white flex flex-col items-center text-black">      <div className="w-full border-b border-gray-200 bg-white/90 backdrop-blur-md sticky top-0 z-30">
+      {renderBreadcrumbs()}
+      <div className="max-w-4xl mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8 text-center">
+        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-black mb-3 sm:mb-4 animate-fade-in line-clamp-2 tracking-tight">
+          {product.name}
+        </h1>
+        <div className="w-10 sm:w-12 md:w-16 h-1 bg-blue-600 rounded-full mx-auto transform transition-all duration-300"></div>
       </div>
+    </div>
 
-      <div className="w-full max-w-5xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <div className="space-y-6 mx-auto w-full max-w-md">
+      <div className="w-full max-w-7xl mx-auto px-4 py-6 sm:py-8 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+          <div className="space-y-4 sm:space-y-6 mx-auto w-full max-w-lg">
             <div className="group">
-              <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200 shadow-sm h-[450px] bg-white">
+              <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
                 <Image
                   src={product.images[currentImageIndex]}
                   alt={product.name}
                   fill
-                  className="object-contain"
+                  className="object-contain p-2 sm:p-4"
                   priority
+                  quality={100}
+                  unoptimized
                 />
               </div>
             </div>
 
             {product.images.length > 1 && (
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
                 {product.images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`relative aspect-square rounded-md overflow-hidden
-                      ${currentImageIndex === index ? 'ring-2 ring-blue-600' : 'ring-1 ring-gray-300'}`}
+                    className={`relative aspect-square rounded-md overflow-hidden transition-all
+                      ${currentImageIndex === index ? 'ring-2 ring-blue-600 scale-95' : 'ring-1 ring-gray-300 hover:ring-blue-400'}`}
                   >
                     <Image
                       src={image}
                       alt={`${product.name} - Image ${index + 1}`}
                       fill
-                      className="object-cover"
+                      className="object-cover p-1"
+                      quality={100}
+                      unoptimized
                     />
                   </button>
                 ))}
@@ -218,9 +279,9 @@ export default function ProductPage({
 
             <button
               onClick={() => setIsContactFormOpen(true)}
-              className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center justify-center gap-2 text-sm"
+              className="w-full py-3 sm:py-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 active:bg-blue-800 transition-all flex items-center justify-center gap-2 text-sm sm:text-base shadow-lg hover:shadow-xl"
             >
-              <IoDownloadOutline className="w-4 h-4" />
+              <IoDownloadOutline className="w-4 h-4 sm:w-5 sm:h-5" />
               Request Product Catalog
             </button>
 
@@ -312,22 +373,29 @@ export default function ProductPage({
           </div>
 
           {/* Right Side - Catalog Preview */}
-          <div className="mx-auto w-full max-w-md">
-            <div className="bg-zinc-900/50 rounded-lg shadow-xl p-6 border border-zinc-800 min-h-[550px]">
-              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <div className="mx-auto w-full max-w-lg">
+            <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 border border-gray-200 min-h-[450px] sm:min-h-[550px]">
+              <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
                 Product Catalog
               </h2>
 
-              <div className="aspect-[3/4] relative rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900">
+              <div className="aspect-[3/4] relative rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
                 {catalogImages.length > 0 ? (
                   <div className="relative h-full">
-                    <Image
-                      src={catalogImages[currentCatalogIndex]}
-                      alt={`${product.name} Catalog Page ${currentCatalogIndex + 1}`}
-                      fill
-                      className="object-contain"
-                    />
+                    <button
+                      onClick={() => setIsCatalogImageOpen(true)}
+                      className="w-full h-full cursor-zoom-in"
+                    >
+                      <Image
+                        src={catalogImages[currentCatalogIndex]}
+                        alt={`${product.name} Catalog Page ${currentCatalogIndex + 1}`}
+                        fill
+                        className="object-contain p-2 sm:p-4"
+                        quality={100}
+                        unoptimized
+                      />
+                    </button>
 
                     {catalogImages.length > 1 && (
                       <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
@@ -352,7 +420,57 @@ export default function ProductPage({
             </div>
           </div>
         </div>
-      </div>
+      </div>      {/* Catalog Image Popup Modal */}
+      {isCatalogImageOpen && catalogImages.length > 0 && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50"
+            onClick={() => setIsCatalogImageOpen(false)}
+          />
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setIsCatalogImageOpen(false)}
+          >
+            <div
+              className="relative w-full max-w-5xl h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setIsCatalogImageOpen(false)}
+                className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+                aria-label="Close"
+              >
+                <IoClose className="w-6 h-6 text-white" />
+              </button>
+              <div className="h-full w-full relative">
+                <Image
+                  src={catalogImages[currentCatalogIndex]}
+                  alt={`${product.name} Catalog Page ${currentCatalogIndex + 1}`}
+                  fill
+                  className="object-contain"
+                  quality={100}
+                />
+              </div>
+              {catalogImages.length > 1 && (
+                <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
+                  {catalogImages.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentCatalogIndex(index);
+                      }}
+                      className={`w-3 h-3 rounded-full transition-all
+                        ${currentCatalogIndex === index ? 'bg-white' : 'bg-white/50'}`}
+                      aria-label={`View catalog page ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Review Modal */}
       {isReviewsOpen && (
@@ -596,11 +714,53 @@ export default function ProductPage({
           animation: fade-in 0.4s ease-out;
         }
 
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-modalSlideIn {
+          animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @media (max-width: 640px) {
+          .modal-content {
+            width: 95%;
+            max-height: 90vh;
+          }
+        }
+
+        @media (min-width: 641px) {
+          .modal-content {
+            width: 90%;
+            max-width: 600px;
+          }
+        }
+
         iframe {
           -webkit-user-select: none;
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
+        }
+
+        .image-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+          gap: 8px;
+        }
+
+        @media (min-width: 640px) {
+          .image-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+          }
         }
       `}</style>
     </div>

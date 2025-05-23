@@ -14,6 +14,8 @@ async function getProducts(subcategoryId: string) {
   return await Product.find({ subcategoryId });
 }
 
+export const revalidate = 0; // Enable real-time revalidation
+
 export default async function SubcategoryPage({
   params
 }: {
@@ -54,11 +56,11 @@ export default async function SubcategoryPage({
             className="group"
           >
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl border border-gray-200">
-              <div className="relative h-56 w-full">
-                <Image
+              <div className="relative h-56 w-full">                <Image
                   src={product.images[0]}
                   alt={product.name}
                   fill
+                  quality={100}
                   className="object-contain group-hover:opacity-90 transition-opacity duration-300"
                   style={{ objectFit: 'contain' }}
                 />

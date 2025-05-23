@@ -5,6 +5,9 @@ import Product from '@/app/models/Product';
 import Image from 'next/image';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getCategory(slug: string) {
   try {
     await connectDB();
@@ -95,14 +98,17 @@ export default async function CategoryPage({
                   className="group"
                 >
                   <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1 border border-gray-200">
-                    <div className="relative h-48 w-full">
-                      <Image
-                        src={subcategory.image || '/images/placeholder.jpg'}
-                        alt={subcategory.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-contain"
-                      />
+                    <div className="relative h-48 w-full">                      <Image
+                      src={subcategory.image || '/images/placeholder.jpg'}
+                      alt={subcategory.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-contain"
+                      quality={75}
+                      loading="lazy"
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRseHyAjIR8qLSgwKy0sLiwoNz83Mjc3NzchLS4tNEY0OD0+PD83QD05Ozk5Ozn/2wBDAR"
+                    />
                     </div>
                     <div className="p-6">
                       <h2 className="text-xl font-semibold mb-2 text-blue-600">{subcategory.name}</h2>
@@ -129,14 +135,17 @@ export default async function CategoryPage({
                   className="group"
                 >
                   <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 group-hover:shadow-lg group-hover:-translate-y-1 border border-gray-200">
-                    <div className="relative h-48 w-full">
-                      <Image
-                        src={product.images?.[0] || '/images/placeholder.jpg'}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-contain"
-                      />
+                    <div className="relative h-48 w-full">                      <Image
+                      src={product.images?.[0] || '/images/placeholder.jpg'}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-contain"
+                      quality={75}
+                      loading="lazy"
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRseHyAjIR8qLSgwKy0sLiwoNz83Mjc3NzchLS4tNEY0OD0+PD83QD05Ozk5Ozn/2wBDAR"
+                    />
                     </div>
                     <div className="p-6">
                       <h2 className="text-xl font-semibold mb-2 text-blue-600">{product.name}</h2>

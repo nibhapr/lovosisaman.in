@@ -4,6 +4,8 @@ import Category from '@/app/models/Category';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Add this line to disable caching and enable real-time updates
+export const revalidate = 0;
 
 async function getNavbarCategories() {
   await connectDB();
@@ -48,6 +50,7 @@ export default async function ShopPage() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       className="object-contain rounded-lg hover:scale-105 transition-transform duration-300"
                       style={{ objectFit: 'contain' }}
+                      quality={100}  // Add this line to prevent compression
                     />
                   </div>
                 )}
@@ -56,14 +59,14 @@ export default async function ShopPage() {
                   <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
                 )}
               </Link>
-              
+
               {/* Display categories under this navbar category */}
               {categoryItems.length > 0 && (
                 <div className="ml-4 mt-2">
                   <ul className="space-y-2">
                     {categoryItems.map((category) => (
                       <li key={category._id.toString()}>
-                        <Link 
+                        <Link
                           href={`/products/${navbarCategory.slug}/${category.slug}`}
                           className="text-gray-600 hover:text-blue-600 hover:underline text-sm transition-colors duration-200"
                         >
@@ -112,14 +115,14 @@ export default async function ShopPage() {
                   <p className="text-gray-600 mb-4">{navbarCategory.description}</p>
                 )}
               </Link>
-              
+
               {/* Display categories under this navbar category for mobile */}
               {categoryItems.length > 0 && (
                 <div className="ml-2 mt-1">
                   <ul className="space-y-2">
                     {categoryItems.map((category) => (
                       <li key={category._id.toString()}>
-                        <Link 
+                        <Link
                           href={`/products/${navbarCategory.slug}/${category.slug}`}
                           className="text-gray-600 hover:text-blue-600 hover:underline text-sm transition-colors duration-200"
                         >
