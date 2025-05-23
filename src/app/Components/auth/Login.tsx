@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import Cookies from 'js-cookie';
 
 export default function Login() {
   const router = useRouter();

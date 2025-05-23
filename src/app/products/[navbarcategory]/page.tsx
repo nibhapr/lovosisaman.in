@@ -41,16 +41,6 @@ export default async function NavbarCategoryPage({
 
   return (
     <div className="container mx-auto px-4 py-12 bg-white min-h-screen">
-      <div className="mb-8">
-        <nav className="flex space-x-2 text-sm text-gray-600">
-          <Link href="/products" className="hover:text-blue-600 hover:underline">
-            Products
-          </Link>
-          <span className="text-gray-400">/</span>
-          <span className="text-black">{navbarCategory.name}</span>
-        </nav>
-      </div>
-
       <h1 className="text-3xl font-bold mb-8 text-black">
         {navbarCategory.name}
       </h1>

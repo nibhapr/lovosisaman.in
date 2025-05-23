@@ -49,6 +49,9 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isTopVisible, setIsTopVisible] = useState(true);
+  const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -166,10 +169,46 @@ const Navbar = () => {
     setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
   };
 
+  // Add this new function to handle link clicks
+  const handleLinkClick = () => {
+    setIsMegaMenuOpen(false);
+    setExpandedNavbarCategory(null);
+    setExpandedCategory(null);
+    setIsOpen(false); // This will also close mobile menu
+  };
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollPosition(currentScrollY);
+      
+      if (currentScrollY > lastScrollY) {
+        setIsTopVisible(false); // Scrolling down
+      } else {
+        setIsTopVisible(currentScrollY < 50); // Show top bar only when near the top
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleSearchBar = () => {
+    setIsSearchBarVisible(!isSearchBarVisible);
+  };
+
   return (
-    <nav className="bg-white text-black sticky top-0 z-50 shadow-lg">
+    <nav className="bg-gradient-to-r from-white via-gray-50 to-white text-black sticky top-0 z-50 shadow-lg">
       {/* Top bar with logo and certifications */}
-      <div className="bg-white py-2 px-4 sm:px-6 lg:px-8">
+      <div 
+        className={`bg-gradient-to-r from-gray-50 via-white to-gray-50 py-3 px-4 sm:px-6 lg:px-8 border-b border-gray-100 transition-all duration-300 ease-in-out ${
+          isTopVisible ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0 overflow-hidden'
+        }`}
+      >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -184,45 +223,51 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Certification Badges */}
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Google 360° */}
+          {/* Certification Badges - Updated styling */}
+          <div className="hidden md:flex items-center space-x-6">
+            {/* Google 360° - Enhanced */}
             <Link href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="group relative">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center text-white text-sm font-bold transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-sm font-bold transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-200 cursor-pointer">
                 360°
               </div>
             </Link>
 
-            {/* ISO 9001 */}
+            {/* Updated certification badges */}
+            {/*
+              { src: iso.src, alt: "ISO" },
+              { src: ce.src, alt: "CE" },
+              { src: si.src, alt: "SI" },
+              { src: sk.src, alt: "SK" },
+              { src: zed.src, alt: "ZED" },
+              { src: gmp.src, alt: "GMP" }
+            */}
             <div className="group relative">
               <Image
                 src={iso.src}
                 alt="ISO"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+                width={48}
+                height={48}
+                className="rounded-xl transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-100 cursor-pointer"
               />
             </div>
 
-            {/* CE */}
             <div className="group relative">
               <Image
                 src={ce.src}
                 alt="CE"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+                width={48}
+                height={48}
+                className="rounded-xl transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-100 cursor-pointer"
               />
             </div>
 
-            {/* Additional 4 badges */}
             <div className="group relative">
               <Image
                 src={si.src}
                 alt="SI"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+                width={48}
+                height={48}
+                className="rounded-xl transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-100 cursor-pointer"
               />
             </div>
 
@@ -230,9 +275,9 @@ const Navbar = () => {
               <Image
                 src={sk.src}
                 alt="SK"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+                width={48}
+                height={48}
+                className="rounded-xl transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-100 cursor-pointer"
               />
             </div>
 
@@ -240,9 +285,9 @@ const Navbar = () => {
               <Image
                 src={zed.src}
                 alt="ZED"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+                width={48}
+                height={48}
+                className="rounded-xl transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-100 cursor-pointer"
               />
             </div>
 
@@ -250,9 +295,9 @@ const Navbar = () => {
               <Image
                 src={gmp.src}
                 alt="GMP"
-                width={40}
-                height={40}
-                className="rounded-full transform transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer"
+                width={48}
+                height={48}
+                className="rounded-xl transform transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-100 cursor-pointer"
               />
             </div>
           </div>
@@ -269,28 +314,35 @@ const Navbar = () => {
             </div>
           </div> */}
 
-          {/* Contact Info */}
+          {/* Contact Info - Enhanced */}
           <div className="hidden md:flex flex-col items-end">
-            <div className="flex items-center space-x-2 text-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {/* Update contact info styling */}
+            {/*
+              { icon: "phone", href: "tel:+917012970281", text: "+91 7012970281" },
+              { icon: "email", href: "mailto:info@lovosis.com", text: "info@lovosis.com" },
+              { icon: "phone", href: "tel:+919747745544", text: "+91 9747745544" },
+              { icon: "email", href: "mailto:lovosist@gmail.com", text: "lovosist@gmail.com" }
+            */}
+            <div className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 mb-1 last:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
               <a href="tel:+917012970281" className="text-sm hover:underline">+91 7012970281</a>
             </div>
-            <div className="flex items-center space-x-2 text-gray-700 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 mb-1 last:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               <a href="mailto:info@lovosis.com" className="text-sm hover:underline">info@lovosis.com</a>
             </div>
-            <div className="flex items-center space-x-2 text-gray-700 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 mb-1 last:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
               <a href="tel:+919747745544" className="text-sm hover:underline">+91 9747745544</a>
             </div>
-            <div className="flex items-center space-x-2 text-gray-700 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 mb-1 last:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               <a href="mailto:lovosist@gmail.com" className="text-sm hover:underline">lovosist@gmail.com</a>
@@ -299,48 +351,24 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Search Bar - Desktop */}
-        <div className="hidden md:flex justify-center py-2">
-          <div className="relative w-1/2">
-            <input
-              type="text"
-              placeholder="Search products, blogs, events..."
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-            />
-            {isSearching ? (
-              <div className="absolute right-3 top-2.5">
-                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black"></div>
-              </div>
-            ) : (
-              <svg className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            )}
-            {searchResults.length > 0 && searchQuery && (
-              <div className="absolute w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
-                {searchResults.map((result, index) => (
-                  <Link
-                    key={index}
-                    href={result.url}
-                    className="block px-4 py-2 hover:bg-gray-100 border-b last:border-b-0"
-                    onClick={() => {
-                      setSearchQuery('');
-                      setSearchResults([]);
-                    }}
-                  >
-                    <div className="font-medium text-black">{result.title}</div>
-                    <div className="text-sm text-gray-500">{result.type}</div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+      {/* Main Navigation - Enhanced */}
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ease-in-out ${
+        !isTopVisible ? 'shadow-md' : ''
+      }`}>
         <div className="flex justify-between items-center h-16">
+          {/* Logo - Shows when top section is hidden */}
+          <div className={`${!isTopVisible ? 'opacity-100 w-auto' : 'opacity-0 w-0'} transition-all duration-300 overflow-hidden flex-shrink-0`}>
+            <Link href="/" className="flex items-center">
+              <Image
+                src={logo.src}
+                alt="Lovosis Logo"
+                width={120}
+                height={30}
+                className="object-contain"
+              />
+            </Link>
+          </div>
+
           {/* Main Menu Items */}
           <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
             <Link
@@ -411,6 +439,7 @@ const Navbar = () => {
                               <Link
                                 href={`/products/${navbarCategory.slug}`}
                                 className="text-sm font-medium cursor-pointer flex-1"
+                                onClick={handleLinkClick}
                               >
                                 {navbarCategory.name}
                               </Link>
@@ -459,6 +488,7 @@ const Navbar = () => {
                                       <Link 
                                         href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${category.slug}`}
                                         className="text-sm font-medium cursor-pointer flex-1"
+                                        onClick={handleLinkClick}
                                       >
                                         {category.name}
                                       </Link>
@@ -503,6 +533,7 @@ const Navbar = () => {
                                               ?.categories.find(c => c.id === expandedCategory)?.slug
                                             }/${subCategory.slug}`}
                                           className="flex-1"
+                                          onClick={handleLinkClick}
                                         >
                                           <span className="text-sm">{subCategory.name}</span>
                                         </Link>
@@ -546,7 +577,7 @@ const Navbar = () => {
                     <Link
                       href="/products"
                       className="text-xs font-medium text-black hover:text-gray-700 transition-colors duration-200"
-                      onClick={() => setIsMegaMenuOpen(false)}
+                      onClick={handleLinkClick}
                     >
                       View All Products →
                     </Link>
@@ -577,8 +608,17 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Contact Button */}
-          <div className="hidden md:block">
+          {/* Contact Button and Search Toggle */}
+          <div className="hidden md:flex items-center space-x-4">
+            <button
+              onClick={toggleSearchBar}
+              className="p-2 text-gray-600 hover:text-black transition-colors duration-200"
+              aria-label="Toggle search"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
             <Link
               href="/contact"
               className="px-6 py-2.5 bg-black text-white font-medium rounded-full shadow-lg hover:shadow-gray-800/20 transform transition-all duration-300 hover:scale-105"
@@ -621,29 +661,27 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={`md:hidden transition-all duration-300 ease-in-out z-40 ${isOpen
-          ? 'max-h-screen opacity-100 visible'
-          : 'max-h-0 opacity-0 invisible'
-          } overflow-hidden bg-white`}
+      {/* Search Bar - Sliding */}
+      <div 
+        className={`border-t border-gray-100 transition-all duration-300 ease-in-out ${
+          isSearchBarVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+        }`}
       >
-        {/* Search Bar - Mobile */}
-        <div className="px-4 py-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="relative">
             <input
               type="text"
               placeholder="Search products, blogs, events..."
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              className="w-full px-6 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm hover:shadow-md transition-shadow duration-200"
             />
             {isSearching ? (
-              <div className="absolute right-3 top-2.5">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black"></div>
               </div>
             ) : (
-              <svg className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             )}
@@ -657,7 +695,7 @@ const Navbar = () => {
                     onClick={() => {
                       setSearchQuery('');
                       setSearchResults([]);
-                      setIsOpen(false);
+                      setIsSearchBarVisible(false);
                     }}
                   >
                     <div className="font-medium text-black">{result.title}</div>
@@ -668,97 +706,195 @@ const Navbar = () => {
             )}
           </div>
         </div>
-        <div className="px-5 py-4 space-y-3 divide-y divide-gray-100">
-          <Link
-            href="/"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Home
-          </Link>
+      </div>
 
-          <Link
-            href="/about"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            About
-          </Link>
+      {/* Mobile Menu - Updated with Desktop Features */}
+      <div className={`md:hidden fixed inset-0 z-50 ${isOpen ? 'visible' : 'invisible'}`}>
+        {/* Backdrop */}
+        <div 
+          className={`fixed inset-0 bg-black transition-opacity duration-300 ${
+            isOpen ? 'opacity-50' : 'opacity-0'
+          }`}
+          onClick={() => setIsOpen(false)}
+        />
 
-          <Link
-            href="/services"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Services
-          </Link>
-
-          <Link
-            href="/products"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Products
-          </Link>
-
-          <Link
-            href="/blogs"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Blogs
-          </Link>
-
-          <Link
-            href="/events"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Events
-          </Link>
-
-          <Link
-            href="/gallery"
-            className="block py-3 text-black font-medium hover:text-gray-600 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Gallery
-          </Link>
-
-          <Link
-            href="/contact"
-            className="block py-3 px-4 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors duration-200"
-            onClick={() => setIsOpen(false)}
-          >
-            Contact
-          </Link>
-
-          {/* Mobile contact info */}
-          <div className="py-4 space-y-2">
-            <div className="flex items-center space-x-3 text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        {/* Menu Panel */}
+        <div className={`fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-out overflow-y-auto ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}>
+          {/* Header with Logo and Close Button */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <Link href="/" onClick={() => setIsOpen(false)}>
+              <Image src={logo.src} alt="Lovosis Logo" width={120} height={30} className="object-contain" />
+            </Link>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="p-2 rounded-full hover:bg-gray-100"
+            >
+              <svg className="h-6 w-6" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              <a href="tel:+917012970281" className="text-sm hover:underline">+91 7012970281</a>
+            </button>
+          </div>
+
+          {/* Certification Badges */}
+          <div className="p-6 border-b border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-500 mb-4 uppercase">Certifications</h3>
+            <div className="grid grid-cols-4 gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-sm font-bold">360°</div>
+              <Image src={iso.src} alt="ISO" width={48} height={48} className="rounded-xl" />
+              <Image src={ce.src} alt="CE" width={48} height={48} className="rounded-xl" />
+              <Image src={si.src} alt="SI" width={48} height={48} className="rounded-xl" />
+              <Image src={sk.src} alt="SK" width={48} height={48} className="rounded-xl" />
+              <Image src={zed.src} alt="ZED" width={48} height={48} className="rounded-xl" />
+              <Image src={gmp.src} alt="GMP" width={48} height={48} className="rounded-xl" />
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="p-6 border-b border-gray-100">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search products, blogs, events..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
+              />
+              {isSearching ? (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-gray-300 border-t-blue-500" />
+                </div>
+              ) : (
+                <svg className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              )}
             </div>
 
-            <div className="flex items-center space-x-3 text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <a href="mailto:info@lovosis.com" className="text-sm hover:underline">info@lovosis.com</a>
+            {/* Search Results */}
+            {searchResults.length > 0 && searchQuery && (
+              <div className="mt-2 rounded-lg border border-gray-200 overflow-hidden">
+                {searchResults.map((result, index) => (
+                  <Link
+                    key={index}
+                    href={result.url}
+                    className="block px-4 py-3 hover:bg-gray-50 border-b last:border-0"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSearchResults([]);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <div className="font-medium text-black">{result.title}</div>
+                    <div className="text-sm text-gray-500">{result.type}</div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Navigation Links with Products Mega Menu */}
+          <div className="py-4">
+            {['Home', 'About', 'Services'].map((item) => (
+              <Link
+                key={item}
+                href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                className="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="text-base font-medium">{item}</span>
+                <svg className="ml-auto h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ))}
+
+            {/* Products Section with Expandable Categories */}
+            <div className="border-t border-b border-gray-100">
+              <button
+                className="w-full px-6 py-4 flex items-center justify-between text-gray-700 hover:bg-gray-50"
+                onClick={() => setExpandedNavbarCategory(expandedNavbarCategory ? null : 'mobile')}
+              >
+                <span className="text-base font-medium">Products</span>
+                <svg
+                  className={`h-5 w-5 text-gray-400 transform transition-transform ${expandedNavbarCategory ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Product Categories */}
+              {expandedNavbarCategory && (
+                <div className="bg-gray-50 px-6 py-4">
+                  {navbarCategories.map((category) => (
+                    <Link
+                      key={category.id}
+                      href={`/products/${category.slug}`}
+                      className="block py-2 text-sm text-gray-600 hover:text-gray-900"
+                      onClick={handleLinkClick}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="flex items-center space-x-3 text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              <a href="tel:+919747745544" className="text-sm hover:underline">+91 9747745544</a>
-            </div>
-            <div className="flex items-center space-x-3 text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <a href="mailto:lovosist@gmail.com" className="text-sm hover:underline">lovosist@gmail.com</a>
+
+            {['Blogs', 'Events', 'Gallery'].map((item) => (
+              <Link
+                key={item}
+                href={`/${item.toLowerCase()}`}
+                className="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="text-base font-medium">{item}</span>
+                <svg className="ml-auto h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ))}
+          </div>
+
+          {/* Contact Section */}
+          <div className="px-6 py-4 bg-gray-50 mt-auto">
+            <Link
+              href="/contact"
+              className="block w-full py-3 px-4 bg-black text-white text-center rounded-xl font-medium hover:bg-gray-900"
+              onClick={() => setIsOpen(false)}
+            >
+              Contact Us
+            </Link>
+            
+            {/* All Contact Info */}
+            <div className="mt-6 space-y-3">
+              {[
+                { icon: 'phone', href: 'tel:+917012970281', text: '+91 7012970281' },
+                { icon: 'email', href: 'mailto:info@lovosis.com', text: 'info@lovosis.com' },
+                { icon: 'phone', href: 'tel:+919747745544', text: '+91 9747745544' },
+                { icon: 'email', href: 'mailto:lovosist@gmail.com', text: 'lovosist@gmail.com' }
+              ].map((contact, index) => (
+                <a
+                  key={index}
+                  href={contact.href}
+                  className="flex items-center text-gray-600 hover:text-gray-900"
+                >
+                  <svg className="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d={contact.icon === 'phone'
+                        ? "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                        : "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"}
+                    />
+                  </svg>
+                  <span className="text-sm">{contact.text}</span>
+                </a>
+              ))}
             </div>
           </div>
         </div>

@@ -16,8 +16,6 @@ export default function ProductPage({
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [categoryName, setCategoryName] = useState<string>('');
-  const [subcategoryName, setSubcategoryName] = useState<string>('');
   const resolvedParams = use(params);
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const [catalogImages, setCatalogImages] = useState<string[]>([]);
@@ -58,33 +56,6 @@ export default function ProductPage({
             setCatalogImages(data.catalogImages);
           } else {
             setCatalogImages([]);
-          }
-
-          // Fetch category and subcategory names
-          if (data.categoryId) {
-            const categoryRes = await fetch(`/api/categories/${data.categoryId}`, {
-              next: { revalidate: 0 },
-              headers: {
-                'Cache-Control': 'no-cache'
-              }
-            });
-            if (categoryRes.ok) {
-              const categoryData = await categoryRes.json();
-              setCategoryName(categoryData.name);
-            }
-          }
-
-          if (data.subcategoryId) {
-            const subcategoryRes = await fetch(`/api/subcategories/${data.subcategoryId}`, {
-              next: { revalidate: 0 },
-              headers: {
-                'Cache-Control': 'no-cache'
-              }
-            });
-            if (subcategoryRes.ok) {
-              const subcategoryData = await subcategoryRes.json();
-              setSubcategoryName(subcategoryData.name);
-            }
           }
         }
       } else {
@@ -194,25 +165,6 @@ export default function ProductPage({
       alert('Failed to create catalog request: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
-  const renderBreadcrumbs = () => (<div className="w-full px-3 py-2 sm:px-4 sm:py-3 md:py-4 overflow-x-auto">
-    <nav className="text-[11px] sm:text-sm md:text-base text-gray-500 flex items-center whitespace-nowrap min-w-0">
-      {categoryName && (
-        <>
-          <span className="hover:text-blue-600 transition-colors duration-200 cursor-pointer truncate max-w-[100px] sm:max-w-[150px] md:max-w-xs">{categoryName}</span>
-          <span className="mx-1.5 sm:mx-2 text-gray-400 flex-shrink-0">/</span>
-        </>
-      )}
-      {subcategoryName && (
-        <>
-          <span className="hover:text-blue-600 transition-colors duration-200 cursor-pointer truncate max-w-[100px] sm:max-w-[150px] md:max-w-xs">{subcategoryName}</span>
-          <span className="mx-1.5 sm:mx-2 text-gray-400 flex-shrink-0">/</span>
-        </>
-      )}
-      <span className="text-black font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-xs">{product?.name}</span>
-    </nav>
-  </div>
-  );
-
   const renderStars = (rating: number) => (
     <div className="flex items-center">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -228,15 +180,15 @@ export default function ProductPage({
   );
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center text-black">      <div className="w-full border-b border-gray-200 bg-white/90 backdrop-blur-md sticky top-0 z-30">
-      {renderBreadcrumbs()}
-      <div className="max-w-4xl mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8 text-center">
-        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-black mb-3 sm:mb-4 animate-fade-in line-clamp-2 tracking-tight">
-          {product.name}
-        </h1>
-        <div className="w-10 sm:w-12 md:w-16 h-1 bg-blue-600 rounded-full mx-auto transform transition-all duration-300"></div>
+    <div className="min-h-screen bg-white flex flex-col items-center text-black">
+      <div className="w-full border-b border-gray-200 bg-white/90 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-4xl mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8 text-center">
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-black mb-3 sm:mb-4 animate-fade-in line-clamp-2 tracking-tight">
+            {product.name}
+          </h1>
+          <div className="w-10 sm:w-12 md:w-16 h-1 bg-blue-600 rounded-full mx-auto transform transition-all duration-300"></div>
+        </div>
       </div>
-    </div>
 
       <div className="w-full max-w-7xl mx-auto px-4 py-6 sm:py-8 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
