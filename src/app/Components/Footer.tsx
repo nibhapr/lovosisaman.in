@@ -51,24 +51,24 @@ const Footer = () => {
 
   return (
     <footer className="bg-white text-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12">
-          <div className="max-w-xl mx-auto text-center">
-            <h3 className="text-xl font-semibold text-black mb-2">Subscribe to our Newsletter</h3>
-            <p className="text-gray-600 mb-4">Stay updated with our latest news and updates</p>
-            <form onSubmit={handleSubmit} className="flex gap-2 max-w-md mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="mb-8 sm:mb-12">
+          <div className="max-w-xl mx-auto text-center px-4">
+            <h3 className="text-lg sm:text-xl font-semibold text-black mb-2">Subscribe to our Newsletter</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-4">Stay updated with our latest news and updates</p>
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-2 bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-black text-black placeholder-gray-500"
+                className="flex-1 px-4 py-2 bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-black text-black placeholder-gray-500 w-full"
                 required
               />
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="px-6 py-2 bg-black text-white rounded-md hover:opacity-90 transition-opacity duration-300 disabled:opacity-50"
+                className="w-full sm:w-auto px-6 py-2 bg-black text-white rounded-md hover:opacity-90 transition-opacity duration-300 disabled:opacity-50"
               >
                 {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
               </button>
@@ -81,16 +81,16 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
           {/* Brand Section */}
-          <div className="space-y-4">
-            <Link href="/" className="text-3xl font-extrabold text-black">
+          <div className="space-y-4 text-center sm:text-left">
+            <Link href="/" className="text-2xl sm:text-3xl font-extrabold text-black inline-block">
               lovosis
             </Link>
-            <p className="text-gray-600 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 mt-2">
               Transforming ideas into digital reality with innovative solutions.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex justify-center sm:justify-start space-x-4">
               {/* Social Media Links */}
               <a href="https://www.instagram.com/lovosis_technology_private_ltd" className="text-gray-500 hover:text-black transition-colors duration-300">
                 <FontAwesomeIcon icon={faInstagram} className="h-8 w-8" />
@@ -105,9 +105,9 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+          <div className="text-center sm:text-left">
+            <h3 className="text-lg sm:text-xl font-semibold text-black mb-4">Quick Links</h3>
+            <ul className="space-y-2 text-sm sm:text-base">
               {['About', 'Services', 'Products', 'Contact', 'Gallery', 'Careers'].map((item) => (
                 <li key={item}>
                   <Link
@@ -122,9 +122,9 @@ const Footer = () => {
           </div>
 
           {/* Resources */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-4">Resources</h3>
-            <ul className="space-y-2">
+          <div className="text-center sm:text-left">
+            <h3 className="text-lg sm:text-xl font-semibold text-black mb-4">Resources</h3>
+            <ul className="space-y-2 text-sm sm:text-base">
               <li>
                 <Link
                   href="/blogs"
@@ -177,10 +177,16 @@ const Footer = () => {
           </div>
 
           {/* Contact */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-4">Contact Us</h3>
-            <ul className="space-y-2 text-gray-600">
-              <li><a href="https://www.google.com/maps?q=4-72/2,+Swathi+Building,+3rd+Floor,+Opp.+Singapura+Garden,+1st+Main+Lakshmipura+Road,+Abbigere,+Bengaluru,+Karnataka+560090" target="_blank" className="hover:text-black transition-colors duration-300">4-72/2, Swathi Building, 3rd Floor, Opp. Singapura Garden, 1st Main Lakshmipura Road, Abbigere, Bengaluru, Karnataka 560090</a></li>
+          <div className="text-center sm:text-left">
+            <h3 className="text-lg sm:text-xl font-semibold text-black mb-4">Contact Us</h3>
+            <ul className="space-y-2 text-sm sm:text-base text-gray-600">
+              <li className="break-words">
+                <a href="https://www.google.com/maps?q=4-72/2,+Swathi+Building,+3rd+Floor,+Opp.+Singapura+Garden,+1st+Main+Lakshmipura+Road,+Abbigere,+Bengaluru,+Karnataka+560090" 
+                   target="_blank" 
+                   className="hover:text-black transition-colors duration-300">
+                  4-72/2, Swathi Building, 3rd Floor, Opp. Singapura Garden, 1st Main Lakshmipura Road, Abbigere, Bengaluru, Karnataka 560090
+                </a>
+              </li>
               <li>Email: <a href="mailto:info@lovosis.in" className="hover:text-black transition-colors duration-300">info@lovosis.in</a></li>
               <li>Email: <a href="mailto:lovosist@gmail.com" className="hover:text-black transition-colors duration-300">lovosist@gmail.com</a></li>
               <li>Phone: <a href="tel:+917012970281" className="hover:text-black transition-colors duration-300">+91 7012970281</a></li>
@@ -190,8 +196,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-200 mt-12 pt-8">
-          <div className="text-center text-gray-500">
+        <div className="border-t border-gray-200 mt-8 sm:mt-12 pt-6 sm:pt-8">
+          <div className="text-center text-sm sm:text-base text-gray-500">
             <p>&copy; {currentYear} lovosis. All rights reserved.</p>
           </div>
         </div>

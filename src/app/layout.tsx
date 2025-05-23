@@ -36,10 +36,6 @@ export default function RootLayout({
       <body 
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-gray-200`}
         suppressHydrationWarning
-        style={{
-          background: 'linear-gradient(to bottom right, #000000, #111111)',
-          minHeight: '100vh'
-        }}
       >
         <RootLayoutWrapper>
           {children}
