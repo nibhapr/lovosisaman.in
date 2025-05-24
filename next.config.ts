@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true, // ✅ Added this line to skip image optimization (optional but speeds up builds)
     remotePatterns: [
       {
         protocol: 'http',

@@ -9,6 +9,9 @@ RUN apk add --no-cache ffmpeg
 COPY package*.json ./
 RUN npm install
 
+# Set non-interactive mode to avoid telemetry or prompts
+ENV CI=true
+
 # Copy the rest of the application
 COPY . .
 
@@ -25,4 +28,4 @@ RUN mkdir -p /app/.next/static/videos
 
 EXPOSE 8081
 
-CMD ["npm", "start"] 
+CMD ["npm", "start"]
