@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import ImageUpload from '@/app/Components/shared/ImageUpload';
@@ -125,9 +124,7 @@ export default function NavbarCategoryManager() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
       {/* Form Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">
@@ -185,12 +182,10 @@ export default function NavbarCategoryManager() {
             )}
           </div>
         </form>
-      </motion.div>
+      </div>
 
       {/* List Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Navbar Categories</h2>
@@ -254,7 +249,7 @@ export default function NavbarCategoryManager() {
             </p>
           )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

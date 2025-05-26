@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { PiStudentBold, PiRulerBold } from "react-icons/pi";
 import { MdOutlineMemory, MdOutlinePrecisionManufacturing } from "react-icons/md";
@@ -83,22 +82,12 @@ export default function ElectronicsManufacturing() {
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-6xl font-bold text-black mb-6"
-          >
+          <h1 className="text-4xl md:text-6xl font-bold text-black mb-6">
             Electronics Manufacturing Services
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-black max-w-3xl mx-auto leading-relaxed"
-          >
+          </h1>
+          <p className="text-xl text-black max-w-3xl mx-auto leading-relaxed">
             Cutting-edge electronics manufacturing solutions with precision engineering and quality assurance
-          </motion.p>
+          </p>
         </div>
       </section>
 
@@ -108,11 +97,8 @@ export default function ElectronicsManufacturing() {
           <h2 className="text-3xl font-bold text-center mb-12 text-black">Our Manufacturing Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <motion.div
+              <div
                 key={service.title}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
               >
                 <div className="flex items-center mb-4">
@@ -128,7 +114,7 @@ export default function ElectronicsManufacturing() {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -144,13 +130,9 @@ export default function ElectronicsManufacturing() {
             Contact us today to discuss your electronics manufacturing needs
           </p>
           <Link href="/contact">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-black text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
-            >
+            <button className="px-8 py-4 bg-black text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
               Get in Touch
-            </motion.button>
+            </button>
           </Link>
         </div>
       </section>

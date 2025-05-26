@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 
 interface GalleryImage {
     _id: string;
@@ -93,17 +92,16 @@ export default function Gallery() {
                     <p className="text-xl text-black max-w-2xl mx-auto mb-8">
                         Explore our collection of images showcasing our products, events, and company culture.
                     </p>
-                    
+
                     <div className="flex flex-wrap justify-center gap-4 mb-8">
                         {CATEGORIES.map((category) => (
                             <button
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
-                                className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                                    selectedCategory === category
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
-                                        : 'bg-gray-200 text-black hover:bg-gray-300'
-                                }`}
+                                className={`px-6 py-2 rounded-full transition-all duration-300 ${selectedCategory === category
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                                    : 'bg-gray-200 text-black hover:bg-gray-300'
+                                    }`}
                             >
                                 {category}
                             </button>
@@ -118,11 +116,8 @@ export default function Gallery() {
                         ))
                     ) : (
                         galleryItems.map((item) => (
-                            <motion.div
+                            <div
                                 key={item._id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
                                 className="aspect-square relative group rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 bg-white border border-gray-200"
                                 onClick={() => {
                                     setSelectedItem(item);
@@ -161,24 +156,17 @@ export default function Gallery() {
                                         <span className="text-gray-600">No image</span>
                                     </div>
                                 )}
-                            </motion.div>
+                            </div>
                         ))
                     )}
                 </div>
 
                 {selectedItem && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                    <div
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
                         onClick={() => setSelectedItem(null)}
                     >
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            transition={{ type: "spring", damping: 25 }}
+                        <div
                             className="relative w-full max-w-5xl bg-white rounded-xl overflow-hidden shadow-2xl border border-gray-200"
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -192,7 +180,7 @@ export default function Gallery() {
                                         quality={100}
                                         sizes="(max-width: 768px) 100vw, 60vw"
                                     />
-                                    
+
                                     {selectedItem.images.length > 1 && (
                                         <div className="absolute inset-y-0 inset-x-4 flex items-center justify-between">
                                             {currentImageIndex > 0 && (
@@ -243,9 +231,8 @@ export default function Gallery() {
                                                     <button
                                                         key={index}
                                                         onClick={() => setCurrentImageIndex(index)}
-                                                        className={`relative aspect-square rounded-lg overflow-hidden ${
-                                                            currentImageIndex === index ? 'ring-2 ring-blue-500' : 'opacity-60 hover:opacity-100'
-                                                        }`}
+                                                        className={`relative aspect-square rounded-lg overflow-hidden ${currentImageIndex === index ? 'ring-2 ring-blue-500' : 'opacity-60 hover:opacity-100'
+                                                            }`}
                                                     >
                                                         <Image
                                                             src={img}
@@ -264,8 +251,8 @@ export default function Gallery() {
                                     )}
                                 </div>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

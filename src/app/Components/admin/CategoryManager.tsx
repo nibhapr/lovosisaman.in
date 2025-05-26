@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import type { Category, NavbarCategory } from '@/types/shop';
@@ -190,9 +189,7 @@ export default function CategoryManager() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
       {/* Form Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">{isEditing ? 'Edit' : 'Add'} Category</h2>
@@ -272,12 +269,10 @@ export default function CategoryManager() {
             {error}
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* List Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Categories</h2>
@@ -347,7 +342,7 @@ export default function CategoryManager() {
             </p>
           )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

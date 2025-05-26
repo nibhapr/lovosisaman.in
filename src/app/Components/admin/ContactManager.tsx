@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { IoTrashOutline } from 'react-icons/io5';
 
 interface Contact {
@@ -84,9 +83,7 @@ export default function ContactManager() {
   if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div 
       className="p-6 bg-gray-900"
     >
       <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white shadow-lg">Contact Submissions</h2>
@@ -176,6 +173,6 @@ export default function ContactManager() {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

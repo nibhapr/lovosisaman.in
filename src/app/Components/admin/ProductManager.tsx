@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { IoAddOutline, IoTrashOutline, IoCreateOutline, IoSearchOutline, IoChevronDownOutline } from 'react-icons/io5';
 import type { NavbarCategory, Category, Subcategory, Product } from '@/types/shop';
@@ -375,15 +374,11 @@ export default function ProductManager() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
             {/* Form Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
-            >
+            <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
                 <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
                     {isEditing ? 'Edit Product' : 'Add New Product'}
                 </h2>
-
+                
                 {/* Duplicates Section */}
                 <div className="mb-6 space-y-4">
                     {/* Name Duplicates */}
@@ -690,14 +685,10 @@ export default function ProductManager() {
                         )}
                     </div>
                 </form>
-            </motion.div>
+            </div>
 
             {/* List Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
-            >
+            <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
                 <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
                     Products
                 </h2>
@@ -797,7 +788,7 @@ export default function ProductManager() {
                         })
                     )}
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

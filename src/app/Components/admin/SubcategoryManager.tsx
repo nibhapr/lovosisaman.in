@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { IoTrashOutline, IoCreateOutline, IoSearchOutline } from 'react-icons/io5';
 import type { Category, Subcategory, NavbarCategory } from '@/types/shop';
@@ -216,11 +215,7 @@ export default function SubcategoryManager() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 bg-gray-900">
       {/* Form Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
-      >
+      <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
           {isEditing ? 'Edit' : 'Add'} Subcategory
         </h2>
@@ -316,14 +311,10 @@ export default function SubcategoryManager() {
             )}
           </div>
         </form>
-      </motion.div>
+      </div>
 
       {/* List Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
-      >
+      <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
           Subcategories
         </h2>
@@ -393,7 +384,7 @@ export default function SubcategoryManager() {
             </p>
           )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

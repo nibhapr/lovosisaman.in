@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import {
     IoCalendarOutline,
@@ -80,11 +79,7 @@ export default function BlogPost({ post }: BlogPostProps) {
     }, []);
 
     return (
-        <motion.article
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="max-w-4xl mx-auto p-6 bg-white text-black"
-        >
+        <article className="max-w-4xl mx-auto p-6 bg-white text-black">
             <header className="mb-8 bg-white">
                 <h1 className="text-4xl font-bold mb-4 text-black">{post.title}</h1>
                 <div className="flex flex-wrap gap-4 text-gray-600 bg-white">
@@ -211,6 +206,6 @@ export default function BlogPost({ post }: BlogPostProps) {
                     </button>
                 </div>
             </div>
-        </motion.article>
+        </article>
     );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { IoAddOutline, IoTrashOutline, IoCreateOutline } from 'react-icons/io5';
 import ImageUpload from '../shared/ImageUpload';
@@ -120,9 +119,7 @@ export default function GalleryManager() {
       <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white shadow-lg">Gallery Management</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
         >
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -214,12 +211,10 @@ export default function GalleryManager() {
               {isEditing ? 'Update' : 'Add'} Gallery Item
             </button>
           </form>
-        </motion.div>
+        </div>
 
         {/* Gallery List */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
         >
           <div className="space-y-4">
@@ -247,7 +242,7 @@ export default function GalleryManager() {
               <p className="text-gray-400">No gallery items found.</p>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { IoStar, IoStarOutline } from 'react-icons/io5';
 import { Review } from '@/types/review';
 
@@ -88,10 +87,8 @@ export default function ReviewManager() {
 
       <div className="grid gap-4">
         {filteredReviews.map((review) => (
-          <motion.div
+          <div
             key={review._id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
             className="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700"
           >
             <div className="flex justify-between items-start">
@@ -121,7 +118,7 @@ export default function ReviewManager() {
                 Delete
               </button>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

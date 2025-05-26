@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 
 interface CatalogRequest {
   _id: string;
@@ -64,9 +63,7 @@ export default function CatalogRequestManager() {
   if (loading) return <div className="text-gray-300">Loading...</div>;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
       className="p-6 bg-gray-900 min-h-screen"
     >
       <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white shadow-lg">Catalog Requests</h2>
@@ -129,7 +126,7 @@ export default function CatalogRequestManager() {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { IoMailOutline, IoTrashOutline } from 'react-icons/io5';
 
 interface Subscriber {
@@ -77,11 +76,7 @@ export default function NewsletterManager() {
   if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="p-6 bg-gray-900"
-    >
+    <div className="p-6 bg-gray-900">
       <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Newsletter Subscribers</h2>
@@ -144,6 +139,6 @@ export default function NewsletterManager() {
           </table>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

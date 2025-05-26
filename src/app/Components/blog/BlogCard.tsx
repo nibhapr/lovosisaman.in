@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 
 interface BlogCardProps {
@@ -48,11 +47,7 @@ export default function BlogCard({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300"
-    >
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
       {image && (
         <div className="relative h-48 w-full">
           <Image
@@ -85,6 +80,6 @@ export default function BlogCard({
           </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

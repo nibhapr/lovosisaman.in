@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { IoPersonOutline, IoKeyOutline } from 'react-icons/io5';
 
 interface ProfileData {
@@ -124,9 +123,7 @@ export default function AdminProfileDashboard() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className="max-w-7xl mx-auto p-6 space-y-8 bg-black"
     >
       {/* Dashboard Welcome Section */}
@@ -279,6 +276,6 @@ export default function AdminProfileDashboard() {
           </form>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
