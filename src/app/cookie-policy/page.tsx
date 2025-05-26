@@ -1,15 +1,9 @@
 "use client";
 
-import { motion } from 'framer-motion';
-
 export default function CookiePage() {
   return (
     <div className="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto"
-      >
+      <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 text-black">
           Cookie Policy
         </h1>
@@ -18,8 +12,8 @@ export default function CookiePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">What Are Cookies?</h2>
             <p className="text-gray-700">
-              Cookies are small text files that are placed on your device when you visit our website. 
-              They help us provide you with a better experience by remembering your preferences, 
+              Cookies are small text files that are placed on your device when you visit our website.
+              They help us provide you with a better experience by remembering your preferences,
               analyzing site usage, and assisting with our marketing efforts.
             </p>
           </section>
@@ -61,7 +55,7 @@ export default function CookiePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">Updates to This Policy</h2>
             <p className="text-gray-700">
-              We may update this Cookie Policy from time to time. Any changes will be posted on this page 
+              We may update this Cookie Policy from time to time. Any changes will be posted on this page
               with an updated revision date. Please check back periodically to stay informed about our use of cookies.
             </p>
           </section>
@@ -69,11 +63,11 @@ export default function CookiePage() {
           <section>
             <h2 className="text-2xl font-semibold text-black mb-4">Contact Us</h2>
             <p className="text-gray-700">
-              If you have any questions about our Cookie Policy, please contact us at{' '} <br/>
+              If you have any questions about our Cookie Policy, please contact us at{' '} <br />
               <a href="mailto:info@lovosis.in" className="text-black hover:text-gray-600 transition-colors">
                 info@lovosis.in
               </a>
-              <br/>
+              <br />
               <a href="mailto:lovosist@gmail.com" className="text-black hover:text-gray-600 transition-colors">
                 lovosist@gmail.com
               </a>
@@ -82,14 +76,14 @@ export default function CookiePage() {
               <a href="tel:+917012970281" className="text-black hover:text-gray-600 transition-colors">
                 +91 7012970281
               </a>
-              <br/>
+              <br />
               <a href="tel:+919747745544" className="text-black hover:text-gray-600 transition-colors">
                 +91 9747745544
               </a>
             </p>
           </section>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

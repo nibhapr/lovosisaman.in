@@ -118,6 +118,49 @@ export default function ProductPage({
     };
   }, [isReviewsOpen, isContactFormOpen]);
 
+  const averageRating = reviews.length
+    ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+    : 0;
+
+  // Add structured data
+  useEffect(() => {
+    if (product) {
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        description: product.description ?? '', // Replace with a valid property or fallback
+        image: product.images,
+        aggregateRating: reviews.length ? {
+          '@type': 'AggregateRating',
+          ratingValue: averageRating.toFixed(1),
+          reviewCount: reviews.length
+        } : undefined,
+        review: reviews.map(review => ({
+          '@type': 'Review',
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: review.rating
+          },
+          author: {
+            '@type': 'Person',
+            name: review.name
+          },
+          reviewBody: review.comment
+        }))
+      };
+
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(jsonLd);
+      document.head.appendChild(script);
+
+      return () => {
+        document.head.removeChild(script);
+      };
+    }
+  }, [product, reviews, averageRating]);
+
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -125,10 +168,6 @@ export default function ProductPage({
       </div>
     );
   }
-
-  const averageRating = reviews.length
-    ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
-    : 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

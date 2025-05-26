@@ -12,14 +12,14 @@ const BLOG_CATEGORIES = [
 ];
 
 export const metadata: Metadata = {
-  title: "Our Blog - Latest Insights and Trends",
+  title: "Our Blog - Latest Insights and Trends | Lovosis Technologies Pvt. Ltd.",
   description: "Stay updated with the latest insights, trends, and news in technology, innovation, and education.",
   keywords: "blog, technology, innovation, education, manufacturing, digital services, trends, insights",
   robots: {
     index: true,
     follow: true
   },
-  authors: [{ name: "Lovosis Technologies" }],
+  authors: [{ name: "Lovosis Technologies Pvt Ltd" }],
   viewport: "width=device-width, initial-scale=1",
   openGraph: {
     title: "Our Blog - Latest Insights and Trends",

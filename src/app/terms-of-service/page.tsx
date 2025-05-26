@@ -1,8 +1,19 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms and Conditions - Lovosis Technologies',
+  title: 'Terms and Conditions - Lovosis Technologies Pvt Ltd',
   description: 'Terms and Conditions for Lovosis Technologies - Understanding our service agreement and user responsibilities.',
+  keywords: 'terms and conditions, terms of service, user agreement, legal terms, service terms, Lovosis Technologies',
+  openGraph: {
+    title: 'Terms and Conditions - Lovosis Technologies',
+    description: 'Terms and Conditions for Lovosis Technologies - Understanding our service agreement and user responsibilities.',
+    type: 'website',
+    url: 'https://lovosis.in/terms-of-service',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function TermsAndConditions() {

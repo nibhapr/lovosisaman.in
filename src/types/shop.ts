@@ -30,6 +30,7 @@ interface Subcategory {
 }
 
 type Product = {
+    description: string;
     _id: string;
     name: string;
     images: string[];

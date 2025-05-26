@@ -1,8 +1,19 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Lovosis Technologies',
+  title: 'Privacy Policy - Lovosis Technologies Pvt Ltd',
   description: 'Privacy Policy for Lovosis Technologies - Learn how we collect, use, and protect your personal information.',
+  keywords: 'privacy policy, data protection, personal information, data security, user privacy, Lovosis Technologies',
+  openGraph: {
+    title: 'Privacy Policy - Lovosis Technologies',
+    description: 'Privacy Policy for Lovosis Technologies - Learn how we collect, use, and protect your personal information.',
+    type: 'website',
+    url: 'https://lovosis.in/privacy-policy',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function PrivacyPolicy() {
@@ -14,7 +25,7 @@ export default function PrivacyPolicy() {
         </h1>
 
         <div className="space-y-8 bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-          <section>
+          <section>can you add meta data and seo for this please and make sure you don't remove anything
             <h2 className="text-2xl font-semibold text-black mb-4">Introduction</h2>
             <p className="text-black leading-relaxed">
               At Lovosis Technologies, we take your privacy seriously. This Privacy Policy explains how we collect, use, 

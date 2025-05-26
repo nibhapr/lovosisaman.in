@@ -1,3 +1,4 @@
+import { defaultMetadata, organizationSchema } from '@/utils/seo';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -15,14 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lovosis Technologies Pvt. Ltd.",
-  description: "Lovosis Technologies - Providing cutting-edge educational equipment, testing & measuring instruments, software development, and security solutions.",
-  robots: {
-    index: false,
-    follow: false
-  },
+  ...defaultMetadata,
   icons: {
-    icon: favicon.src
+    icon: '/favicon.ico'
   }
 };
 
@@ -33,7 +29,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body 
+      <head>
+        <link rel="icon" href={favicon.src} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema)
+          }}
+        />
+      </head>
+      <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-gray-200`}
         suppressHydrationWarning
       >
