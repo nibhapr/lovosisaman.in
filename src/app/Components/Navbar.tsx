@@ -1,5 +1,6 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { debounce } from 'lodash';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../../public/navbarlogo/lovosis-logo.png';
@@ -53,79 +54,154 @@ const Navbar = () => {
   const [isTopVisible, setIsTopVisible] = useState(true);
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
 
-  const handleSearch = async (query: string) => {
+  // Memoized search handler with debouncing
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (query: string) => {
+        if (query.trim().length === 0) {
+          setSearchResults([]);
+          setIsSearching(false);
+          return;
+        }
+
+        setIsSearching(true);
+        try {
+          const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+          const data = await response.json();
+          setSearchResults(data);
+        } catch (error) {
+          console.error('Search error:', error);
+          setSearchResults([]);
+        } finally {
+          setIsSearching(false);
+        }
+      }, 300),
+    []
+  );
+
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-    if (query.trim().length === 0) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
-    
-    setIsSearching(true);
+    debouncedSearch(query);
+  }, [debouncedSearch]);
+
+  // Memoized data fetching
+  const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      const data = await response.json();
-      setSearchResults(data);
+      // Fetch all three endpoints in parallel
+      const [navbarResponse, categoriesResponse, subcategoriesResponse] = await Promise.all([
+        fetch('/api/navbarcategories'),
+        fetch('/api/categories'),
+        fetch('/api/subcategories')
+      ]);
+
+      const [navbarData, categoriesData, subcategoriesData] = await Promise.all([
+        navbarResponse.json(),
+        categoriesResponse.json(),
+        subcategoriesResponse.json()
+      ]);
+
+      // Combine the data into a hierarchical structure
+      const formattedData = navbarData.map((navbarCategory: any) => ({
+        id: navbarCategory._id || '',
+        name: navbarCategory.name || '',
+        slug: navbarCategory.slug || '',
+        categories: categoriesData
+          .filter((category: any) => category.navbarCategoryId === navbarCategory._id)
+          .map((category: any) => ({
+            id: category._id || '',
+            name: category.name || '',
+            slug: category.slug || '',
+            subCategories: subcategoriesData
+              .filter((subcategory: any) => subcategory.categoryId === category._id)
+              .map((subcategory: any) => ({
+                id: subcategory._id || '',
+                name: subcategory.name || '',
+                slug: subcategory.slug || '',
+                products: []
+              }))
+          }))
+      }));
+
+      setNavbarCategories(formattedData);
     } catch (error) {
-      console.error('Search error:', error);
-      setSearchResults([]);
+      console.error('Error fetching data:', error);
+      setNavbarCategories([]);
     } finally {
-      setIsSearching(false);
+      setLoading(false);
     }
-  };
+  }, []);
 
+  // Updated scroll handler
+  const handleScroll = useCallback(() => {
+    let isScrollingTimeout: NodeJS.Timeout | null = null;
+    const currentScrollY = window.scrollY;
+    const scrollThreshold = 50;
+
+    if (Math.abs(currentScrollY - scrollPosition) > 5) {
+      if (isScrollingTimeout) {
+        clearTimeout(isScrollingTimeout);
+      }
+
+      if (!isTopVisible && currentScrollY < scrollThreshold) {
+        setIsTopVisible(true);
+      } else if (isTopVisible && currentScrollY >= scrollThreshold) {
+        setIsTopVisible(false);
+      }
+
+      setScrollPosition(currentScrollY);
+
+      isScrollingTimeout = setTimeout(() => {
+        setScrollPosition(currentScrollY);
+      }, 100);
+    }
+  }, [scrollPosition, isTopVisible]);
+
+  // Replace the scroll event listener useEffect
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch all three endpoints in parallel
-        const [navbarResponse, categoriesResponse, subcategoriesResponse] = await Promise.all([
-          fetch('/api/navbarcategories'),
-          fetch('/api/categories'),
-          fetch('/api/subcategories')
-        ]);
+    let scrollTimer: number;
 
-        const navbarData = await navbarResponse.json();
-        const categoriesData = await categoriesResponse.json();
-        const subcategoriesData = await subcategoriesResponse.json();
-
-        // Combine the data into a hierarchical structure
-        const formattedData = navbarData.map((navbarCategory: any) => ({
-          id: navbarCategory._id || '',
-          name: navbarCategory.name || '',
-          slug: navbarCategory.slug || '',
-          categories: categoriesData
-            .filter((category: any) => category.navbarCategoryId === navbarCategory._id)
-            .map((category: any) => ({
-              id: category._id || '',
-              name: category.name || '',
-              slug: category.slug || '',
-              subCategories: subcategoriesData
-                .filter((subcategory: any) => subcategory.categoryId === category._id)
-                .map((subcategory: any) => ({
-                  id: subcategory._id || '',
-                  name: subcategory.name || '',
-                  slug: subcategory.slug || '',
-                  products: []
-                }))
-            }))
-        }));
-
-        setNavbarCategories(formattedData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setNavbarCategories([]);
-      } finally {
-        setLoading(false);
+    const throttledScroll = () => {
+      if (!scrollTimer) {
+        scrollTimer = window.setTimeout(() => {
+          handleScroll();
+          scrollTimer = 0;
+        }, 150); // Increased debounce time
       }
     };
 
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+      if (scrollTimer) window.clearTimeout(scrollTimer);
+    };
+  }, [handleScroll]);
+
+  // Memoized click handlers
+  const handleNavbarCategoryClick = useCallback((navbarCategoryId: string) => {
+    setExpandedNavbarCategory(expandedNavbarCategory === navbarCategoryId ? null : navbarCategoryId);
+    setExpandedCategory(null);
+  }, [expandedNavbarCategory]);
+
+  const handleCategoryClick = useCallback((categoryId: string) => {
+    setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
+  }, [expandedCategory]);
+
+  const handleLinkClick = useCallback(() => {
+    setIsMegaMenuOpen(false);
+    setExpandedNavbarCategory(null);
+    setExpandedCategory(null);
+    setIsOpen(false);
+  }, []);
+
+  // Effect hooks
+  useEffect(() => {
     fetchData();
 
     // Set active section based on current path
     const path = window.location.pathname;
     const section = path.split('/')[1];
     setActiveSection(section || 'home');
-  }, []);
+  }, [fetchData]);
 
   // Handle click outside to close mega menu
   useEffect(() => {
@@ -160,43 +236,6 @@ const Navbar = () => {
     }
   };
 
-  const handleNavbarCategoryClick = (navbarCategoryId: string) => {
-    setExpandedNavbarCategory(expandedNavbarCategory === navbarCategoryId ? null : navbarCategoryId);
-    setExpandedCategory(null);
-  };
-
-  const handleCategoryClick = (categoryId: string) => {
-    setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
-  };
-
-  // Add this new function to handle link clicks
-  const handleLinkClick = () => {
-    setIsMegaMenuOpen(false);
-    setExpandedNavbarCategory(null);
-    setExpandedCategory(null);
-    setIsOpen(false); // This will also close mobile menu
-  };
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollPosition(currentScrollY);
-      
-      if (currentScrollY > lastScrollY) {
-        setIsTopVisible(false); // Scrolling down
-      } else {
-        setIsTopVisible(currentScrollY < 50); // Show top bar only when near the top
-      }
-      
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const toggleSearchBar = () => {
     setIsSearchBarVisible(!isSearchBarVisible);
   };
@@ -204,10 +243,9 @@ const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-white via-gray-50 to-white text-black sticky top-0 z-50 shadow-lg">
       {/* Top bar with logo and certifications */}
-      <div 
-        className={`bg-gradient-to-r from-gray-50 via-white to-gray-50 py-3 px-4 sm:px-6 lg:px-8 border-b border-gray-100 transition-all duration-300 ease-in-out ${
-          isTopVisible ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0 overflow-hidden'
-        }`}
+      <div
+        className={`bg-gradient-to-r from-gray-50 via-white to-gray-50 py-3 px-4 sm:px-6 lg:px-8 border-b border-gray-100 transition-all duration-300 ease-in-out ${isTopVisible ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0 overflow-hidden'
+          }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           {/* Logo */}
@@ -352,9 +390,8 @@ const Navbar = () => {
       </div>
 
       {/* Main Navigation - Enhanced */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ease-in-out ${
-        !isTopVisible ? 'shadow-md' : ''
-      }`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ease-in-out ${!isTopVisible ? 'shadow-md' : ''
+        }`}>
         <div className="flex justify-between items-center h-16">
           {/* Logo - Shows when top section is hidden */}
           <div className={`${!isTopVisible ? 'opacity-100 w-auto' : 'opacity-0 w-0'} transition-all duration-300 overflow-hidden flex-shrink-0`}>
@@ -485,7 +522,7 @@ const Navbar = () => {
                                       } transition-all duration-200`}
                                   >
                                     <div className="flex items-center justify-between">
-                                      <Link 
+                                      <Link
                                         href={`/products/${navbarCategories.find(nc => nc.id === expandedNavbarCategory)?.slug}/${category.slug}`}
                                         className="text-sm font-medium cursor-pointer flex-1"
                                         onClick={handleLinkClick}
@@ -662,10 +699,9 @@ const Navbar = () => {
       </div>
 
       {/* Search Bar - Sliding */}
-      <div 
-        className={`border-t border-gray-100 transition-all duration-300 ease-in-out ${
-          isSearchBarVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-        }`}
+      <div
+        className={`border-t border-gray-100 transition-all duration-300 ease-in-out ${isSearchBarVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="relative">
@@ -711,17 +747,15 @@ const Navbar = () => {
       {/* Mobile Menu - Updated with Desktop Features */}
       <div className={`md:hidden fixed inset-0 z-50 ${isOpen ? 'visible' : 'invisible'}`}>
         {/* Backdrop */}
-        <div 
-          className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-            isOpen ? 'opacity-50' : 'opacity-0'
-          }`}
+        <div
+          className={`fixed inset-0 bg-black transition-opacity duration-300 ${isOpen ? 'opacity-50' : 'opacity-0'
+            }`}
           onClick={() => setIsOpen(false)}
         />
 
         {/* Menu Panel */}
-        <div className={`fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-out overflow-y-auto ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}>
+        <div className={`fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-out overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}>
           {/* Header with Logo and Close Button */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <Link href="/" onClick={() => setIsOpen(false)}>
@@ -849,9 +883,8 @@ const Navbar = () => {
                           className="p-1"
                         >
                           <svg
-                            className={`h-4 w-4 text-gray-400 transform transition-transform ${
-                              expandedNavbarCategory === navCat.id ? 'rotate-180' : ''
-                            }`}
+                            className={`h-4 w-4 text-gray-400 transform transition-transform ${expandedNavbarCategory === navCat.id ? 'rotate-180' : ''
+                              }`}
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -882,9 +915,8 @@ const Navbar = () => {
                                   className="p-1"
                                 >
                                   <svg
-                                    className={`h-4 w-4 text-gray-400 transform transition-transform ${
-                                      expandedCategory === cat.id ? 'rotate-180' : ''
-                                    }`}
+                                    className={`h-4 w-4 text-gray-400 transform transition-transform ${expandedCategory === cat.id ? 'rotate-180' : ''
+                                      }`}
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -943,7 +975,7 @@ const Navbar = () => {
             >
               Contact Us
             </Link>
-            
+
             {/* All Contact Info */}
             <div className="mt-6 space-y-3">
               {[
