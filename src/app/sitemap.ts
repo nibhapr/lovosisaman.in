@@ -4,53 +4,25 @@ import Category from '@/app/models/Category'
 import Subcategory from '@/app/models/Subcategory'
 import Product from '@/app/models/Product'
 import NavbarCategory from '@/app/models/NavbarCategory'
+import BlogPost from '@/app/models/Blog'
+import Event from '@/app/models/Event'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'lovosis.in'
-  
+  const baseUrl = 'https://lovosis.in'
+
   await connectDB()
 
-  // Fetch all categories, subcategories, products, and navbar categories
-  const categories = await Category.find({})
-  const subcategories = await Subcategory.find({})
-  const products = await Product.find({})
-  const navbarCategories = await NavbarCategory.find({})
+  const [categories, subcategories, products, navbarCategories, blogPosts, eventPosts] = await Promise.all([
+    Category.find({}),
+    Subcategory.find({}),
+    Product.find({}),
+    NavbarCategory.find({}),
+    BlogPost.find({}),
+    Event.find({}),
+  ])
 
-  // Generate shop routes
-  const shopRoutes = categories.flatMap(category => {
-    const categoryRoute = {
-      url: `${baseUrl}/products/${category.slug}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    }
-
-    const subcategoryRoutes = subcategories
-      .filter(sub => sub.categoryId === category._id.toString())
-      .map(sub => ({
-        url: `${baseUrl}/products/${category.slug}/${sub.slug}`,
-        lastModified: new Date().toISOString(),
-        changeFrequency: 'daily' as const,
-        priority: 0.7,
-      }))
-
-    const productRoutes = products
-      .filter(prod => prod.categoryId === category._id.toString())
-      .map(prod => {
-        const sub = subcategories.find(sub => sub._id.toString() === prod.subcategoryId);
-        return {
-          url: `${baseUrl}/products/${category.slug}/${sub?.slug}/${prod.slug}`,
-          lastModified: new Date().toISOString(),
-          changeFrequency: 'daily' as const,
-          priority: 0.6,
-        };
-      })
-
-    return [categoryRoute, ...subcategoryRoutes, ...productRoutes]
-  })
-
-  // Base routes that we know exist
-  const staticRoutes = [
+  // ===== Static Routes =====
+  const staticRoutes: MetadataRoute.Sitemap = [
     '',
     '/about',
     '/contact',
@@ -70,17 +42,95 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
-    changeFrequency: 'daily' as const,
+    changeFrequency: 'daily',
     priority: route === '' ? 1 : 0.8,
   }))
 
-  // Generate navbar category routes
-  const navbarCategoryRoutes = navbarCategories.map(category => ({
-    url: `${baseUrl}/products/${category.slug}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: 'daily' as const,
-    priority: 0.8,
+  // ===== Blog Routes =====
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map(post => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt || post.createdAt).toISOString(),
+    changeFrequency: 'weekly',
+    priority: 0.6,
   }))
 
-  return [...staticRoutes, ...shopRoutes, ...navbarCategoryRoutes]
-} 
+  // ===== Event Routes =====
+  const eventRoutes: MetadataRoute.Sitemap = eventPosts.map(event => ({
+    url: `${baseUrl}/events/${event.slug}`,
+    lastModified: new Date(event.updatedAt || event.createdAt).toISOString(),
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }))
+
+  // ===== Navbar Category Routes =====
+  const navbarCategoryRoutes: MetadataRoute.Sitemap = navbarCategories.map(nav => ({
+    url: `${baseUrl}/products/${nav.slug}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'daily',
+    priority: 0.9,
+  }))
+
+  // ===== Category Routes: /products/:navbarCategorySlug/:categorySlug =====
+  const categoryRoutes: MetadataRoute.Sitemap = categories
+    .map(category => {
+      const navbarCategory = navbarCategories.find(nav => nav._id.toString() === category.navbarCategoryId?.toString())
+      if (!navbarCategory) return null
+
+      return {
+        url: `${baseUrl}/products/${navbarCategory.slug}/${category.slug}`,
+        lastModified: new Date().toISOString(),
+        changeFrequency: 'daily',
+        priority: 0.85,
+      }
+    })
+    .filter(Boolean) as MetadataRoute.Sitemap
+
+  // ===== Subcategory Routes: /products/:navbarCategorySlug/:categorySlug/:subcategorySlug =====
+  const subcategoryRoutes: MetadataRoute.Sitemap = subcategories
+    .map(subcategory => {
+      const category = categories.find(cat => cat._id.toString() === subcategory.categoryId?.toString())
+      if (!category) return null
+
+      const navbarCategory = navbarCategories.find(nav => nav._id.toString() === category.navbarCategoryId?.toString())
+      if (!navbarCategory) return null
+
+      return {
+        url: `${baseUrl}/products/${navbarCategory.slug}/${category.slug}/${subcategory.slug}`,
+        lastModified: new Date().toISOString(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      }
+    })
+    .filter(Boolean) as MetadataRoute.Sitemap
+
+  // ===== Product Routes: /products/:navbarCategorySlug/:categorySlug/:subcategorySlug/:productSlug =====
+  const productRoutes: MetadataRoute.Sitemap = products
+    .map(product => {
+      const subcategory = subcategories.find(sub => sub._id.toString() === product.subcategoryId?.toString())
+      if (!subcategory) return null
+
+      const category = categories.find(cat => cat._id.toString() === subcategory.categoryId?.toString())
+      if (!category) return null
+
+      const navbarCategory = navbarCategories.find(nav => nav._id.toString() === category.navbarCategoryId?.toString())
+      if (!navbarCategory) return null
+
+      return {
+        url: `${baseUrl}/products/${navbarCategory.slug}/${category.slug}/${subcategory.slug}/${product.slug}`,
+        lastModified: new Date().toISOString(),
+        changeFrequency: 'daily',
+        priority: 0.7,
+      }
+    })
+    .filter(Boolean) as MetadataRoute.Sitemap
+
+  return [
+    ...staticRoutes,
+    ...blogRoutes,
+    ...eventRoutes,
+    ...navbarCategoryRoutes,
+    ...categoryRoutes,
+    ...subcategoryRoutes,
+    ...productRoutes,
+  ]
+}
