@@ -46,6 +46,7 @@ const Navbar = () => {
   const [expandedNavbarCategory, setExpandedNavbarCategory] = useState<string | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -208,6 +209,7 @@ const Navbar = () => {
     const handleClickOutside = (event: MouseEvent) => {
       const megaMenu = document.getElementById('mega-menu');
       const megaMenuButton = document.getElementById('mega-menu-button');
+      const servicesDropdown = document.querySelector('[data-services-dropdown]');
 
       if (megaMenu && megaMenuButton) {
         if (!megaMenu.contains(event.target as Node) &&
@@ -216,6 +218,10 @@ const Navbar = () => {
           setExpandedNavbarCategory(null);
           setExpandedCategory(null);
         }
+      }
+
+      if (servicesDropdown && !servicesDropdown.contains(event.target as Node)) {
+        setIsServicesOpen(false);
       }
     };
 
@@ -422,12 +428,51 @@ const Navbar = () => {
               About
             </Link>
 
-            <Link
-              href="/services"
-              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'services' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
-            >
-              Services
-            </Link>
+            {/* Services Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsServicesOpen(!isServicesOpen)}
+                className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide flex items-center gap-2 ${activeSection === 'services' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
+              >
+                Services
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-4 w-4 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Services Dropdown Menu */}
+              {isServicesOpen && (
+                <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                  <Link
+                    href="/services/educational-lab-equipment"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsServicesOpen(false)}
+                  >
+                    Educational Lab Equipment
+                  </Link>
+                  <Link
+                    href="/services/industrial-solutions"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsServicesOpen(false)}
+                  >
+                    Industrial Solutions
+                  </Link>
+                  <Link
+                    href="/services/research-development"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsServicesOpen(false)}
+                  >
+                    Research & Development
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {/* Products Mega Menu Button */}
             <div className="relative">
@@ -830,7 +875,7 @@ const Navbar = () => {
 
           {/* Navigation Links with Products Mega Menu */}
           <div className="py-4">
-            {['Home', 'About', 'Services'].map((item) => (
+            {['Home', 'About'].map((item) => (
               <Link
                 key={item}
                 href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
@@ -843,6 +888,59 @@ const Navbar = () => {
                 </svg>
               </Link>
             ))}
+
+            {/* Services Dropdown for Mobile */}
+            <div className="border-t border-gray-100">
+              <button
+                className="w-full px-6 py-4 flex items-center justify-between text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsServicesOpen(!isServicesOpen)}
+              >
+                <span className="text-base font-medium">Services</span>
+                <svg
+                  className={`h-5 w-5 text-gray-400 transform transition-transform ${isServicesOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isServicesOpen && (
+                <div className="bg-gray-50 py-2">
+                  <Link
+                    href="/services/educational-lab-equipment"
+                    className="block px-8 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                    onClick={() => {
+                      setIsServicesOpen(false);
+                      setIsOpen(false);
+                    }}
+                  >
+                    Educational Lab Equipment
+                  </Link>
+                  <Link
+                    href="/services/industrial-solutions"
+                    className="block px-8 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                    onClick={() => {
+                      setIsServicesOpen(false);
+                      setIsOpen(false);
+                    }}
+                  >
+                    Industrial Solutions
+                  </Link>
+                  <Link
+                    href="/services/research-development"
+                    className="block px-8 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                    onClick={() => {
+                      setIsServicesOpen(false);
+                      setIsOpen(false);
+                    }}
+                  >
+                    Research & Development
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {/* Products Section with Expandable Categories */}
             <div className="border-t border-b border-gray-100">
