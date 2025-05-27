@@ -375,6 +375,14 @@ export default function ProductManager() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-900 p-6">
             {/* Form Section */}
             <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
+                        {isEditing ? 'Edit Product' : 'Add New Product'}
+                    </h2>
+                    <div className="bg-blue-900/50 text-blue-200 px-4 py-2 rounded-lg">
+                        Total: {products.length}
+                    </div>
+                </div>
                 <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
                     {isEditing ? 'Edit Product' : 'Add New Product'}
                 </h2>

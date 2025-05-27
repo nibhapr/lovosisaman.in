@@ -405,7 +405,10 @@ export default function EventManager() {
             <div
                 className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
             >
-                <h2 className="text-2xl font-semibold mb-6 text-white bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg">Events</h2>
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-semibold text-white bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg">Events</h2>
+                    <span className="text-gray-400 text-lg">Total Events: {events.length}</span>
+                </div>
                 <div className="space-y-4">
                     {events.map((event) => (
                         <div

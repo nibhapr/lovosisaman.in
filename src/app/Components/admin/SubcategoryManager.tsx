@@ -315,9 +315,14 @@ export default function SubcategoryManager() {
 
       {/* List Section */}
       <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
-        <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
-          Subcategories
-        </h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
+            Subcategories
+          </h2>
+          <span className="text-gray-400">
+            Total: {filteredSubcategories.length}
+          </span>
+        </div>
         
         {/* Search Box */}
         <div className="mb-4 relative">

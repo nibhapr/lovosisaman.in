@@ -317,6 +317,11 @@ export default function BlogManager() {
 
             {/* Posts List */}
             <div className="space-y-4">
+                {/* Total Count Display */}
+                <div className="text-gray-300 font-semibold mb-2">
+                    Total Posts: {posts.length}
+                </div>
+                
                 {loading ? (
                     <p className="text-gray-300">Loading...</p>
                 ) : (

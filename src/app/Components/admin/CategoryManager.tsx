@@ -277,6 +277,11 @@ export default function CategoryManager() {
       >
         <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Categories</h2>
 
+        {/* Total Count Display */}
+        <div className="text-gray-300 font-semibold mb-4">
+          Total Categories: {categories.length}
+        </div>
+
         {/* Search Box */}
         <div className="mb-4 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

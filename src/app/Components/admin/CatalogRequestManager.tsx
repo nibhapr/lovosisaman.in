@@ -68,6 +68,11 @@ export default function CatalogRequestManager() {
     >
       <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white shadow-lg">Catalog Requests</h2>
 
+      {/* Total Count Display */}
+      <div className="mb-4 text-gray-300 font-semibold">
+        Total Requests: {requests.length}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
           <h3 className="text-lg font-semibold mb-4 text-gray-100 bg-gradient-to-r from-blue-900 to-blue-700 p-2 rounded">Recent Requests</h3>

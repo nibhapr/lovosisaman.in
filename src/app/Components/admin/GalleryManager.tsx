@@ -217,6 +217,10 @@ export default function GalleryManager() {
         <div
           className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
         >
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold text-gray-100">Gallery Items</h3>
+            <span className="text-gray-400">Total Items: {galleryItems.length}</span>
+          </div>
           <div className="space-y-4">
             {Array.isArray(galleryItems) && galleryItems.length > 0 ? (
               galleryItems.map((item) => (

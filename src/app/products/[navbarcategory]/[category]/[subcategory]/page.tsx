@@ -17,13 +17,13 @@ async function getProducts(subcategoryId: string) {
 
 export const revalidate = 0; // Enable real-time revalidation
 
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: { navbarcategory: string; category: string; subcategory: string } 
+export async function generateMetadata({
+  params
+}: {
+  params: { navbarcategory: string; category: string; subcategory: string }
 }): Promise<Metadata> {
   const subcategory = await getSubcategory(params.subcategory);
-  
+
   if (!subcategory) {
     return {
       title: 'Subcategory Not Found | Lovosis Technology Pvt Ltd',
@@ -88,6 +88,9 @@ export default async function SubcategoryPage({
             Explore{" "}
             <span className="text-blue-600">
               {subcategory.name}
+            </span>
+            <span className="text-lg font-semibold text-gray-600 ml-2">
+              ({products.length} products)
             </span>
           </h1>
           <p className="text-black max-w-2xl mx-auto">

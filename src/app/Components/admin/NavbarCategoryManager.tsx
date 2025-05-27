@@ -188,7 +188,10 @@ export default function NavbarCategoryManager() {
       <div
         className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700"
       >
-        <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Navbar Categories</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold bg-gradient-to-r from-blue-900 to-blue-700 p-4 rounded-lg text-white">Navbar Categories</h2>
+          <span className="text-gray-400 text-lg">Total Categories: {categories.length}</span>
+        </div>
 
         {/* Search Box */}
         <div className="mb-4 relative">
