@@ -450,25 +450,18 @@ const Navbar = () => {
               {isServicesOpen && (
                 <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
                   <Link
-                    href="/services/educational-lab-equipment"
+                    href="/services/electronics-manufacturing"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => setIsServicesOpen(false)}
                   >
-                    Educational Lab Equipment
+                    Electronics Manufacturing
                   </Link>
                   <Link
-                    href="/services/industrial-solutions"
+                    href="/services/it-services"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => setIsServicesOpen(false)}
                   >
-                    Industrial Solutions
-                  </Link>
-                  <Link
-                    href="/services/research-development"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsServicesOpen(false)}
-                  >
-                    Research & Development
+                    IT Services
                   </Link>
                 </div>
               )}
@@ -909,34 +902,24 @@ const Navbar = () => {
               {isServicesOpen && (
                 <div className="bg-gray-50 py-2">
                   <Link
-                    href="/services/educational-lab-equipment"
+                    href="/services/electronics-manufacturing"
                     className="block px-8 py-2 text-sm text-gray-600 hover:bg-gray-100"
                     onClick={() => {
                       setIsServicesOpen(false);
                       setIsOpen(false);
                     }}
                   >
-                    Educational Lab Equipment
+                    Electronics Manufacturing
                   </Link>
                   <Link
-                    href="/services/industrial-solutions"
+                    href="/services/it-services"
                     className="block px-8 py-2 text-sm text-gray-600 hover:bg-gray-100"
                     onClick={() => {
                       setIsServicesOpen(false);
                       setIsOpen(false);
                     }}
                   >
-                    Industrial Solutions
-                  </Link>
-                  <Link
-                    href="/services/research-development"
-                    className="block px-8 py-2 text-sm text-gray-600 hover:bg-gray-100"
-                    onClick={() => {
-                      setIsServicesOpen(false);
-                      setIsOpen(false);
-                    }}
-                  >
-                    Research & Development
+                    IT Services
                   </Link>
                 </div>
               )}
