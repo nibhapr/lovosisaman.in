@@ -74,11 +74,9 @@ export default function ProductManager() {
                 ...formData,
                 slug: generateSlug(formData.name),
                 images: validImages,
-                // Make sure catalogImage is either a valid string or null, never undefined or empty string
                 catalogImage: formData.catalogImage && formData.catalogImage.trim() !== '' ? formData.catalogImage : null,
-                // Only include category and subcategory if they have values
-                ...(formData.categoryId && formData.categoryId.trim() !== '' ? { categoryId: formData.categoryId } : {}),
-                ...(formData.subcategoryId && formData.subcategoryId.trim() !== '' ? { subcategoryId: formData.subcategoryId } : {})
+                categoryId: formData.categoryId || null,  // Always include categoryId
+                subcategoryId: formData.subcategoryId || null  // Always include subcategoryId
             };
 
             console.log('Processed product data:', productData);
@@ -89,7 +87,11 @@ export default function ProductManager() {
             const response = await fetch(url, {
                 method: isEditing ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData),
+                body: JSON.stringify({
+                    ...productData,
+                    // Ensure nested category relationships are preserved
+                    navbarCategory: navbarCategories.find(nc => nc._id === formData.navbarCategoryId),
+                }),
             });
 
             if (!response.ok) {
@@ -344,13 +346,15 @@ export default function ProductManager() {
     // Filter products based on search term
     const filteredProducts: Product[] = products.filter((product: Product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );    function handleEdit(product: Product): void {
+    ); function handleEdit(product: Product): void {
         setIsEditing(true);
         setSelectedProduct(product);
 
-        // Find the associated category to get its navbarCategoryId
-        const category = categories.find(c => c._id === product.categoryId);
-        const navbarCategoryId = category?.navbarCategoryId || '';
+        // Use the product's navbarCategoryId directly if available, otherwise try to find it from the category
+        const navbarCategoryId = product.navbarCategoryId || (() => {
+            const category = categories.find(c => c._id === product.categoryId);
+            return category?.navbarCategoryId || '';
+        })();
 
         // Process catalog images - ensure we have both catalogImage and catalogImages
         let catalogImagesData = [''];
@@ -363,7 +367,7 @@ export default function ProductManager() {
         setFormData({
             name: product.name,
             images: product.images || [''],
-            navbarCategoryId: navbarCategoryId,
+            navbarCategoryId: typeof navbarCategoryId === 'string' ? navbarCategoryId : navbarCategoryId?._id || '',
             categoryId: product.categoryId || '',
             subcategoryId: product.subcategoryId || '',
             catalogImage: product.catalogImage || null,
@@ -386,7 +390,7 @@ export default function ProductManager() {
                 <h2 className="text-2xl font-semibold mb-6 bg-gradient-to-r from-blue-500 to-blue-300 bg-clip-text text-transparent">
                     {isEditing ? 'Edit Product' : 'Add New Product'}
                 </h2>
-                
+
                 {/* Duplicates Section */}
                 <div className="mb-6 space-y-4">
                     {/* Name Duplicates */}
@@ -487,12 +491,16 @@ export default function ProductManager() {
                         <select
                             value={formData.navbarCategoryId}
                             onChange={(e) => {
-                                setFormData({
-                                    ...formData,
-                                    navbarCategoryId: e.target.value,
-                                    categoryId: '',
-                                    subcategoryId: '',
-                                });
+                                const newNavbarCategoryId = e.target.value;
+                                setFormData(prev => ({
+                                    ...prev,
+                                    navbarCategoryId: newNavbarCategoryId,
+                                    // Only reset category and subcategory if navbar category actually changed
+                                    ...(prev.navbarCategoryId !== newNavbarCategoryId ? {
+                                        categoryId: '',
+                                        subcategoryId: ''
+                                    } : {})
+                                }));
                             }}
                             className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500"
                             required

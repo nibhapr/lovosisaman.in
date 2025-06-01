@@ -9,7 +9,7 @@ const blogSchema = new mongoose.Schema({
   slug: {
     type: String,
     required: true,
-    unique: true
+
   },
   content: {
     type: String,
@@ -31,9 +31,11 @@ const blogSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Create indexes for better query performance
-blogSchema.index({ slug: 1 });
+// Remove this line:
+// blogSchema.index({ slug: 1 });
+// Keep other indexes
 blogSchema.index({ category: 1, date: -1 });
 
 const Blog = mongoose.models.Blog || mongoose.model('Blog', blogSchema);
 
-export default Blog; 
+export default Blog;

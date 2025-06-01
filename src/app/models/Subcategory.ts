@@ -11,7 +11,7 @@ const subcategorySchema = new mongoose.Schema({
   slug: {
     type: String,
     required: true,
-    unique: true,
+    
     trim: true,
     match: /^[a-z0-9-]+$/
   },
@@ -41,7 +41,9 @@ const subcategorySchema = new mongoose.Schema({
 });
 
 // Add indexes for better query performance
-subcategorySchema.index({ slug: 1 }, { unique: true });
+// Remove this line:
+// subcategorySchema.index({ slug: 1 }, { unique: true });
+// Keep other indexes
 subcategorySchema.index({ categoryId: 1 });
 subcategorySchema.index({ navbarCategoryId: 1 });
 
@@ -82,4 +84,4 @@ subcategorySchema.pre('save', async function (next) {
 
 const Subcategory = mongoose.models.Subcategory || mongoose.model('Subcategory', subcategorySchema);
 
-export default Subcategory; 
+export default Subcategory;

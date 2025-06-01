@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       query = { categoryId: { $in: categoryIds } };
     }
 
-    const subcategories = await Subcategory.find(query);
+    const subcategories = await Subcategory.find(query).sort({ name: 1 });
     return NextResponse.json(subcategories);
   } catch (error) {
     console.error('Database error:', error);
@@ -72,4 +72,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

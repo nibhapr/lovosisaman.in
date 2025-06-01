@@ -4,8 +4,6 @@ import NavbarCategory from '@/app/models/NavbarCategory';
 import Category from '@/app/models/Category';
 import Subcategory from '@/app/models/Subcategory';
 import Product from '@/app/models/Product';
-import Blog from '@/app/models/Blog';
-import Event from '@/app/models/Event';
 
 export async function GET(request: Request) {
   try {
@@ -25,25 +23,11 @@ export async function GET(request: Request) {
       categories,
       subcategories,
       products,
-      blogs,
-      events
     ] = await Promise.all([
       NavbarCategory.find({ name: searchRegex }).limit(5),
       Category.find({ name: searchRegex }).limit(5),
       Subcategory.find({ name: searchRegex }).limit(5),
       Product.find({ name: searchRegex }).limit(5),
-      Blog.find({ 
-        $or: [
-          { title: searchRegex },
-          { content: searchRegex }
-        ]
-      }).limit(5),
-      Event.find({
-        $or: [
-          { title: searchRegex },
-          { description: searchRegex }
-        ]
-      }).limit(5)
     ]);
 
     // Format and combine results
@@ -68,16 +52,6 @@ export async function GET(request: Request) {
         url: `/products/${p.navbarCategoryId}/${p.categoryId}/${p.subcategoryId || 'no-subcategory'}/${p.slug}`,
         type: 'Product'
       })),
-      ...blogs.map(b => ({
-        title: b.title,
-        url: `/blogs/${b.slug}`,
-        type: 'Blog'
-      })),
-      ...events.map(e => ({
-        title: e.title,
-        url: `/events/${e.slug}`,
-        type: 'Event'
-      }))
     ];
 
     return NextResponse.json(results);

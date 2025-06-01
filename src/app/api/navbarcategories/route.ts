@@ -5,7 +5,7 @@ import File from '@/app/models/File';
 
 export async function GET() {
   await connectDB();
-  const categories = await NavbarCategory.find({});
+  const categories = await NavbarCategory.find({}).sort({ name: 1 });
   return NextResponse.json(categories);
 }
 
@@ -45,4 +45,4 @@ export async function DELETE(request: Request) {
   const { _id } = await request.json();
   await NavbarCategory.findByIdAndDelete(_id);
   return NextResponse.json({ message: 'Category deleted successfully' });
-} 
+}

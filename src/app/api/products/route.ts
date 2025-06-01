@@ -29,6 +29,7 @@ export async function GET(request: Request) {
     }
 
     const products = await Product.find(query)
+      .sort({ name: 1 })
       .populate('navbarCategoryId')
       .populate({
         path: 'categoryId',

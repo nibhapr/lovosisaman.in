@@ -260,8 +260,8 @@ const Navbar = () => {
               <Image
                 src={logo.src}
                 alt="Lovosis Logo"
-                width={200}
-                height={40}
+                width={350}
+                height={450}
                 className="object-contain"
               />
             </Link>
@@ -662,17 +662,10 @@ const Navbar = () => {
             </div>
 
             <Link
-              href="/blogs"
-              className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'blogs' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
-            >
-              Blogs
-            </Link>
-
-            <Link
-              href="/events"
+              href="/certificates"
               className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide ${activeSection === 'events' ? 'bg-white text-indigo-800' : 'text-gray-800 hover:bg-gray-100'} transition-all duration-300`}
             >
-              Events
+              Certificates
             </Link>
 
             <Link
@@ -745,7 +738,7 @@ const Navbar = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search products, blogs, events..."
+              placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               className="w-full px-6 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm hover:shadow-md transition-shadow duration-200"
@@ -828,7 +821,7 @@ const Navbar = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search products, blogs, events..."
+                placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
@@ -1032,7 +1025,7 @@ const Navbar = () => {
               )}
             </div>
 
-            {['Blogs', 'Events', 'Gallery'].map((item) => (
+            {['Certificates', 'Gallery'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}

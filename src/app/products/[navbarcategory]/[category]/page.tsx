@@ -43,7 +43,10 @@ async function getProducts(navbarCategoryId: string, categoryId: string) {
     return await Product.find({
       navbarCategoryId,
       categoryId,
-      subcategoryId: { $exists: false }  // Only get products with no subcategory
+      $or: [
+        { subcategoryId: { $exists: false } },
+        { subcategoryId: null }
+      ]
     });
   } catch (error) {
     console.error('Error fetching products:', error);

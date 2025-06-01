@@ -8,13 +8,11 @@ import {
   HiOutlineBars3,
   HiOutlineXMark,
   HiOutlineNewspaper,
-  HiOutlineCalendar,
   HiOutlineSquares2X2,
   HiOutlineRectangleStack,
   HiOutlineShoppingBag,
   HiOutlineStar,
   HiOutlineArrowRightOnRectangle,
-  HiOutlineDocumentText,
   HiOutlinePhoto,
 } from 'react-icons/hi2';
 
@@ -22,8 +20,6 @@ const menuItems = [
   { name: 'Dashboard', icon: HiOutlineHome, path: '/admin/dashboard' },
   { name: 'Contacts', icon: HiOutlineEnvelope, path: '/admin/dashboard/contacts' },
   { name: 'Newsletter', icon: HiOutlineNewspaper, path: '/admin/dashboard/newsletter' },
-  { name: 'Blog', icon: HiOutlineDocumentText, path: '/admin/dashboard/blog' },
-  { name: 'Events', icon: HiOutlineCalendar, path: '/admin/dashboard/events' },
   { name: 'Navbar Category', icon: HiOutlineSquares2X2, path: '/admin/dashboard/navbarcategories' },
   { name: 'Categories', icon: HiOutlineSquares2X2, path: '/admin/dashboard/categories' },
   { name: 'Subcategories', icon: HiOutlineRectangleStack, path: '/admin/dashboard/subcategories' },
@@ -31,6 +27,7 @@ const menuItems = [
   { name: 'Catalog Requests', icon: HiOutlineRectangleStack, path: '/admin/dashboard/catalog-requests' },
   { name: 'Reviews', icon: HiOutlineStar, path: '/admin/dashboard/reviews' },
   { name: 'Gallery', icon: HiOutlinePhoto, path: '/admin/dashboard/gallery' },
+  { name: 'Certificates', icon: HiOutlinePhoto, path: '/admin/dashboard/certificates' },
 ];
 
 interface SidebarProps {

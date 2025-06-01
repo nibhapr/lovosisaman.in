@@ -14,7 +14,7 @@ async function getNavbarCategory(slug: string) {
 
 async function getCategories(navbarCategoryId: string) {
   await connectDB();
-  return await Category.find({ navbarCategoryId });
+  return await Category.find({ navbarCategoryId }).sort({ name: 1 });
 }
 
 async function getProducts(navbarCategoryId: string) {
@@ -23,7 +23,7 @@ async function getProducts(navbarCategoryId: string) {
     navbarCategoryId,
     categoryId: { $exists: false },
     subcategoryId: { $exists: false }
-  }).lean();
+  }).sort({ name: 1 }).lean();
 }
 
 export async function generateMetadata({ params }: { params: { navbarcategory: string } }): Promise<Metadata> {

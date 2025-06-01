@@ -40,12 +40,12 @@ export const revalidate = 0;
 
 async function getNavbarCategories() {
   await connectDB();
-  return await NavbarCategory.find({});
+  return await NavbarCategory.find({}).sort({ name: 1 });
 }
 
 async function getCategories() {
   await connectDB();
-  return await Category.find({});
+  return await Category.find({}).sort({ name: 1 });
 }
 
 export default async function ShopPage() {

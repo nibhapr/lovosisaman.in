@@ -16,9 +16,9 @@ const categorySchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Add index here if needed
-categorySchema.index({ slug: 1 }, { unique: true });
+// Remove this line:
+// categorySchema.index({ slug: 1 }, { unique: true });
 
 const Category = mongoose.models.Category || mongoose.model('Category', categorySchema);
 
-export default Category; 
+export default Category;

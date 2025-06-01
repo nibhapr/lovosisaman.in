@@ -127,18 +127,10 @@ const Footer = () => {
             <ul className="space-y-2 text-sm sm:text-base">
               <li>
                 <Link
-                  href="/blogs"
+                  href="/certificates"
                   className="text-gray-600 hover:text-black transition-colors duration-300"
                 >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/events"
-                  className="text-gray-600 hover:text-black transition-colors duration-300"
-                >
-                  Events
+                  Certificates
                 </Link>
               </li>
               <li>

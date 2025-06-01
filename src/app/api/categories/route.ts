@@ -7,7 +7,7 @@ import NavbarCategory from '@/app/models/NavbarCategory';
 export async function GET() {
   try {
     await connectDB();
-    const categories = await Category.find({}).select('_id name slug navbarCategoryId');
+    const categories = await Category.find({}).select('_id name slug navbarCategoryId').sort({ name: 1 });
     return NextResponse.json(categories);
   } catch (error) {
     console.error('Error fetching categories:', error);

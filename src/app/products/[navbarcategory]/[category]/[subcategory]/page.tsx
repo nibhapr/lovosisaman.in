@@ -12,7 +12,7 @@ async function getSubcategory(slug: string) {
 
 async function getProducts(subcategoryId: string) {
   await connectDB();
-  return await Product.find({ subcategoryId });
+  return await Product.find({ subcategoryId }).sort({ name: 1 }).lean();
 }
 
 export const revalidate = 0; // Enable real-time revalidation
@@ -49,7 +49,9 @@ export default async function SubcategoryPage({
   params: { navbarcategory: string; category: string; subcategory: string }
 }) {
   const subcategory = await getSubcategory(params.subcategory);
+  console.log('Subcategory:', subcategory); // Add this
   const products = subcategory ? await getProducts(subcategory._id) : [];
+  console.log('Products:', products); // Add this
 
   if (!subcategory) {
     return <div>Subcategory not found</div>;
@@ -107,7 +109,7 @@ export default async function SubcategoryPage({
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <Link
-              key={product._id}
+              key={String(product._id)}
               href={`/products/${params.navbarcategory}/${params.category}/${params.subcategory}/${product.slug}`}
               className="group"
             >
