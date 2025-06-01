@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { IoDownloadOutline, IoStarOutline, IoStar, IoClose } from 'react-icons/io5';
 import ReviewForm from '@/app/Components/shared/ReviewForm';
 import type { Product, Review } from '@/types/shop';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 export default function ProductPage({
   params
@@ -233,17 +235,22 @@ export default function ProductPage({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
           <div className="space-y-4 sm:space-y-6 mx-auto w-full max-w-lg">
             <div className="group">
-              <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
-                <Image
-                  src={product.images[currentImageIndex]}
-                  alt={product.name}
-                  fill
-                  className="object-contain p-2 sm:p-4"
-                  priority
-                  quality={100}
-                  unoptimized
-                />
-              </div>
+              <Zoom>
+                <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
+                  <Image
+                    src={product.images[currentImageIndex]}
+                    alt={product.name}
+                    fill
+                    className="object-contain p-2 sm:p-4"
+                    priority
+                    quality={100}
+                    unoptimized
+                  />
+                  <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                    {currentImageIndex + 1}/{product.images.length}
+                  </div>
+                </div>
+              </Zoom>
             </div>
 
             {product.images.length > 1 && (
@@ -386,8 +393,10 @@ export default function ProductPage({
                         quality={100}
                         unoptimized
                       />
+                      <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                        {currentCatalogIndex + 1}/{catalogImages.length}
+                      </div>
                     </button>
-
                     {catalogImages.length > 1 && (
                       <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
                         {catalogImages.map((_, index) => (
