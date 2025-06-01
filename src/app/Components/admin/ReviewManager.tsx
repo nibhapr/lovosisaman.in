@@ -8,7 +8,7 @@ export default function ReviewManager() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedType, setSelectedType] = useState<'all' | 'blog' | 'event' | 'product'>('all');
+  const [selectedType, setSelectedType] = useState<'all' | 'product'>('all');
 
   useEffect(() => {
     fetchReviews();
@@ -43,8 +43,8 @@ export default function ReviewManager() {
     }
   };
 
-  const filteredReviews = selectedType === 'all' 
-    ? reviews 
+  const filteredReviews = selectedType === 'all'
+    ? reviews
     : reviews.filter(review => review.itemType === selectedType);
 
   const StarRating = ({ rating }: { rating: number }) => (
@@ -74,15 +74,14 @@ export default function ReviewManager() {
           </div>
         </div>
         <div className="flex gap-2">
-          {['all', 'blog', 'event', 'product'].map((type) => (
+          {['all', 'product'].map((type) => (
             <button
               key={type}
               onClick={() => setSelectedType(type as any)}
-              className={`px-4 py-2 rounded-lg ${
-                selectedType === type
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
+              className={`px-4 py-2 rounded-lg ${selectedType === type
+                ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}
             </button>
@@ -109,9 +108,9 @@ export default function ReviewManager() {
                 <StarRating rating={review.rating} />
               </div>
             </div>
-            
+
             <p className="mt-4 text-gray-300">{review.comment}</p>
-            
+
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm text-gray-400">
                 {new Date(review.createdAt).toLocaleDateString()}

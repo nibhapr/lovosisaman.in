@@ -1,11 +1,12 @@
 import { connectDB } from '@/lib/db';
-import NavbarCategory from '@/app/models/NavbarCategory';
 import Category from '@/app/models/Category';
-import Product from '@/app/models/Product';
-import { Metadata } from 'next';
-export const dynamic = 'force-dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
+import NavbarCategory from '@/app/models/NavbarCategory';
+import Product from '@/app/models/Product';
+
+export const dynamic = 'force-dynamic';
 
 async function getNavbarCategory(slug: string) {
   await connectDB();
@@ -20,9 +21,7 @@ async function getCategories(navbarCategoryId: string) {
 async function getProducts(navbarCategoryId: string) {
   await connectDB();
   return await Product.find({
-    navbarCategoryId,
-    categoryId: { $exists: false },
-    subcategoryId: { $exists: false }
+    navbarCategoryId
   }).sort({ name: 1 }).lean();
 }
 

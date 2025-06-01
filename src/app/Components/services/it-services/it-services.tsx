@@ -126,7 +126,7 @@ const portfolioProjects = [
     category: "Software Development",
     image: "/images/services/portfolio/andriod-ios.jpg",
     description: "Secure and user-friendly social media application",
-    url: "https://nexmedia.com"
+    url: "https://nexmedia.live"
   },
   {
     title: "Digital Marketing Campaign",
